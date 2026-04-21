@@ -1,40 +1,40 @@
 # FluGenPass
 
-FluGenPass — это современный менеджер паролей для Windows (.NET 8), обеспечивающий локальное и безопасное хранение ваших учетных данных. Приложение использует философию дизайна Fluent UI с эффектом Mica, обеспечивая нативный и премиальный пользовательский опыт.
+FluGenPass is a modern password manager for Windows (.NET 8) that provides local and secure storage for your credentials. The app adopts the Fluent UI design philosophy with the Mica effect, delivering a native and premium user experience.
 
-## Ключевые особенности
+## Key Features
 
-- **Fluent Shell**: Современная оболочка на базе `WPF-UI` с навигацией по разделам `Generator`, `Vault` и `Settings`.
-- **Генератор паролей**: 
-  - Настройка длины (от 8 до 64 символов).
-  - Управление наборами символов: заглавные/строчные буквы, цифры и спецсимволы.
-  - Индикатор надежности на основе энтропии.
-  - Быстрое сохранение в зашифрованное хранилище.
-- **Локальное хранилище (Vault)**:
-  - Шифрование с использованием AES-GCM.
-  - Удобное управление записями: просмотр, копирование и удаление.
-  - Импорт паролей из внешних источников.
-  - Экспорт в CSV (совместим с Bitwarden) и безопасные бэкапы.
-- **Премиальный дизайн**:
-  - Поддержка эффекта Mica и динамических тем (System, Light, Dark).
-  - Интуитивная навигация с текстовыми подсказками.
-  - Идеальная адаптация элементов интерфейса под тёмный режим.
+- **Fluent Shell**: A modern shell based on `WPF-UI` with navigation through the `Generator`, `Vault`, and `Settings` sections.
+- **Password Generator**: 
+  - Length customization (8 to 64 characters).
+  - Character set control: uppercase/lowercase letters, numbers, and special characters.
+  - Entropy-based strength indicator.
+  - Quick saving to encrypted storage.
+- **Local Storage (Vault)**:
+  - Encryption using AES-GCM.
+  - Convenient entry management: view, copy, and delete.
+  - Import passwords from external sources.
+  - Export to CSV (compatible with Bitwarden) and secure backups.
+- **Modern design**:
+  - Support for the Mica effect and dynamic themes (System, Light, Dark).
+  - Intuitive navigation with text hints.
+  - Perfect adaptation of interface elements for dark mode.
 
-## Безопасность
+## Security
 
-- **Argon2id**: Для защиты мастер-пароля используется современный алгоритм Argon2id (65,536 KB памяти, 4 потока параллелизма). Это обеспечивает высочайшую устойчивость к перебору на GPU и специализированном оборудовании (ASIC).
-- **Криптография**: Все пароли генерируются с помощью `System.Security.Cryptography.RandomNumberGenerator`.
-- **Локальность**: Ваши данные никогда не покидают ваше устройство. Мастер-пароль не хранится в открытом виде; проверяется только его хеш.
-- **Изоляция сессии**: При блокировке хранилища ключ шифрования мгновенно удаляется из оперативной памяти.
+- **Argon2id**: The modern Argon2id algorithm (65,536 KB memory, 4 parallel threads) is used to protect the master password. This ensures the highest resistance to brute-force attacks on GPUs and specialized hardware (ASICs).
+- **Cryptography**: All passwords are generated using `System.Security.Cryptography.RandomNumberGenerator`.
+- **Local Storage**: Your data never leaves your device. The master password is not stored in plain text; only its hash is verified.
+- **Session Isolation**: When the vault is locked, the encryption key is immediately removed from RAM.
 
-## Хранение данных
+## Data Storage
 
-Все файлы приложения хранятся локально в профиле пользователя:
+All application files are stored locally in the user profile:
 `%LocalAppData%\FluGenPass`
 
-- `settings.json`: Настройки темы и метаданные проверки мастер-пароля.
-- `vault.dat`: Зашифрованное содержимое вашего хранилища.
+- `settings.json`: Theme settings and master password verification metadata.
+- `vault.dat`: The encrypted contents of your vault.
 
-## Установка
+## Installation
 
-В настоящий момент проект готовится к выпуску полноценного установщика (.exe), который позволит легко устанавливать и обновлять FluGenPass в среде Windows без необходимости ручной сборки.
+Currently, the program can be installed using a single .exe file to avoid all the difficulties associated with installing source files and compiling them.
