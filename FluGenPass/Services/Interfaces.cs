@@ -1,0 +1,169 @@
+using System.Windows;
+using FluGenPass.Models;
+using Wpf.Ui.Controls;
+
+namespace FluGenPass.Services;
+
+public interface IPasswordGeneratorService
+{
+    string Generate(PasswordOptions options);
+
+    PasswordStrength EvaluateStrength(PasswordOptions options);
+
+    double EstimateEntropy(PasswordOptions options);
+}
+
+public interface ISettingsService
+{
+    string SettingsFilePath { get; }
+
+    Task<AppSettings> GetAsync(CancellationToken cancellationToken = default);
+
+    Task SaveAsync(AppSettings settings, CancellationToken cancellationToken = default);
+}
+
+public interface ISessionStateService
+{
+    event EventHandler<bool>? UnlockStateChanged;
+
+    bool IsUnlocked { get; }
+
+    void SetVaultKey(byte[] key);
+
+    byte[] GetRequiredVaultKey();
+
+    void Lock();
+}
+
+public interface IMasterPasswordService
+{
+    bool IsUnlocked { get; }
+
+    Task<bool> HasMasterPasswordAsync(CancellationToken cancellationToken = default);
+
+    Task SetMasterPasswordAsync(string password, CancellationToken cancellationToken = default);
+
+    Task ChangeMasterPasswordAsync(string newPassword, CancellationToken cancellationToken = default);
+
+    Task ResetAsync(CancellationToken cancellationToken = default);
+
+    Task<bool> TryUnlockAsync(string password, CancellationToken cancellationToken = default);
+
+    void Lock();
+}
+
+public interface IVaultService
+{
+    string VaultFilePath { get; }
+
+    Task<IReadOnlyList<VaultEntry>> LoadAsync(CancellationToken cancellationToken = default);
+
+    Task SaveAsync(IEnumerable<VaultEntry> entries, CancellationToken cancellationToken = default);
+}
+
+public interface IVaultTransferService
+{
+    Task<VaultExportResult> ExportSecureAsync(
+        IEnumerable<VaultEntry> entries,
+        string filePath,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<VaultExportResult> ExportBitwardenCsvAsync(
+        IEnumerable<VaultEntry> entries,
+        string filePath,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<VaultImportResult> ImportAsync(
+        string filePath,
+        IEnumerable<VaultEntry> existingEntries,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<VaultVerificationResult> VerifyAsync(
+        string filePath,
+        CancellationToken cancellationToken = default
+    );
+}
+
+public interface ITransferSignatureService
+{
+    VaultTransferSignature CreateSignature(byte[] payloadBytes);
+
+    VaultIntegrityStatus VerifySignature(
+        byte[] payloadBytes,
+        VaultTransferSignature signature,
+        out string integritySummary,
+        out IReadOnlyList<string> warnings
+    );
+}
+
+public interface IClipboardService
+{
+    void SetText(string text);
+}
+
+public interface INotificationService
+{
+    void Initialize(SnackbarPresenter presenter);
+
+    void ShowInfo(string title, string message);
+
+    void ShowSuccess(string title, string message);
+
+    void ShowError(string title, string message);
+}
+
+public interface IDialogService
+{
+    void Initialize(ContentDialogHost dialogHost, Window ownerWindow);
+
+    Task<string?> PromptForSiteNameAsync(CancellationToken cancellationToken = default);
+
+    Task<string?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default);
+
+    Task<string?> PromptForUnlockPasswordAsync(CancellationToken cancellationToken = default);
+
+    Task<bool> ConfirmAsync(
+        string title,
+        string message,
+        string primaryButtonText = "Confirm",
+        string closeButtonText = "Cancel",
+        CancellationToken cancellationToken = default
+    );
+
+    Task ShowMessageAsync(
+        string title,
+        string message,
+        string closeButtonText = "Close",
+        CancellationToken cancellationToken = default
+    );
+}
+
+public interface IThemeService
+{
+    AppThemeOption CurrentTheme { get; }
+
+    Task InitializeAsync(Window window, CancellationToken cancellationToken = default);
+
+    Task ApplyThemeAsync(AppThemeOption theme, CancellationToken cancellationToken = default);
+}
+
+public interface IVaultAccessCoordinator
+{
+    Task<bool> EnsureAccessAsync(CancellationToken cancellationToken = default);
+
+    void LockVault();
+}
+
+public interface IInactivityAutoLockService
+{
+    bool IsEnabled { get; set; }
+
+    TimeSpan Timeout { get; set; }
+
+    void ResetTimer();
+
+    void Dispose();
+}

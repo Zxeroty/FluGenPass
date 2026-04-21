@@ -1,0 +1,72 @@
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using FluGenPass.Models;
+
+namespace FluGenPass.Services;
+
+public sealed class SettingsService(string appDirectory) : ISettingsService
+{
+    private static readonly JsonSerializerOptions SerializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter() },
+    };
+
+    private readonly SemaphoreSlim _gate = new(1, 1);
+    private AppSettings? _cachedSettings;
+
+    public string SettingsFilePath { get; } = Path.Combine(appDirectory, "settings.json");
+
+    public async Task<AppSettings> GetAsync(CancellationToken cancellationToken = default)
+    {
+        await _gate.WaitAsync(cancellationToken);
+
+        try
+        {
+            if (_cachedSettings is not null)
+            {
+                return _cachedSettings.Clone();
+            }
+
+            if (!File.Exists(SettingsFilePath))
+            {
+                _cachedSettings = new AppSettings();
+                return _cachedSettings.Clone();
+            }
+
+            await using FileStream stream = File.OpenRead(SettingsFilePath);
+            _cachedSettings =
+                await JsonSerializer.DeserializeAsync<AppSettings>(stream, SerializerOptions, cancellationToken)
+                ?? new AppSettings();
+
+            return _cachedSettings.Clone();
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    public async Task SaveAsync(AppSettings settings, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        await _gate.WaitAsync(cancellationToken);
+
+        try
+        {
+            Directory.CreateDirectory(appDirectory);
+
+            _cachedSettings = settings.Clone();
+
+            await using FileStream stream = File.Create(SettingsFilePath);
+            await JsonSerializer.SerializeAsync(stream, _cachedSettings, SerializerOptions, cancellationToken);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+}

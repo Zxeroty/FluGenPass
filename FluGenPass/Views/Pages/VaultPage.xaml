@@ -1,0 +1,146 @@
+<Page x:Class="FluGenPass.Views.Pages.VaultPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      Loaded="OnLoaded">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:Card Margin="0,0,0,24">
+            <Grid Margin="28">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    <TextBlock FontSize="30"
+                               FontWeight="SemiBold"
+                               Text="Vault" />
+                    <TextBlock Margin="0,10,0,0"
+                               FontWeight="SemiBold"
+                               Text="{Binding Headline}" />
+                    <TextBlock Margin="0,8,0,0"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="{Binding StatusMessage}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <WrapPanel Grid.Column="1"
+                           Margin="24,0,0,0"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Top">
+                    <ui:Button Margin="0,0,12,12"
+                               Command="{Binding RefreshCommand}"
+                               Content="Refresh"
+                               Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
+                    <ui:Button Margin="0,0,0,12"
+                               Command="{Binding ImportPasswordsCommand}"
+                               Content="Import"
+                               Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
+                               Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ui:Button Margin="12,0,0,12"
+                               Command="{Binding ExportSecureCommand}"
+                               Content="Export Backup"
+                               Icon="{ui:SymbolIcon Symbol=SaveArrowRight20}" 
+                               Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ui:Button Margin="12,0,0,12"
+                               Command="{Binding ExportBitwardenCsvCommand}"
+                               Content="Export CSV"
+                               Icon="{ui:SymbolIcon Symbol=DocumentArrowRight24}"
+                               Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ui:Button Margin="12,0,12,12"
+                               Command="{Binding VerifyTransferFileCommand}"
+                               Content="Verify File"
+                               Icon="{ui:SymbolIcon Symbol=ShieldCheckmark24}" />
+                    <ui:Button Margin="0,0,0,12"
+                               Command="{Binding LockVaultCommand}"
+                               Content="Lock"
+                               Icon="{ui:SymbolIcon Symbol=LockClosed24}"
+                               Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                </WrapPanel>
+            </Grid>
+        </ui:Card>
+
+        <ui:Card Grid.Row="1">
+            <Grid Margin="28">
+                <ListView ItemsSource="{Binding Entries}"
+                          MinHeight="340"
+                          Background="Transparent"
+                          BorderThickness="0"
+                          Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <ListView.Resources>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <Setter Property="Padding" Value="8,4" />
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="180"
+                                            Header="Site / Service">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding SiteName}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="180"
+                                            Header="Password">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock FontFamily="Cascadia Code"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Text="{Binding PasswordDisplay}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="150"
+                                            Header="Created">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CreatedUtc, StringFormat={}{0:g}}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="168"
+                                            Header="Actions">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:Button Width="62"
+                                                       Margin="0,0,8,0"
+                                                       Command="{Binding ToggleRevealCommand}"
+                                                       Content="{Binding RevealButtonText}" />
+                                            <ui:Button Width="40"
+                                                       Margin="0,0,8,0"
+                                                       Command="{Binding CopyEntryCommand}"
+                                                       Icon="{ui:SymbolIcon Symbol=Copy24}"
+                                                       ToolTip="Copy password" />
+                                            <ui:Button Width="40"
+                                                       Appearance="Danger"
+                                                       Command="{Binding DeleteEntryCommand}"
+                                                       Icon="{ui:SymbolIcon Symbol=Delete24}"
+                                                       ToolTip="Delete entry" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </ui:Card>
+    </Grid>
+</Page>

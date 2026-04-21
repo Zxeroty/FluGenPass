@@ -1,0 +1,166 @@
+<Page x:Class="FluGenPass.Views.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      Loaded="OnLoaded">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:Card Margin="0,0,0,24">
+            <StackPanel Margin="28">
+                <TextBlock FontSize="30"
+                           FontWeight="SemiBold"
+                           Text="Settings" />
+                <TextBlock Margin="0,10,0,20"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Text="Tune theme behavior and review where FluGenPass keeps its local settings and encrypted vault."
+                           TextWrapping="Wrap" />
+
+                <TextBlock FontWeight="SemiBold"
+                           Text="Theme" />
+                <ComboBox Width="240"
+                          Margin="0,12,0,0"
+                          ItemsSource="{Binding ThemeOptions}"
+                          SelectedItem="{Binding SelectedTheme}" />
+            </StackPanel>
+        </ui:Card>
+
+        <ui:Card Grid.Row="1"
+                 Margin="0,0,0,24">
+            <StackPanel Margin="28">
+                <TextBlock FontSize="24"
+                           FontWeight="SemiBold"
+                           Text="Auto-Lock" />
+                <TextBlock Margin="0,10,0,18"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Text="Automatically lock the vault after a period of inactivity. Keyboard and mouse activity resets the timer."
+                           TextWrapping="Wrap" />
+
+                <ui:ToggleSwitch Margin="0,0,0,12"
+                              IsChecked="{Binding AutoLockEnabled}"
+                              Content="Auto-lock after inactivity" />
+
+                <StackPanel Margin="0,8,0,0"
+                            IsEnabled="{Binding AutoLockEnabled}">
+                    <TextBlock FontWeight="SemiBold"
+                               Text="Lock after" />
+                    <ComboBox Width="180"
+                              Margin="0,8,0,0"
+                              ItemsSource="{Binding AutoLockTimeoutOptions}"
+                              SelectedItem="{Binding AutoLockTimeoutMinutes}" />
+                    <TextBlock Margin="0,4,0,0"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="Minutes of inactivity"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </StackPanel>
+        </ui:Card>
+
+        <ui:Card Grid.Row="2"
+                 Margin="0,0,0,24">
+            <StackPanel Margin="28">
+                <TextBlock FontSize="24"
+                           FontWeight="SemiBold"
+                           Text="Vault Access" />
+                <TextBlock Margin="0,10,0,18"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Text="{Binding VaultAccessDescription}"
+                           TextWrapping="Wrap" />
+
+                <WrapPanel>
+                    <ui:Button Margin="0,0,12,12"
+                               Command="{Binding ConfigureMasterPasswordCommand}"
+                               Content="{Binding PrimaryVaultPasswordActionLabel}"
+                               Icon="{ui:SymbolIcon Symbol=Key24}" />
+                    <ui:Button Margin="0,0,0,12"
+                               Appearance="Danger"
+                               Command="{Binding ResetVaultProtectionCommand}"
+                               Content="Reset Vault Protection"
+                               Icon="{ui:SymbolIcon Symbol=Delete24}"
+                               Visibility="{Binding HasMasterPassword, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                </WrapPanel>
+            </StackPanel>
+        </ui:Card>
+
+        <ui:Card Grid.Row="3"
+                 Margin="0,0,0,24">
+            <StackPanel Margin="28">
+                <TextBlock FontSize="24"
+                           FontWeight="SemiBold"
+                           Text="Storage" />
+                <TextBlock Margin="0,10,0,18"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Text="Everything stays local in your Windows profile. Vault exports and imports stay local too, with SHA-256 integrity checks and ECDSA digital signatures for transfer files."
+                           TextWrapping="Wrap" />
+
+                <TextBlock FontWeight="SemiBold"
+                           Text="App data folder" />
+                <Border Margin="0,8,0,0"
+                        Padding="12,10"
+                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                               Text="{Binding AppDirectory}"
+                               TextWrapping="Wrap" />
+                </Border>
+
+                <TextBlock Margin="0,16,0,0"
+                           FontWeight="SemiBold"
+                           Text="Settings file" />
+                <Border Margin="0,8,0,0"
+                        Padding="12,10"
+                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                               Text="{Binding SettingsFilePath}"
+                               TextWrapping="Wrap" />
+                </Border>
+
+                <TextBlock Margin="0,16,0,0"
+                           FontWeight="SemiBold"
+                           Text="Encrypted vault file" />
+                <Border Margin="0,8,0,0"
+                        Padding="12,10"
+                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                               Text="{Binding VaultFilePath}"
+                               TextWrapping="Wrap" />
+                </Border>
+            </StackPanel>
+        </ui:Card>
+
+        <ui:Card Grid.Row="4">
+            <StackPanel Margin="28">
+                <TextBlock FontSize="24"
+                           FontWeight="SemiBold"
+                           Text="Security" />
+                <TextBlock Margin="0,10,0,18"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Text="The vault unlocks only for the current app session. Locking clears the in-memory key and keeps the encrypted file on disk."
+                           TextWrapping="Wrap" />
+
+                <ui:Button Width="180"
+                           Command="{Binding LockVaultCommand}"
+                           Content="Lock Vault"
+                           Icon="{ui:SymbolIcon Symbol=LockClosed24}"
+                           Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </StackPanel>
+        </ui:Card>
+    </Grid>
+</Page>
