@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluGenPass.Models;
+using FluGenPass.Services;
 
 namespace FluGenPass.ViewModels;
 
@@ -8,6 +9,8 @@ public partial class VaultEntryItemViewModel : ObservableObject
 {
     private readonly Func<VaultEntryItemViewModel, Task> _copyAction;
     private readonly Func<VaultEntryItemViewModel, Task> _deleteAction;
+    private readonly Func<VaultEntryItemViewModel, Task> _editTagsAction;
+    private readonly ILocalizationService _localizationService;
 
     [ObservableProperty]
     private bool _isRevealed;
@@ -15,12 +18,16 @@ public partial class VaultEntryItemViewModel : ObservableObject
     public VaultEntryItemViewModel(
         VaultEntry entry,
         Func<VaultEntryItemViewModel, Task> copyAction,
-        Func<VaultEntryItemViewModel, Task> deleteAction
+        Func<VaultEntryItemViewModel, Task> deleteAction,
+        Func<VaultEntryItemViewModel, Task> editTagsAction,
+        ILocalizationService localizationService
     )
     {
         Entry = entry;
         _copyAction = copyAction;
         _deleteAction = deleteAction;
+        _editTagsAction = editTagsAction;
+        _localizationService = localizationService;
     }
 
     public VaultEntry Entry { get; }
@@ -31,11 +38,19 @@ public partial class VaultEntryItemViewModel : ObservableObject
 
     public string Password => Entry.Password;
 
+    public IReadOnlyList<string> Tags => Entry.Tags;
+
+    public bool HasTags => Tags.Count > 0;
+
+    public string TagsDisplay => Tags.Count == 0 ? "-" : string.Join(", ", Tags);
+
     public DateTimeOffset CreatedUtc => Entry.CreatedUtc;
 
     public string PasswordDisplay => IsRevealed ? Entry.Password : new string('*', Math.Max(12, Entry.Password.Length));
 
-    public string RevealButtonText => IsRevealed ? "Hide" : "Reveal";
+    public string RevealButtonText => IsRevealed 
+        ? _localizationService.GetString("VaultBtnHide") 
+        : _localizationService.GetString("VaultBtnReveal");
 
     partial void OnIsRevealedChanged(bool value)
     {
@@ -59,5 +74,18 @@ public partial class VaultEntryItemViewModel : ObservableObject
     private Task DeleteEntryAsync()
     {
         return _deleteAction(this);
+    }
+
+    [RelayCommand]
+    private Task EditTagsAsync()
+    {
+        return _editTagsAction(this);
+    }
+
+    public void RefreshTags()
+    {
+        OnPropertyChanged(nameof(Tags));
+        OnPropertyChanged(nameof(HasTags));
+        OnPropertyChanged(nameof(TagsDisplay));
     }
 }

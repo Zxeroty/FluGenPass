@@ -16,6 +16,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly ISettingsService _settingsService;
     private readonly IMasterPasswordService _masterPasswordService;
     private readonly IInactivityAutoLockService _autoLockService;
+    private readonly ILocalizationService _localizationService;
     private bool _isInitializing;
 
     [ObservableProperty]
@@ -36,6 +37,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private int _autoLockTimeoutMinutes = 5;
 
+    [ObservableProperty]
+    private AppLanguageOption _selectedLanguage = AppLanguageOption.English;
+
     public SettingsViewModel(
         IDialogService dialogService,
         INotificationService notificationService,
@@ -45,7 +49,8 @@ public partial class SettingsViewModel : ObservableObject
         ISettingsService settingsService,
         IMasterPasswordService masterPasswordService,
         ISessionStateService sessionStateService,
-        IInactivityAutoLockService autoLockService
+        IInactivityAutoLockService autoLockService,
+        ILocalizationService localizationService
     )
     {
         _dialogService = dialogService;
@@ -56,8 +61,10 @@ public partial class SettingsViewModel : ObservableObject
         _settingsService = settingsService;
         _masterPasswordService = masterPasswordService;
         _autoLockService = autoLockService;
+        _localizationService = localizationService;
         _isInitializing = true;
         SelectedTheme = _themeService.CurrentTheme;
+        SelectedLanguage = _localizationService.CurrentLanguage;
         _isInitializing = false;
         IsVaultUnlocked = sessionStateService.IsUnlocked;
 
@@ -65,6 +72,8 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     public IReadOnlyList<AppThemeOption> ThemeOptions { get; } = Enum.GetValues<AppThemeOption>();
+
+    public IReadOnlyList<AppLanguageOption> LanguageOptions { get; } = Enum.GetValues<AppLanguageOption>();
 
     public IReadOnlyList<int> AutoLockTimeoutOptions { get; } = new[] { 1, 2, 3, 5, 10, 15, 30, 60 };
 
@@ -74,13 +83,15 @@ public partial class SettingsViewModel : ObservableObject
 
     public string VaultFilePath => _vaultService.VaultFilePath;
 
-    public string PrimaryVaultPasswordActionLabel => HasMasterPassword ? "Change Master Password" : "Create Master Password";
+    public string PrimaryVaultPasswordActionLabel => HasMasterPassword 
+        ? _localizationService.GetString("SettingsVaultBtnChange") 
+        : _localizationService.GetString("SettingsVaultBtnCreate");
 
     public string VaultAccessDescription => HasMasterPassword
         ? IsVaultUnlocked
-            ? "The vault is unlocked for this session. You can update the master password or fully reset vault protection."
-            : "A master password is configured. Unlock the vault first if you want to change the password without clearing saved entries."
-        : "No master password is configured yet. Create one to protect access to the vault page.";
+            ? _localizationService.GetString("SettingsVaultDescUnlocked")
+            : _localizationService.GetString("SettingsVaultDescLocked")
+        : _localizationService.GetString("SettingsVaultDescNone");
 
     partial void OnSelectedThemeChanged(AppThemeOption value)
     {
@@ -90,6 +101,20 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         _ = _themeService.ApplyThemeAsync(value);
+    }
+
+    partial void OnSelectedLanguageChanged(AppLanguageOption value)
+    {
+        if (_isInitializing)
+        {
+            return;
+        }
+
+        _ = _localizationService.ApplyLanguageAsync(value);
+        
+        // Refresh localized properties
+        OnPropertyChanged(nameof(PrimaryVaultPasswordActionLabel));
+        OnPropertyChanged(nameof(VaultAccessDescription));
     }
 
     partial void OnHasMasterPasswordChanged(bool value)

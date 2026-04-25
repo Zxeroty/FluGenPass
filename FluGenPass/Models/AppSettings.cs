@@ -5,6 +5,7 @@ namespace FluGenPass.Models;
 public sealed class AppSettings
 {
     public AppThemeOption Theme { get; set; } = AppThemeOption.System;
+    public AppLanguageOption Language { get; set; } = AppLanguageOption.English;
 
     public MasterPasswordMetadata? MasterPassword { get; set; }
 
@@ -30,8 +31,16 @@ public sealed class AppSettings
                 },
             AutoLockTimeoutMinutes = AutoLockTimeoutMinutes,
             AutoLockEnabled = AutoLockEnabled,
+            Language = Language
         };
     }
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum AppLanguageOption
+{
+    English,
+    Russian
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]

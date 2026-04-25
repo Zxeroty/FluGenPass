@@ -1,0 +1,125 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="AppTitle">FluGenPass</sys:String>
+
+    <!-- Навигация -->
+    <sys:String x:Key="NavMenu">Меню</sys:String>
+    <sys:String x:Key="NavBack">Назад</sys:String>
+    <sys:String x:Key="NavGenerator">Генератор</sys:String>
+    <sys:String x:Key="NavVault">Хранилище</sys:String>
+    <sys:String x:Key="NavSettings">Настройки</sys:String>
+    <sys:String x:Key="NavVaultUnlocked">Хранилище разблокировано</sys:String>
+    <sys:String x:Key="NavLockVault">Заблокировать</sys:String>
+
+    <!-- Страница генератора -->
+    <sys:String x:Key="GenTitle">Генератор паролей</sys:String>
+    <sys:String x:Key="GenSubtitle">Создавайте надежные учетные данные с криптографической случайностью, затем копируйте их или сохраняйте прямо в локальное хранилище.</sys:String>
+    <sys:String x:Key="GenStrength">Надежность: {0}</sys:String>
+    <sys:String x:Key="GenEntropy">Оценочная энтропия</sys:String>
+    <sys:String x:Key="GenBits">{0} бит</sys:String>
+    <sys:String x:Key="GenBtnGenerate">Сгенерировать</sys:String>
+    <sys:String x:Key="GenBtnCopy">Копировать</sys:String>
+    <sys:String x:Key="GenBtnSave">В хранилище</sys:String>
+    <sys:String x:Key="GenOptionsTitle">Опции</sys:String>
+    <sys:String x:Key="GenOptionsSubtitle">Пароль обновляется мгновенно при изменении длины и набора символов.</sys:String>
+    <sys:String x:Key="GenOptionLength">Длина</sys:String>
+    <sys:String x:Key="GenOptionUpper">Заглавные буквы</sys:String>
+    <sys:String x:Key="GenOptionLower">Строчные буквы</sys:String>
+    <sys:String x:Key="GenOptionNumbers">Цифры</sys:String>
+    <sys:String x:Key="GenOptionSymbols">Спецсимволы</sys:String>
+    <sys:String x:Key="GenWeakTitle">Слабый</sys:String>
+    <sys:String x:Key="GenWeakDesc">Ниже 45 бит. Подходит для временных нужд, но не для важных аккаунтов.</sys:String>
+    <sys:String x:Key="GenMediumTitle">Средний</sys:String>
+    <sys:String x:Key="GenMediumDesc">От 45 до 69 бит. Уже лучше, но стоит увеличить для долгосрочных паролей.</sys:String>
+    <sys:String x:Key="GenStrongTitle">Надежный</sys:String>
+    <sys:String x:Key="GenStrongDesc">70 бит и выше. Идеальный вариант для паролей, которыми вы дорожите.</sys:String>
+    <sys:String x:Key="GenStatusReady">Генератор готов к работе.</sys:String>
+    <sys:String x:Key="GenStatusCopied">Пароль скопирован в буфер обмена.</sys:String>
+    <sys:String x:Key="GenStatusSaved">Пароль сохранен в хранилище как '{0}'.</sys:String>
+
+    <!-- Страница хранилища -->
+    <sys:String x:Key="VaultTitle">Хранилище</sys:String>
+    <sys:String x:Key="VaultSubtitle">Просматривайте, копируйте или удаляйте любые записи ниже.</sys:String>
+    <sys:String x:Key="VaultColSite">Сайт / Сервис</sys:String>
+    <sys:String x:Key="VaultColPassword">Пароль</sys:String>
+    <sys:String x:Key="VaultColTags">Теги</sys:String>
+    <sys:String x:Key="VaultColCreated">Создан</sys:String>
+    <sys:String x:Key="VaultColActions">Действия</sys:String>
+    <sys:String x:Key="VaultFilterLabel">Фильтр по тегу</sys:String>
+    <sys:String x:Key="VaultSearchPlaceholder">Поиск сайта или тега...</sys:String>
+    <sys:String x:Key="VaultFilterAllTags">Все теги</sys:String>
+    <sys:String x:Key="VaultFilterMatches">Показано {0} из {1} записей для тега '{2}'.</sys:String>
+    <sys:String x:Key="VaultFilterNoMatches">Для тега '{0}' ничего не найдено.</sys:String>
+    <sys:String x:Key="VaultSearchMatches">Найдено {0} совпадений для '{1}'.</sys:String>
+    <sys:String x:Key="VaultSearchNoMatches">Ничего не найдено по запросу '{0}'.</sys:String>
+    <sys:String x:Key="VaultBtnRefresh">Обновить</sys:String>
+    <sys:String x:Key="VaultBtnImport">Импорт</sys:String>
+    <sys:String x:Key="VaultBtnExportBackup">Экспорт бэкапа</sys:String>
+    <sys:String x:Key="VaultBtnExportCsv">Экспорт CSV</sys:String>
+    <sys:String x:Key="VaultBtnVerify">Проверить файл</sys:String>
+    <sys:String x:Key="VaultBtnLock">Закрыть</sys:String>
+    <sys:String x:Key="VaultBtnTags">Теги</sys:String>
+    <sys:String x:Key="VaultBtnReveal">Показать</sys:String>
+    <sys:String x:Key="VaultBtnHide">Скрыть</sys:String>
+    <sys:String x:Key="VaultTipCopy">Копировать пароль</sys:String>
+    <sys:String x:Key="VaultTipDelete">Удалить запись</sys:String>
+    <sys:String x:Key="VaultHeadLocked">Хранилище заблокировано</sys:String>
+    <sys:String x:Key="VaultHeadReady">Хранилище готово</sys:String>
+    <sys:String x:Key="VaultHeadCountOne">{0} запись в хранилище</sys:String>
+    <sys:String x:Key="VaultHeadCountMany">{0} записей в хранилище</sys:String>
+    <sys:String x:Key="VaultMsgLocked">Разблокируйте хранилище, чтобы просмотреть пароли.</sys:String>
+    <sys:String x:Key="VaultMsgReady">Здесь появятся пароли, сохраненные из генератора.</sys:String>
+    <sys:String x:Key="VaultTagsUpdated">Теги для '{0}' обновлены.</sys:String>
+
+    <!-- Страница настроек -->
+    <sys:String x:Key="SettingsTitle">Настройки</sys:String>
+    <sys:String x:Key="SettingsSubtitle">Настройте поведение темы и проверьте, где FluGenPass хранит настройки и зашифрованное хранилище.</sys:String>
+    <sys:String x:Key="SettingsThemeTitle">Тема</sys:String>
+    <sys:String x:Key="SettingsAutoLockTitle">Автоблокировка</sys:String>
+    <sys:String x:Key="SettingsAutoLockSubtitle">Автоматически блокировать хранилище после периода бездействия. Активность клавиатуры и мыши сбрасывает таймер.</sys:String>
+    <sys:String x:Key="SettingsAutoLockSwitch">Блокировать при бездействии</sys:String>
+    <sys:String x:Key="SettingsAutoLockAfter">Время до блокировки</sys:String>
+    <sys:String x:Key="SettingsAutoLockMinutes">Минуты бездействия</sys:String>
+    <sys:String x:Key="SettingsVaultAccessTitle">Доступ к хранилищу</sys:String>
+    <sys:String x:Key="SettingsVaultBtnReset">Сбросить защиту хранилища</sys:String>
+    <sys:String x:Key="SettingsVaultBtnCreate">Создать мастер-пароль</sys:String>
+    <sys:String x:Key="SettingsVaultBtnChange">Изменить мастер-пароль</sys:String>
+    <sys:String x:Key="SettingsVaultDescUnlocked">Хранилище разблокировано для текущей сессии. Вы можете изменить пароль или полностью сбросить защиту.</sys:String>
+    <sys:String x:Key="SettingsVaultDescLocked">Мастер-пароль настроен. Сначала разблокируйте хранилище, если хотите сменить пароль без удаления записей.</sys:String>
+    <sys:String x:Key="SettingsVaultDescNone">Мастер-пароль еще не настроен. Создайте его, чтобы защитить доступ к вашим данным.</sys:String>
+    <sys:String x:Key="SettingsStorageTitle">Хранение</sys:String>
+    <sys:String x:Key="SettingsStorageSubtitle">Все данные остаются в вашем профиле Windows. Экспорт и импорт также локальны, с проверкой целостности SHA-256 и цифровыми подписями ECDSA.</sys:String>
+    <sys:String x:Key="SettingsPathAppData">Папка данных приложения</sys:String>
+    <sys:String x:Key="SettingsPathSettings">Файл настроек</sys:String>
+    <sys:String x:Key="SettingsPathVault">Файл зашифрованного хранилища</sys:String>
+    <sys:String x:Key="SettingsSecurityTitle">Безопасность</sys:String>
+    <sys:String x:Key="SettingsSecuritySubtitle">Хранилище разблокируется только на время текущей сессии. Блокировка стирает ключ из памяти и оставляет файл зашифрованным на диске.</sys:String>
+    <sys:String x:Key="SettingsLanguageTitle">Язык</sys:String>
+    <sys:String x:Key="SettingsLanguageSubtitle">Выберите предпочтительный язык интерфейса приложения.</sys:String>
+
+    <!-- Общее / Диалоги -->
+    <sys:String x:Key="CommonBtnLock">Заблокировать</sys:String>
+    <sys:String x:Key="CommonBtnCancel">Отмена</sys:String>
+    <sys:String x:Key="CommonBtnOk">ОК</sys:String>
+    <sys:String x:Key="CommonBtnClose">Закрыть</sys:String>
+
+    <sys:String x:Key="DlgSiteTitle">Название сайта</sys:String>
+    <sys:String x:Key="DlgSiteMsg">Введите название для этого пароля (например, GitHub, Почта):</sys:String>
+    <sys:String x:Key="DlgResetTitle">Сброс защиты хранилища</sys:String>
+    <sys:String x:Key="DlgResetMsg">Это действие удалит мастер-пароль и все сохраненные записи. Это невозможно отменить.</sys:String>
+    <sys:String x:Key="DlgResetBtn">Сбросить всё</sys:String>
+
+    <!-- Уведомления -->
+    <sys:String x:Key="NotifLockedTitle">Хранилище закрыто</sys:String>
+    <sys:String x:Key="NotifLockedMsg">Хранилище скрыто, пока вы не разблокируете его снова.</sys:String>
+    <sys:String x:Key="NotifCopiedTitle">Скопировано</sys:String>
+    <sys:String x:Key="NotifCopiedMsg">{0} скопирован в буфер обмена.</sys:String>
+    <sys:String x:Key="NotifDeletedTitle">Удалено</sys:String>
+    <sys:String x:Key="NotifDeletedMsg">{0} был удален из хранилища.</sys:String>
+    <sys:String x:Key="NotifResetTitle">Сброс выполнен</sys:String>
+    <sys:String x:Key="NotifResetMsg">Мастер-пароль удален, данные хранилища очищены.</sys:String>
+    <sys:String x:Key="NotifSuccess">Успех</sys:String>
+    <sys:String x:Key="NotifError">Ошибка</sys:String>
+</ResourceDictionary>

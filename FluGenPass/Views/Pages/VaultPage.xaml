@@ -22,7 +22,7 @@
                 <StackPanel>
                     <TextBlock FontSize="30"
                                FontWeight="SemiBold"
-                               Text="Vault" />
+                               Text="{DynamicResource VaultTitle}" />
                     <TextBlock Margin="0,10,0,0"
                                FontWeight="SemiBold"
                                Text="{Binding Headline}" />
@@ -38,30 +38,30 @@
                            VerticalAlignment="Top">
                     <ui:Button Margin="0,0,12,12"
                                Command="{Binding RefreshCommand}"
-                               Content="Refresh"
+                               Content="{DynamicResource VaultBtnRefresh}"
                                Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
                     <ui:Button Margin="0,0,0,12"
                                Command="{Binding ImportPasswordsCommand}"
-                               Content="Import"
+                               Content="{DynamicResource VaultBtnImport}"
                                Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
                                Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ui:Button Margin="12,0,0,12"
                                Command="{Binding ExportSecureCommand}"
-                               Content="Export Backup"
+                               Content="{DynamicResource VaultBtnExportBackup}"
                                Icon="{ui:SymbolIcon Symbol=SaveArrowRight20}" 
                                Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ui:Button Margin="12,0,0,12"
                                Command="{Binding ExportBitwardenCsvCommand}"
-                               Content="Export CSV"
+                               Content="{DynamicResource VaultBtnExportCsv}"
                                Icon="{ui:SymbolIcon Symbol=DocumentArrowRight24}"
                                Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ui:Button Margin="12,0,12,12"
                                Command="{Binding VerifyTransferFileCommand}"
-                               Content="Verify File"
+                               Content="{DynamicResource VaultBtnVerify}"
                                Icon="{ui:SymbolIcon Symbol=ShieldCheckmark24}" />
                     <ui:Button Margin="0,0,0,12"
                                Command="{Binding LockVaultCommand}"
-                               Content="Lock"
+                               Content="{DynamicResource VaultBtnLock}"
                                Icon="{ui:SymbolIcon Symbol=LockClosed24}"
                                Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 </WrapPanel>
@@ -70,76 +70,215 @@
 
         <ui:Card Grid.Row="1">
             <Grid Margin="28">
-                <ListView ItemsSource="{Binding Entries}"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0"
+                                Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center"
+                                   Margin="0,0,12,0"
+                                   FontWeight="SemiBold"
+                                   Text="{DynamicResource VaultFilterLabel}" />
+                        <ComboBox Width="220"
+                                  ItemsSource="{Binding AvailableTags}"
+                                  SelectedItem="{Binding SelectedTagFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                    <ui:TextBox Grid.Column="2"
+                                Width="300"
+                                Icon="{ui:SymbolIcon Symbol=Search24}"
+                                ClearButtonEnabled="True"
+                                PlaceholderText="{DynamicResource VaultSearchPlaceholder}"
+                                Text="{Binding SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </Grid>
+
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding Entries}"
                           MinHeight="340"
-                          Background="Transparent"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeRows="False"
+                          CanUserSortColumns="False"
+                          GridLinesVisibility="Horizontal"
+                          HeadersVisibility="Column"
+                          IsReadOnly="True"
+                          Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                          BorderBrush="Transparent"
                           BorderThickness="0"
                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                    <ListView.Resources>
-                        <Style TargetType="GridViewColumnHeader">
+                          RowBackground="Transparent"
+                          AlternatingRowBackground="Transparent"
+                          HorizontalGridLinesBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                          VerticalGridLinesBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                          ClipboardCopyMode="None">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Transparent" />
                             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                            <Setter Property="Padding" Value="8,4" />
-                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Setter Property="Padding" Value="8,10" />
                             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                            <Setter Property="BorderThickness" Value="0,0,1,1" />
                         </Style>
-                    </ListView.Resources>
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Width="180"
-                                            Header="Site / Service">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding SiteName}"
-                                                   TextTrimming="CharacterEllipsis" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="180"
-                                            Header="Password">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontFamily="Cascadia Code"
-                                                   TextTrimming="CharacterEllipsis"
-                                                   Text="{Binding PasswordDisplay}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="150"
-                                            Header="Created">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding CreatedUtc, StringFormat={}{0:g}}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="168"
-                                            Header="Actions">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <ui:Button Width="62"
-                                                       Margin="0,0,8,0"
-                                                       Command="{Binding ToggleRevealCommand}"
-                                                       Content="{Binding RevealButtonText}" />
-                                            <ui:Button Width="40"
-                                                       Margin="0,0,8,0"
-                                                       Command="{Binding CopyEntryCommand}"
-                                                       Icon="{ui:SymbolIcon Symbol=Copy24}"
-                                                       ToolTip="Copy password" />
-                                            <ui:Button Width="40"
-                                                       Appearance="Danger"
-                                                       Command="{Binding DeleteEntryCommand}"
-                                                       Icon="{ui:SymbolIcon Symbol=Delete24}"
-                                                       ToolTip="Delete entry" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Padding" Value="10,6" />
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                SnapsToDevicePixels="True">
+                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                              VerticalAlignment="Center" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                            <Setter Property="ValidationErrorTemplate" Value="{x:Null}" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="180"
+                                                Header="{DynamicResource VaultColSite}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding SiteName}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="180"
+                                                Header="{DynamicResource VaultColPassword}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock FontFamily="Cascadia Code"
+                                               Text="{Binding PasswordDisplay}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="180"
+                                                Header="{DynamicResource VaultColTags}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Text="-"
+                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding HasTags}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <ItemsControl ItemsSource="{Binding Tags}"
+                                                      Visibility="{Binding HasTags, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Margin="0,0,6,6"
+                                                            Padding="10,5"
+                                                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                                            BorderBrush="{DynamicResource SystemAccentColorBrush}"
+                                                            BorderThickness="1"
+                                                            CornerRadius="4">
+                                                        <TextBlock FontSize="12"
+                                                                   FontWeight="SemiBold"
+                                                                   Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
+                                                                   Text="{Binding}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="150"
+                                                Header="{DynamicResource VaultColCreated}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding CreatedUtc, StringFormat={}{0:g}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="236"
+                                                Header="{DynamicResource VaultColActions}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:Button Width="62"
+                                                   Margin="0,0,8,0"
+                                                   Command="{Binding ToggleRevealCommand}"
+                                                   Content="{Binding RevealButtonText}" />
+                                        <ui:Button Width="54"
+                                                   Margin="0,0,8,0"
+                                                   Command="{Binding EditTagsCommand}"
+                                                   Content="{DynamicResource VaultBtnTags}" />
+                                        <ui:Button Width="40"
+                                                   Margin="0,0,8,0"
+                                                   Command="{Binding CopyEntryCommand}"
+                                                   Icon="{ui:SymbolIcon Symbol=Copy24}"
+                                                   ToolTip="{DynamicResource VaultTipCopy}" />
+                                        <ui:Button Width="40"
+                                                   Appearance="Danger"
+                                                   Command="{Binding DeleteEntryCommand}"
+                                                   Icon="{ui:SymbolIcon Symbol=Delete24}"
+                                                   ToolTip="{DynamicResource VaultTipDelete}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </ui:Card>
     </Grid>

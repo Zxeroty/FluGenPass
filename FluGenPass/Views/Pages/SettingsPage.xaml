@@ -13,20 +13,21 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <ui:Card Margin="0,0,0,24">
             <StackPanel Margin="28">
                 <TextBlock FontSize="30"
                            FontWeight="SemiBold"
-                           Text="Settings" />
+                           Text="{DynamicResource SettingsTitle}" />
                 <TextBlock Margin="0,10,0,20"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="Tune theme behavior and review where FluGenPass keeps its local settings and encrypted vault."
+                           Text="{DynamicResource SettingsSubtitle}"
                            TextWrapping="Wrap" />
 
                 <TextBlock FontWeight="SemiBold"
-                           Text="Theme" />
+                           Text="{DynamicResource SettingsThemeTitle}" />
                 <ComboBox Width="240"
                           Margin="0,12,0,0"
                           ItemsSource="{Binding ThemeOptions}"
@@ -39,27 +40,27 @@
             <StackPanel Margin="28">
                 <TextBlock FontSize="24"
                            FontWeight="SemiBold"
-                           Text="Auto-Lock" />
+                           Text="{DynamicResource SettingsAutoLockTitle}" />
                 <TextBlock Margin="0,10,0,18"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="Automatically lock the vault after a period of inactivity. Keyboard and mouse activity resets the timer."
+                           Text="{DynamicResource SettingsAutoLockSubtitle}"
                            TextWrapping="Wrap" />
 
                 <ui:ToggleSwitch Margin="0,0,0,12"
                               IsChecked="{Binding AutoLockEnabled}"
-                              Content="Auto-lock after inactivity" />
+                              Content="{DynamicResource SettingsAutoLockSwitch}" />
 
                 <StackPanel Margin="0,8,0,0"
                             IsEnabled="{Binding AutoLockEnabled}">
                     <TextBlock FontWeight="SemiBold"
-                               Text="Lock after" />
+                               Text="{DynamicResource SettingsAutoLockAfter}" />
                     <ComboBox Width="180"
-                              Margin="0,8,0,0"
-                              ItemsSource="{Binding AutoLockTimeoutOptions}"
-                              SelectedItem="{Binding AutoLockTimeoutMinutes}" />
+                               Margin="0,8,0,0"
+                               ItemsSource="{Binding AutoLockTimeoutOptions}"
+                               SelectedItem="{Binding AutoLockTimeoutMinutes}" />
                     <TextBlock Margin="0,4,0,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               Text="Minutes of inactivity"
+                               Text="{DynamicResource SettingsAutoLockMinutes}"
                                TextWrapping="Wrap" />
                 </StackPanel>
             </StackPanel>
@@ -70,7 +71,7 @@
             <StackPanel Margin="28">
                 <TextBlock FontSize="24"
                            FontWeight="SemiBold"
-                           Text="Vault Access" />
+                           Text="{DynamicResource SettingsVaultAccessTitle}" />
                 <TextBlock Margin="0,10,0,18"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                            Text="{Binding VaultAccessDescription}"
@@ -84,7 +85,7 @@
                     <ui:Button Margin="0,0,0,12"
                                Appearance="Danger"
                                Command="{Binding ResetVaultProtectionCommand}"
-                               Content="Reset Vault Protection"
+                               Content="{DynamicResource SettingsVaultBtnReset}"
                                Icon="{ui:SymbolIcon Symbol=Delete24}"
                                Visibility="{Binding HasMasterPassword, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 </WrapPanel>
@@ -96,14 +97,14 @@
             <StackPanel Margin="28">
                 <TextBlock FontSize="24"
                            FontWeight="SemiBold"
-                           Text="Storage" />
+                           Text="{DynamicResource SettingsStorageTitle}" />
                 <TextBlock Margin="0,10,0,18"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="Everything stays local in your Windows profile. Vault exports and imports stay local too, with SHA-256 integrity checks and ECDSA digital signatures for transfer files."
+                           Text="{DynamicResource SettingsStorageSubtitle}"
                            TextWrapping="Wrap" />
 
                 <TextBlock FontWeight="SemiBold"
-                           Text="App data folder" />
+                           Text="{DynamicResource SettingsPathAppData}" />
                 <Border Margin="0,8,0,0"
                         Padding="12,10"
                         Background="{DynamicResource ControlFillColorSecondaryBrush}"
@@ -117,7 +118,7 @@
 
                 <TextBlock Margin="0,16,0,0"
                            FontWeight="SemiBold"
-                           Text="Settings file" />
+                           Text="{DynamicResource SettingsPathSettings}" />
                 <Border Margin="0,8,0,0"
                         Padding="12,10"
                         Background="{DynamicResource ControlFillColorSecondaryBrush}"
@@ -131,7 +132,7 @@
 
                 <TextBlock Margin="0,16,0,0"
                            FontWeight="SemiBold"
-                           Text="Encrypted vault file" />
+                           Text="{DynamicResource SettingsPathVault}" />
                 <Border Margin="0,8,0,0"
                         Padding="12,10"
                         Background="{DynamicResource ControlFillColorSecondaryBrush}"
@@ -145,21 +146,38 @@
             </StackPanel>
         </ui:Card>
 
-        <ui:Card Grid.Row="4">
+        <ui:Card Grid.Row="4"
+                 Margin="0,0,0,24">
             <StackPanel Margin="28">
                 <TextBlock FontSize="24"
                            FontWeight="SemiBold"
-                           Text="Security" />
+                           Text="{DynamicResource SettingsSecurityTitle}" />
                 <TextBlock Margin="0,10,0,18"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="The vault unlocks only for the current app session. Locking clears the in-memory key and keeps the encrypted file on disk."
+                           Text="{DynamicResource SettingsSecuritySubtitle}"
                            TextWrapping="Wrap" />
 
                 <ui:Button Width="180"
                            Command="{Binding LockVaultCommand}"
-                           Content="Lock Vault"
+                           Content="{DynamicResource CommonBtnLock}"
                            Icon="{ui:SymbolIcon Symbol=LockClosed24}"
                            Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </StackPanel>
+        </ui:Card>
+
+        <ui:Card Grid.Row="5">
+            <StackPanel Margin="28">
+                <TextBlock FontSize="24"
+                           FontWeight="SemiBold"
+                           Text="{DynamicResource SettingsLanguageTitle}" />
+                <TextBlock Margin="0,10,0,18"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Text="{DynamicResource SettingsLanguageSubtitle}"
+                           TextWrapping="Wrap" />
+
+                <ComboBox Width="240"
+                          ItemsSource="{Binding LanguageOptions}"
+                          SelectedItem="{Binding SelectedLanguage}" />
             </StackPanel>
         </ui:Card>
     </Grid>

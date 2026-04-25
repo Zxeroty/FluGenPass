@@ -121,6 +121,8 @@ public interface IDialogService
 
     Task<string?> PromptForSiteNameAsync(CancellationToken cancellationToken = default);
 
+    Task<string?> PromptForTagsAsync(string initialValue = "", CancellationToken cancellationToken = default);
+
     Task<string?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default);
 
     Task<string?> PromptForUnlockPasswordAsync(CancellationToken cancellationToken = default);
@@ -166,4 +168,15 @@ public interface IInactivityAutoLockService
     void ResetTimer();
 
     void Dispose();
+}
+
+public interface ILocalizationService
+{
+    AppLanguageOption CurrentLanguage { get; }
+
+    Task InitializeAsync(CancellationToken cancellationToken = default);
+
+    Task ApplyLanguageAsync(AppLanguageOption language, CancellationToken cancellationToken = default);
+
+    string GetString(string key);
 }

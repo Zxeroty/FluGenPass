@@ -13,6 +13,7 @@ public partial class GeneratorViewModel : ObservableObject
     private readonly IVaultAccessCoordinator _vaultAccessCoordinator;
     private readonly IDialogService _dialogService;
     private readonly IVaultService _vaultService;
+    private readonly ILocalizationService _localizationService;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasCharacterSelection))]
@@ -52,7 +53,7 @@ public partial class GeneratorViewModel : ObservableObject
     private int _strengthPercent = 100;
 
     [ObservableProperty]
-    private string _statusMessage = "Adjust the options and FluGenPass will refresh the password instantly.";
+    private string _statusMessage = string.Empty;
 
     public GeneratorViewModel(
         IPasswordGeneratorService passwordGeneratorService,
@@ -60,7 +61,8 @@ public partial class GeneratorViewModel : ObservableObject
         INotificationService notificationService,
         IVaultAccessCoordinator vaultAccessCoordinator,
         IDialogService dialogService,
-        IVaultService vaultService
+        IVaultService vaultService,
+        ILocalizationService localizationService
     )
     {
         _passwordGeneratorService = passwordGeneratorService;
@@ -69,6 +71,9 @@ public partial class GeneratorViewModel : ObservableObject
         _vaultAccessCoordinator = vaultAccessCoordinator;
         _dialogService = dialogService;
         _vaultService = vaultService;
+        _localizationService = localizationService;
+
+        StatusMessage = _localizationService.GetString("GenOptionsSubtitle");
 
         RefreshGeneratedPassword();
     }
@@ -76,7 +81,15 @@ public partial class GeneratorViewModel : ObservableObject
     public bool HasCharacterSelection =>
         IncludeUppercase || IncludeLowercase || IncludeNumbers || IncludeSymbols;
 
-    public string StrengthLabel => Strength.ToString();
+    public string StrengthLabel => string.Format(
+        _localizationService.GetString("GenStrength"), 
+        _localizationService.GetString($"Gen{Strength}Title")
+    );
+
+    public string EntropyLabel => string.Format(
+        _localizationService.GetString("GenBits"), 
+        EntropyBits
+    );
 
     partial void OnIncludeUppercaseChanged(bool value) => RefreshGeneratedPassword();
 
@@ -89,6 +102,8 @@ public partial class GeneratorViewModel : ObservableObject
     partial void OnLengthChanged(int value) => RefreshGeneratedPassword();
 
     partial void OnStrengthChanged(PasswordStrength value) => OnPropertyChanged(nameof(StrengthLabel));
+
+    partial void OnEntropyBitsChanged(double value) => OnPropertyChanged(nameof(EntropyLabel));
 
     [RelayCommand(CanExecute = nameof(CanGeneratePassword))]
     private void GeneratePassword()
@@ -105,7 +120,10 @@ public partial class GeneratorViewModel : ObservableObject
         }
 
         _clipboardService.SetText(GeneratedPassword);
-        _notificationService.ShowSuccess("Copied", "The generated password is now on your clipboard.");
+        _notificationService.ShowSuccess(
+            _localizationService.GetString("NotifCopiedTitle"), 
+            _localizationService.GetString("GenStatusCopied")
+        );
     }
 
     [RelayCommand(CanExecute = nameof(CanSaveToVault))]
@@ -134,7 +152,10 @@ public partial class GeneratorViewModel : ObservableObject
         );
 
         await _vaultService.SaveAsync(entries.OrderByDescending(entry => entry.CreatedUtc));
-        _notificationService.ShowSuccess("Saved", $"{siteName} was added to the local vault.");
+        _notificationService.ShowSuccess(
+            _localizationService.GetString("NotifSuccess"), 
+            string.Format(_localizationService.GetString("GenStatusSaved"), siteName)
+        );
     }
 
     private bool CanGeneratePassword() => HasCharacterSelection;
@@ -151,7 +172,7 @@ public partial class GeneratorViewModel : ObservableObject
             EntropyBits = 0;
             Strength = PasswordStrength.Weak;
             StrengthPercent = 0;
-            StatusMessage = "Select at least one character group to generate a password.";
+            StatusMessage = _localizationService.GetString("GenOptionsSubtitle");
             return;
         }
 
@@ -165,7 +186,7 @@ public partial class GeneratorViewModel : ObservableObject
             PasswordStrength.Medium => 66,
             _ => 100,
         };
-        StatusMessage = "Cryptographically secure password ready.";
+        StatusMessage = _localizationService.GetString("GenStatusReady");
     }
 
     private PasswordOptions BuildOptions()

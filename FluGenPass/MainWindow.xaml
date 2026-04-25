@@ -13,24 +13,26 @@
                  ExtendsContentIntoTitleBar="True"
                  WindowStartupLocation="CenterScreen"
                  WindowBackdropType="Mica"
+                 Background="{DynamicResource ApplicationBackgroundBrush}"
                  Icon="/ico.png"
                  mc:Ignorable="d">
-    <Grid>
+    <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <ui:TitleBar Grid.Row="0"
+                     Background="{DynamicResource ApplicationBackgroundBrush}"
                      Title="FluGenPass">
             <ui:TitleBar.TrailingContent>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0,0,12,0"
                                VerticalAlignment="Center"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               Text="Vault unlocked"
+                               Text="{DynamicResource NavVaultUnlocked}"
                                Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                    <ui:Button Content="Lock Vault"
+                    <ui:Button Content="{DynamicResource NavLockVault}"
                                Command="{Binding LockVaultCommand}"
                                Icon="{ui:SymbolIcon Symbol=LockClosed24}"
                                Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -38,35 +40,37 @@
             </ui:TitleBar.TrailingContent>
         </ui:TitleBar>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1"
+              Background="{DynamicResource ApplicationBackgroundBrush}">
             <ui:NavigationView x:Name="RootNavigationView"
                                CompactPaneLength="48"
                                IsBackButtonVisible="Collapsed"
                                IsPaneToggleVisible="True"
                                OpenPaneLength="188"
                                PaneDisplayMode="Left"
-                               PaneTitle="Menu"
+                               Background="{DynamicResource ApplicationBackgroundBrush}"
+                               PaneTitle="{DynamicResource NavMenu}"
                                Navigating="OnNavigationViewNavigating">
                 <ui:NavigationView.MenuItems>
-                    <ui:NavigationViewItem Content="Back"
+                    <ui:NavigationViewItem Content="{DynamicResource NavBack}"
                                            Icon="{ui:SymbolIcon Symbol=ArrowLeft24}"
                                            Click="OnBackClicked" />
-                    <ui:NavigationViewItem Content="Generator"
+                    <ui:NavigationViewItem Content="{DynamicResource NavGenerator}"
                                            TargetPageType="{x:Type pages:GeneratorPage}"
                                            Icon="{ui:SymbolIcon Symbol=Home24}" />
-                    <ui:NavigationViewItem Content="Vault"
+                    <ui:NavigationViewItem Content="{DynamicResource NavVault}"
                                            TargetPageType="{x:Type pages:VaultPage}"
                                            Icon="{ui:SymbolIcon Symbol=LockClosed24}" />
                 </ui:NavigationView.MenuItems>
                 <ui:NavigationView.FooterMenuItems>
-                    <ui:NavigationViewItem Content="Settings"
+                    <ui:NavigationViewItem Content="{DynamicResource NavSettings}"
                                            TargetPageType="{x:Type pages:SettingsPage}"
                                            Icon="{ui:SymbolIcon Symbol=Settings24}" />
                 </ui:NavigationView.FooterMenuItems>
             </ui:NavigationView>
 
             <ui:ContentDialogHost x:Name="RootContentDialogHost"
-                                  IsDisableSiblingsEnabled="True" />
+                                  IsDisableSiblingsEnabled="False" />
 
             <ui:SnackbarPresenter x:Name="RootSnackbarPresenter"
                                   Margin="24"

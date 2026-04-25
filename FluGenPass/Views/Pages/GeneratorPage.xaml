@@ -20,10 +20,10 @@
                 <StackPanel Margin="28">
                     <TextBlock FontSize="30"
                                FontWeight="SemiBold"
-                               Text="Password Generator" />
+                               Text="{DynamicResource GenTitle}" />
                     <TextBlock Margin="0,8,0,20"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               Text="Create a fresh credential with cryptographic randomness, then copy it or send it straight into the local vault."
+                               Text="{DynamicResource GenSubtitle}"
                                TextWrapping="Wrap" />
 
                     <TextBox MinHeight="92"
@@ -41,7 +41,7 @@
 
                         <StackPanel>
                             <TextBlock FontWeight="SemiBold"
-                                       Text="{Binding StrengthLabel, StringFormat=Strength: {0}}" />
+                                       Text="{Binding StrengthLabel}" />
                             <ProgressBar Margin="0,10,0,0"
                                          Height="10"
                                          Maximum="100"
@@ -54,10 +54,10 @@
                             <TextBlock FontSize="22"
                                        FontWeight="SemiBold"
                                        HorizontalAlignment="Right"
-                                       Text="{Binding EntropyBits, StringFormat={}{0} bits}" />
+                                       Text="{Binding EntropyLabel}" />
                             <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                        HorizontalAlignment="Right"
-                                       Text="Estimated entropy" />
+                                       Text="{DynamicResource GenEntropy}" />
                         </StackPanel>
                     </Grid>
 
@@ -70,15 +70,15 @@
                         <ui:Button Margin="0,0,12,12"
                                    Appearance="Primary"
                                    Command="{Binding GeneratePasswordCommand}"
-                                   Content="Generate"
+                                   Content="{DynamicResource GenBtnGenerate}"
                                    Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
                         <ui:Button Margin="0,0,12,12"
                                    Command="{Binding CopyToClipboardCommand}"
-                                   Content="Copy"
+                                   Content="{DynamicResource GenBtnCopy}"
                                    Icon="{ui:SymbolIcon Symbol=Copy24}" />
                         <ui:Button Margin="0,0,12,12"
                                    Command="{Binding SaveToVaultCommand}"
-                                   Content="Save to Vault"
+                                   Content="{DynamicResource GenBtnSave}"
                                    Icon="{ui:SymbolIcon Symbol=Save24}" />
                     </WrapPanel>
                 </StackPanel>
@@ -89,10 +89,10 @@
                 <StackPanel Margin="28">
                     <TextBlock FontSize="26"
                                FontWeight="SemiBold"
-                               Text="Options" />
+                               Text="{DynamicResource GenOptionsTitle}" />
                     <TextBlock Margin="0,8,0,22"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               Text="The password refreshes immediately as you tune length and character sets."
+                               Text="{DynamicResource GenOptionsSubtitle}"
                                TextWrapping="Wrap" />
 
                     <Grid Margin="0,0,0,16">
@@ -101,7 +101,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock FontWeight="SemiBold"
-                                   Text="Length" />
+                                   Text="{DynamicResource GenOptionLength}" />
                         <TextBlock Grid.Column="1"
                                    FontWeight="SemiBold"
                                    Text="{Binding Length}" />
@@ -114,16 +114,16 @@
                             Value="{Binding Length}" />
 
                     <CheckBox Margin="0,24,0,0"
-                              Content="Uppercase letters"
+                              Content="{DynamicResource GenOptionUpper}"
                               IsChecked="{Binding IncludeUppercase}" />
                     <CheckBox Margin="0,12,0,0"
-                              Content="Lowercase letters"
+                              Content="{DynamicResource GenOptionLower}"
                               IsChecked="{Binding IncludeLowercase}" />
                     <CheckBox Margin="0,12,0,0"
-                              Content="Numbers"
+                              Content="{DynamicResource GenOptionNumbers}"
                               IsChecked="{Binding IncludeNumbers}" />
                     <CheckBox Margin="0,12,0,0"
-                              Content="Special symbols"
+                              Content="{DynamicResource GenOptionSymbols}"
                               IsChecked="{Binding IncludeSymbols}" />
                 </StackPanel>
             </ui:Card>
@@ -139,30 +139,30 @@
 
                     <StackPanel Margin="0,0,16,0">
                         <TextBlock FontWeight="SemiBold"
-                                   Text="Weak" />
+                                   Text="{DynamicResource GenWeakTitle}" />
                         <TextBlock Margin="0,8,0,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Below 45 bits. Fine for throwaway use, not for accounts you care about."
+                                   Text="{DynamicResource GenWeakDesc}"
                                    TextWrapping="Wrap" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1"
                                 Margin="16,0">
                         <TextBlock FontWeight="SemiBold"
-                                   Text="Medium" />
+                                   Text="{DynamicResource GenMediumTitle}" />
                         <TextBlock Margin="0,8,0,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="Between 45 and 69 bits. Better, but still worth increasing for long-term credentials."
+                                   Text="{DynamicResource GenMediumDesc}"
                                    TextWrapping="Wrap" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="2"
                                 Margin="16,0,0,0">
                         <TextBlock FontWeight="SemiBold"
-                                   Text="Strong" />
+                                   Text="{DynamicResource GenStrongTitle}" />
                         <TextBlock Margin="0,8,0,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                   Text="70 bits and above. This is the sweet spot for the passwords you keep."
+                                   Text="{DynamicResource GenStrongDesc}"
                                    TextWrapping="Wrap" />
                     </StackPanel>
                 </Grid>

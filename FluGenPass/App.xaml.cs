@@ -36,6 +36,7 @@ public partial class App : Application
         _services = ConfigureServices();
 
         MainWindow = GetRequiredService<MainWindow>();
+        _ = GetRequiredService<ILocalizationService>().InitializeAsync();
         MainWindow.Show();
     }
 
@@ -183,6 +184,7 @@ public partial class App : Application
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IThemeService, ThemeService>();
+        services.AddSingleton<ILocalizationService, LocalizationService>();
         services.AddSingleton<IVaultAccessCoordinator, VaultAccessCoordinator>();
         services.AddSingleton<IInactivityAutoLockService>(serviceProvider =>
         {

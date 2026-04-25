@@ -1,0 +1,126 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <sys:String x:Key="AppTitle">FluGenPass</sys:String>
+    
+    <!-- Navigation -->
+    <sys:String x:Key="NavMenu">Menu</sys:String>
+    <sys:String x:Key="NavBack">Back</sys:String>
+    <sys:String x:Key="NavGenerator">Generator</sys:String>
+    <sys:String x:Key="NavVault">Vault</sys:String>
+    <sys:String x:Key="NavSettings">Settings</sys:String>
+    <sys:String x:Key="NavVaultUnlocked">Vault unlocked</sys:String>
+    <sys:String x:Key="NavLockVault">Lock Vault</sys:String>
+
+    <!-- Generator Page -->
+    <sys:String x:Key="GenTitle">Password Generator</sys:String>
+    <sys:String x:Key="GenSubtitle">Create a fresh credential with cryptographic randomness, then copy it or send it straight into the local vault.</sys:String>
+    <sys:String x:Key="GenStrength">Strength: {0}</sys:String>
+    <sys:String x:Key="GenEntropy">Estimated entropy</sys:String>
+    <sys:String x:Key="GenBits">{0} bits</sys:String>
+    <sys:String x:Key="GenBtnGenerate">Generate</sys:String>
+    <sys:String x:Key="GenBtnCopy">Copy</sys:String>
+    <sys:String x:Key="GenBtnSave">Save to Vault</sys:String>
+    <sys:String x:Key="GenOptionsTitle">Options</sys:String>
+    <sys:String x:Key="GenOptionsSubtitle">The password refreshes immediately as you tune length and character sets.</sys:String>
+    <sys:String x:Key="GenOptionLength">Length</sys:String>
+    <sys:String x:Key="GenOptionUpper">Uppercase letters</sys:String>
+    <sys:String x:Key="GenOptionLower">Lowercase letters</sys:String>
+    <sys:String x:Key="GenOptionNumbers">Numbers</sys:String>
+    <sys:String x:Key="GenOptionSymbols">Special symbols</sys:String>
+    <sys:String x:Key="GenWeakTitle">Weak</sys:String>
+    <sys:String x:Key="GenWeakDesc">Below 45 bits. Fine for throwaway use, not for accounts you care about.</sys:String>
+    <sys:String x:Key="GenMediumTitle">Medium</sys:String>
+    <sys:String x:Key="GenMediumDesc">Between 45 and 69 bits. Better, but still worth increasing for long-term credentials.</sys:String>
+    <sys:String x:Key="GenStrongTitle">Strong</sys:String>
+    <sys:String x:Key="GenStrongDesc">70 bits and above. This is the sweet spot for the passwords you keep.</sys:String>
+    <sys:String x:Key="GenStatusReady">Generator is ready.</sys:String>
+    <sys:String x:Key="GenStatusCopied">Password copied to clipboard.</sys:String>
+    <sys:String x:Key="GenStatusSaved">Password saved to vault as '{0}'.</sys:String>
+
+    <!-- Vault Page -->
+    <sys:String x:Key="VaultTitle">Vault</sys:String>
+    <sys:String x:Key="VaultSubtitle">Reveal, copy, or delete any entry below.</sys:String>
+    <sys:String x:Key="VaultColSite">Site / Service</sys:String>
+    <sys:String x:Key="VaultColPassword">Password</sys:String>
+    <sys:String x:Key="VaultColTags">Tags</sys:String>
+    <sys:String x:Key="VaultColCreated">Created</sys:String>
+    <sys:String x:Key="VaultColActions">Actions</sys:String>
+    <sys:String x:Key="VaultFilterLabel">Filter by tag</sys:String>
+    <sys:String x:Key="VaultSearchPlaceholder">Search site or tag...</sys:String>
+    <sys:String x:Key="VaultFilterAllTags">All tags</sys:String>
+    <sys:String x:Key="VaultFilterMatches">Showing {0} of {1} entries for tag '{2}'.</sys:String>
+    <sys:String x:Key="VaultFilterNoMatches">No entries found for tag '{0}'.</sys:String>
+    <sys:String x:Key="VaultSearchMatches">Found {0} matches for '{1}'.</sys:String>
+    <sys:String x:Key="VaultSearchNoMatches">No results found for '{0}'.</sys:String>
+    <sys:String x:Key="VaultBtnRefresh">Refresh</sys:String>
+    <sys:String x:Key="VaultBtnImport">Import</sys:String>
+    <sys:String x:Key="VaultBtnExportBackup">Export Backup</sys:String>
+    <sys:String x:Key="VaultBtnExportCsv">Export CSV</sys:String>
+    <sys:String x:Key="VaultBtnVerify">Verify File</sys:String>
+    <sys:String x:Key="VaultBtnLock">Lock</sys:String>
+    <sys:String x:Key="VaultBtnTags">Tags</sys:String>
+    <sys:String x:Key="VaultBtnReveal">Reveal</sys:String>
+    <sys:String x:Key="VaultBtnHide">Hide</sys:String>
+    <sys:String x:Key="VaultTipCopy">Copy password</sys:String>
+    <sys:String x:Key="VaultTipDelete">Delete entry</sys:String>
+    
+    <sys:String x:Key="VaultHeadLocked">Vault locked</sys:String>
+    <sys:String x:Key="VaultHeadReady">Vault ready</sys:String>
+    <sys:String x:Key="VaultHeadCountOne">{0} secret stored</sys:String>
+    <sys:String x:Key="VaultHeadCountMany">{0} secrets stored</sys:String>
+    <sys:String x:Key="VaultMsgLocked">Unlock the vault to browse saved passwords.</sys:String>
+    <sys:String x:Key="VaultMsgReady">Passwords saved from the generator appear here.</sys:String>
+    <sys:String x:Key="VaultTagsUpdated">Tags updated for '{0}'.</sys:String>
+
+    <!-- Settings Page -->
+    <sys:String x:Key="SettingsTitle">Settings</sys:String>
+    <sys:String x:Key="SettingsSubtitle">Tune theme behavior and review where FluGenPass keeps its local settings and encrypted vault.</sys:String>
+    <sys:String x:Key="SettingsThemeTitle">Theme</sys:String>
+    <sys:String x:Key="SettingsAutoLockTitle">Auto-Lock</sys:String>
+    <sys:String x:Key="SettingsAutoLockSubtitle">Automatically lock the vault after a period of inactivity. Keyboard and mouse activity resets the timer.</sys:String>
+    <sys:String x:Key="SettingsAutoLockSwitch">Auto-lock after inactivity</sys:String>
+    <sys:String x:Key="SettingsAutoLockAfter">Lock after</sys:String>
+    <sys:String x:Key="SettingsAutoLockMinutes">Minutes of inactivity</sys:String>
+    <sys:String x:Key="SettingsVaultAccessTitle">Vault Access</sys:String>
+    <sys:String x:Key="SettingsVaultBtnReset">Reset Vault Protection</sys:String>
+    <sys:String x:Key="SettingsVaultBtnCreate">Create Master Password</sys:String>
+    <sys:String x:Key="SettingsVaultBtnChange">Change Master Password</sys:String>
+    <sys:String x:Key="SettingsVaultDescUnlocked">The vault is unlocked for this session. You can update the master password or fully reset vault protection.</sys:String>
+    <sys:String x:Key="SettingsVaultDescLocked">A master password is configured. Unlock the vault first if you want to change the password without clearing saved entries.</sys:String>
+    <sys:String x:Key="SettingsVaultDescNone">No master password is configured yet. Create one to protect access to the vault page.</sys:String>
+    <sys:String x:Key="SettingsStorageTitle">Storage</sys:String>
+    <sys:String x:Key="SettingsStorageSubtitle">Everything stays local in your Windows profile. Vault exports and imports stay local too, with SHA-256 integrity checks and ECDSA digital signatures for transfer files.</sys:String>
+    <sys:String x:Key="SettingsPathAppData">App data folder</sys:String>
+    <sys:String x:Key="SettingsPathSettings">Settings file</sys:String>
+    <sys:String x:Key="SettingsPathVault">Encrypted vault file</sys:String>
+    <sys:String x:Key="SettingsSecurityTitle">Security</sys:String>
+    <sys:String x:Key="SettingsSecuritySubtitle">The vault unlocks only for the current app session. Locking clears the in-memory key and keeps the encrypted file on disk.</sys:String>
+    <sys:String x:Key="SettingsLanguageTitle">Language</sys:String>
+    <sys:String x:Key="SettingsLanguageSubtitle">Choose your preferred display language for the application interface.</sys:String>
+
+    <!-- Common / Dialogs -->
+    <sys:String x:Key="CommonBtnLock">Lock Vault</sys:String>
+    <sys:String x:Key="CommonBtnCancel">Cancel</sys:String>
+    <sys:String x:Key="CommonBtnOk">OK</sys:String>
+    <sys:String x:Key="CommonBtnClose">Close</sys:String>
+    
+    <sys:String x:Key="DlgSiteTitle">Site Name</sys:String>
+    <sys:String x:Key="DlgSiteMsg">Enter a label for this password (e.g., GitHub, Gmail):</sys:String>
+    <sys:String x:Key="DlgResetTitle">Reset vault protection</sys:String>
+    <sys:String x:Key="DlgResetMsg">This will remove the master password, delete all saved vault entries, and lock the vault. This cannot be undone.</sys:String>
+    <sys:String x:Key="DlgResetBtn">Reset vault</sys:String>
+
+    <!-- Notifications -->
+    <sys:String x:Key="NotifLockedTitle">Vault locked</sys:String>
+    <sys:String x:Key="NotifLockedMsg">The vault is now hidden until you unlock it again.</sys:String>
+    <sys:String x:Key="NotifCopiedTitle">Copied</sys:String>
+    <sys:String x:Key="NotifCopiedMsg">{0} copied to the clipboard.</sys:String>
+    <sys:String x:Key="NotifDeletedTitle">Deleted</sys:String>
+    <sys:String x:Key="NotifDeletedMsg">{0} was removed from the vault.</sys:String>
+    <sys:String x:Key="NotifResetTitle">Vault reset</sys:String>
+    <sys:String x:Key="NotifResetMsg">Master password removed and local vault contents cleared.</sys:String>
+    <sys:String x:Key="NotifSuccess">Success</sys:String>
+    <sys:String x:Key="NotifError">Error</sys:String>
+</ResourceDictionary>

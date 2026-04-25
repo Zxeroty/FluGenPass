@@ -565,6 +565,7 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
             Id = entry.Id,
             SiteName = entry.SiteName,
             Password = entry.Password,
+            Tags = [.. entry.Tags],
             CreatedUtc = entry.CreatedUtc,
         };
     }

@@ -36,6 +36,18 @@ public sealed class DialogService : IDialogService
         );
     }
 
+    public Task<string?> PromptForTagsAsync(string initialValue = "", CancellationToken cancellationToken = default)
+    {
+        return PromptForTextAsync(
+            title: "Edit tags",
+            description: "Add one or more tags separated by commas. Leave the field empty to clear tags for this entry.",
+            primaryButtonText: "Save",
+            validationMessageFactory: static _ => null,
+            cancellationToken: cancellationToken,
+            initialValue: initialValue
+        );
+    }
+
     public async Task<string?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default)
     {
         if (!_isInitialized)
@@ -239,7 +251,8 @@ public sealed class DialogService : IDialogService
         string description,
         string primaryButtonText,
         Func<string, string?> validationMessageFactory,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        string initialValue = ""
     )
     {
         if (!_isInitialized)
@@ -251,7 +264,7 @@ public sealed class DialogService : IDialogService
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            TextBox textBox = new() { MinWidth = 320, Margin = new Thickness(0, 8, 0, 0) };
+            TextBox textBox = new() { MinWidth = 320, Margin = new Thickness(0, 8, 0, 0), Text = initialValue };
 
             StackPanel panel = new() { Margin = new Thickness(0, 8, 0, 0) };
             panel.Children.Add(new TextBlock { Text = description, TextWrapping = TextWrapping.Wrap });
