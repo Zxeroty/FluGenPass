@@ -15,9 +15,11 @@ public partial class SettingsViewModel : ObservableObject
     private readonly IVaultService _vaultService;
     private readonly ISettingsService _settingsService;
     private readonly IMasterPasswordService _masterPasswordService;
+    private readonly IKeyFileService _keyFileService;
     private readonly IInactivityAutoLockService _autoLockService;
     private readonly ILocalizationService _localizationService;
     private bool _isInitializing;
+    private bool _isUpdatingKeyFileState;
 
     [ObservableProperty]
     private AppThemeOption _selectedTheme = AppThemeOption.System;
@@ -35,6 +37,12 @@ public partial class SettingsViewModel : ObservableObject
     private bool _autoLockEnabled = true;
 
     [ObservableProperty]
+    private bool _isKeyFileEnabled;
+
+    [ObservableProperty]
+    private string _keyFileName = string.Empty;
+
+    [ObservableProperty]
     private int _autoLockTimeoutMinutes = 5;
 
     [ObservableProperty]
@@ -48,6 +56,7 @@ public partial class SettingsViewModel : ObservableObject
         IVaultService vaultService,
         ISettingsService settingsService,
         IMasterPasswordService masterPasswordService,
+        IKeyFileService keyFileService,
         ISessionStateService sessionStateService,
         IInactivityAutoLockService autoLockService,
         ILocalizationService localizationService
@@ -60,6 +69,7 @@ public partial class SettingsViewModel : ObservableObject
         _vaultService = vaultService;
         _settingsService = settingsService;
         _masterPasswordService = masterPasswordService;
+        _keyFileService = keyFileService;
         _autoLockService = autoLockService;
         _localizationService = localizationService;
         _isInitializing = true;
@@ -93,6 +103,10 @@ public partial class SettingsViewModel : ObservableObject
             : _localizationService.GetString("SettingsVaultDescLocked")
         : _localizationService.GetString("SettingsVaultDescNone");
 
+    public string KeyFileDescription => IsKeyFileEnabled
+        ? string.Format(_localizationService.GetString("SettingsKeyFileDescEnabled"), KeyFileName)
+        : _localizationService.GetString("SettingsKeyFileDescDisabled");
+
     partial void OnSelectedThemeChanged(AppThemeOption value)
     {
         if (_isInitializing)
@@ -115,6 +129,7 @@ public partial class SettingsViewModel : ObservableObject
         // Refresh localized properties
         OnPropertyChanged(nameof(PrimaryVaultPasswordActionLabel));
         OnPropertyChanged(nameof(VaultAccessDescription));
+        OnPropertyChanged(nameof(KeyFileDescription));
     }
 
     partial void OnHasMasterPasswordChanged(bool value)
@@ -142,6 +157,23 @@ public partial class SettingsViewModel : ObservableObject
         {
             _ = SaveAutoLockSettingsAsync();
         }
+    }
+
+    partial void OnIsKeyFileEnabledChanged(bool value)
+    {
+        OnPropertyChanged(nameof(KeyFileDescription));
+
+        if (_isInitializing || _isUpdatingKeyFileState)
+        {
+            return;
+        }
+
+        _ = ToggleKeyFileAsync(value);
+    }
+
+    partial void OnKeyFileNameChanged(string value)
+    {
+        OnPropertyChanged(nameof(KeyFileDescription));
     }
 
     private async Task SaveAutoLockSettingsAsync()
@@ -173,6 +205,9 @@ public partial class SettingsViewModel : ObservableObject
         _isInitializing = true;
         AutoLockEnabled = settings.AutoLockEnabled;
         AutoLockTimeoutMinutes = settings.AutoLockTimeoutMinutes > 0 ? settings.AutoLockTimeoutMinutes : 5;
+        KeyFileMetadata? keyFile = await _keyFileService.GetMetadataAsync();
+        IsKeyFileEnabled = keyFile is not null;
+        KeyFileName = keyFile?.FileName ?? string.Empty;
         _isInitializing = false;
     }
 
@@ -202,10 +237,28 @@ public partial class SettingsViewModel : ObservableObject
 
             if (HasMasterPassword)
             {
-                await _masterPasswordService.ChangeMasterPasswordAsync(newPassword);
+                byte[]? keyFileSecret = null;
+                try
+                {
+                    if (IsKeyFileEnabled)
+                    {
+                        keyFileSecret = await PromptCurrentKeyFileSecretAsync();
+                        if (keyFileSecret is null)
+                        {
+                            return;
+                        }
+                    }
+
+                    await _masterPasswordService.ChangeMasterPasswordAsync(newPassword, keyFileSecret);
+                }
+                finally
+                {
+                    ZeroIfPresent(keyFileSecret);
+                }
+
                 _notificationService.ShowSuccess(
                     "Master password updated",
-                    "Vault entries were re-encrypted with the new password."
+                    "Vault access now uses the new master password."
                 );
             }
             else
@@ -273,5 +326,270 @@ public partial class SettingsViewModel : ObservableObject
     private void LockVault()
     {
         _masterPasswordService.Lock();
+    }
+
+    [RelayCommand]
+    private async Task RegenerateKeyFileAsync()
+    {
+        if (IsBusy || !IsKeyFileEnabled)
+        {
+            return;
+        }
+
+        await CreateOrReplaceKeyFileAsync(revertToggleOnCancel: false, replacingExistingKeyFile: true);
+    }
+
+    private async Task ToggleKeyFileAsync(bool enable)
+    {
+        if (enable)
+        {
+            await CreateOrReplaceKeyFileAsync(revertToggleOnCancel: true, replacingExistingKeyFile: false);
+            return;
+        }
+
+        bool confirmed = await _dialogService.ConfirmAsync(
+            "Disable key file requirement",
+            "The vault will stop asking for the key file after the master password. The file itself will not be deleted from disk.",
+            "Disable"
+        );
+
+        if (!confirmed)
+        {
+            SetKeyFileEnabledWithoutPrompt(true);
+            return;
+        }
+
+        try
+        {
+            KeyFileAuthResult? auth = await AuthenticateCurrentKeyFileRequirementAsync();
+            if (auth is null)
+            {
+                SetKeyFileEnabledWithoutPrompt(true);
+                return;
+            }
+
+            try
+            {
+                await _masterPasswordService.DisableKeyFileAsync(auth.Password);
+                KeyFileName = string.Empty;
+                _notificationService.ShowInfo("Key file disabled", "The vault will only require the master password.");
+            }
+            finally
+            {
+                auth.Clear();
+            }
+        }
+        catch (Exception exception)
+        {
+            SetKeyFileEnabledWithoutPrompt(true);
+            _notificationService.ShowError("Key file update failed", exception.Message);
+        }
+    }
+
+    private async Task<KeyFileAuthResult?> AuthenticateCurrentKeyFileRequirementAsync()
+    {
+        bool wasUnlocked = _masterPasswordService.IsUnlocked;
+
+        string? password = await PromptVerifiedPasswordAsync();
+        if (password is null)
+        {
+            return null;
+        }
+
+        string? keyFilePath = _dialogService.PromptForOpenKeyFilePath();
+        if (string.IsNullOrWhiteSpace(keyFilePath))
+        {
+            if (!wasUnlocked)
+            {
+                _masterPasswordService.Lock();
+            }
+
+            return null;
+        }
+
+        byte[]? keyFileSecret = await _keyFileService.GetAndVerifySecretAsync(keyFilePath);
+        if (keyFileSecret is null)
+        {
+            if (!wasUnlocked)
+            {
+                _masterPasswordService.Lock();
+            }
+
+            _notificationService.ShowError("Access denied", "That key file did not match this vault.");
+            return null;
+        }
+
+        bool unlocked = await _masterPasswordService.TryUnlockAsync(password, keyFileSecret);
+        if (!unlocked)
+        {
+            ZeroIfPresent(keyFileSecret);
+            if (!wasUnlocked)
+            {
+                _masterPasswordService.Lock();
+            }
+
+            _notificationService.ShowError("Access denied", "That key file did not match this vault.");
+            return null;
+        }
+
+        return new KeyFileAuthResult(password, keyFileSecret);
+    }
+
+    private async Task CreateOrReplaceKeyFileAsync(bool revertToggleOnCancel, bool replacingExistingKeyFile)
+    {
+        if (IsBusy)
+        {
+            return;
+        }
+
+        IsBusy = true;
+
+        try
+        {
+            string? password;
+            KeyFileAuthResult? existingKeyFileAuth = null;
+
+            if (replacingExistingKeyFile)
+            {
+                existingKeyFileAuth = await AuthenticateCurrentKeyFileRequirementAsync();
+                if (existingKeyFileAuth is null)
+                {
+                    if (revertToggleOnCancel)
+                    {
+                        SetKeyFileEnabledWithoutPrompt(false);
+                    }
+                    return;
+                }
+
+                password = existingKeyFileAuth.Password;
+            }
+            else
+            {
+                password = await PromptVerifiedPasswordAsync();
+                if (password is null)
+                {
+                    if (revertToggleOnCancel)
+                    {
+                        SetKeyFileEnabledWithoutPrompt(false);
+                    }
+                    return;
+                }
+
+                bool unlocked = await _masterPasswordService.TryUnlockAsync(password);
+                if (!unlocked)
+                {
+                    if (revertToggleOnCancel)
+                    {
+                        SetKeyFileEnabledWithoutPrompt(false);
+                    }
+                    _notificationService.ShowError("Access denied", "That master password did not unlock the vault.");
+                    return;
+                }
+            }
+
+            try
+            {
+                string? filePath = _dialogService.PromptForSaveKeyFilePath();
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    if (revertToggleOnCancel)
+                    {
+                        SetKeyFileEnabledWithoutPrompt(false);
+                    }
+                    return;
+                }
+
+                KeyFileCreationResult result = await _keyFileService.CreateKeyFileAsync(filePath);
+                try
+                {
+                    await _masterPasswordService.EnableKeyFileAsync(password, result.Metadata, result.Secret);
+                    KeyFileName = result.Metadata.FileName;
+                    SetKeyFileEnabledWithoutPrompt(true);
+                }
+                finally
+                {
+                    ZeroIfPresent(result.Secret);
+                }
+            }
+            finally
+            {
+                existingKeyFileAuth?.Clear();
+            }
+
+            _notificationService.ShowSuccess(
+                "Key file ready",
+                "The generated key file is now required after the master password."
+            );
+        }
+        catch (Exception exception)
+        {
+            if (revertToggleOnCancel)
+            {
+                SetKeyFileEnabledWithoutPrompt(false);
+            }
+
+            _notificationService.ShowError("Key file update failed", exception.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void SetKeyFileEnabledWithoutPrompt(bool value)
+    {
+        _isUpdatingKeyFileState = true;
+        IsKeyFileEnabled = value;
+        _isUpdatingKeyFileState = false;
+    }
+
+    private async Task<string?> PromptVerifiedPasswordAsync()
+    {
+        string? password = await _dialogService.PromptForUnlockPasswordAsync();
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            return null;
+        }
+
+        if (await _masterPasswordService.VerifyPasswordAsync(password))
+        {
+            return password;
+        }
+
+        _notificationService.ShowError("Access denied", "That master password did not unlock the vault.");
+        return null;
+    }
+
+    private async Task<byte[]?> PromptCurrentKeyFileSecretAsync()
+    {
+        string? keyFilePath = _dialogService.PromptForOpenKeyFilePath();
+        if (string.IsNullOrWhiteSpace(keyFilePath))
+        {
+            return null;
+        }
+
+        byte[]? keyFileSecret = await _keyFileService.GetAndVerifySecretAsync(keyFilePath);
+        if (keyFileSecret is null)
+        {
+            _notificationService.ShowError("Access denied", "That key file did not match this vault.");
+        }
+
+        return keyFileSecret;
+    }
+
+    private static void ZeroIfPresent(byte[]? value)
+    {
+        if (value is not null)
+        {
+            System.Security.Cryptography.CryptographicOperations.ZeroMemory(value);
+        }
+    }
+
+    private sealed record KeyFileAuthResult(string Password, byte[] KeyFileSecret)
+    {
+        public void Clear()
+        {
+            ZeroIfPresent(KeyFileSecret);
+        }
     }
 }

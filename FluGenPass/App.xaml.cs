@@ -174,6 +174,7 @@ public partial class App : Application
         services.AddSingleton<ISettingsService>(_ => new SettingsService(appDirectory));
         services.AddSingleton<ISessionStateService, SessionStateService>();
         services.AddSingleton<IMasterPasswordService, MasterPasswordService>();
+        services.AddSingleton<IKeyFileService, KeyFileService>();
         services.AddSingleton<IVaultService>(serviceProvider =>
             new VaultService(appDirectory, serviceProvider.GetRequiredService<ISessionStateService>())
         );

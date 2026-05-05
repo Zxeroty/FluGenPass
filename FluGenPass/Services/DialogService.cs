@@ -1,4 +1,5 @@
 using System.Windows;
+using Microsoft.Win32;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
@@ -134,6 +135,33 @@ public sealed class DialogService : IDialogService
             primaryButtonText: "Unlock",
             cancellationToken
         );
+    }
+
+    public string? PromptForSaveKeyFilePath()
+    {
+        SaveFileDialog dialog = new()
+        {
+            Title = "Create key file",
+            Filter = "FluGenPass key file (*.fgpkey)|*.fgpkey|All files (*.*)|*.*",
+            AddExtension = true,
+            DefaultExt = ".fgpkey",
+            FileName = $"flugenpass-key-{DateTimeOffset.UtcNow:yyyyMMdd-HHmmss}.fgpkey",
+        };
+
+        return dialog.ShowDialog(_ownerWindow) == true ? dialog.FileName : null;
+    }
+
+    public string? PromptForOpenKeyFilePath()
+    {
+        OpenFileDialog dialog = new()
+        {
+            Title = "Select key file",
+            Filter = "FluGenPass key file (*.fgpkey)|*.fgpkey|All files (*.*)|*.*",
+            CheckFileExists = true,
+            Multiselect = false,
+        };
+
+        return dialog.ShowDialog(_ownerWindow) == true ? dialog.FileName : null;
     }
 
     public async Task<bool> ConfirmAsync(

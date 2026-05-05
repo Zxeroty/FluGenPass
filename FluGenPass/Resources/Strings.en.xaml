@@ -97,6 +97,11 @@
     <sys:String x:Key="SettingsPathVault">Encrypted vault file</sys:String>
     <sys:String x:Key="SettingsSecurityTitle">Security</sys:String>
     <sys:String x:Key="SettingsSecuritySubtitle">The vault unlocks only for the current app session. Locking clears the in-memory key and keeps the encrypted file on disk.</sys:String>
+    <sys:String x:Key="SettingsKeyFileTitle">Key File</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescDisabled">Generate a local key file if you want the vault to require a second unlock step after the master password.</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescEnabled">Two-step unlock is enabled. After the master password, this vault also requires the key file: {0}</sys:String>
+    <sys:String x:Key="SettingsKeyFileSwitch">Require key file after master password</sys:String>
+    <sys:String x:Key="SettingsKeyFileBtnRegenerate">Replace Key File</sys:String>
     <sys:String x:Key="SettingsLanguageTitle">Language</sys:String>
     <sys:String x:Key="SettingsLanguageSubtitle">Choose your preferred display language for the application interface.</sys:String>
 

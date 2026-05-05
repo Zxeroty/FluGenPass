@@ -96,6 +96,11 @@
     <sys:String x:Key="SettingsPathVault">Файл зашифрованного хранилища</sys:String>
     <sys:String x:Key="SettingsSecurityTitle">Безопасность</sys:String>
     <sys:String x:Key="SettingsSecuritySubtitle">Хранилище разблокируется только на время текущей сессии. Блокировка стирает ключ из памяти и оставляет файл зашифрованным на диске.</sys:String>
+    <sys:String x:Key="SettingsKeyFileTitle">Key File</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescDisabled">Сгенерируйте локальный ключевой файл, если хотите, чтобы после мастер-пароля хранилище требовало второй этап входа.</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescEnabled">Двухэтапный вход включен. После мастер-пароля хранилище также требует Key File: {0}</sys:String>
+    <sys:String x:Key="SettingsKeyFileSwitch">Требовать Key File после мастер-пароля</sys:String>
+    <sys:String x:Key="SettingsKeyFileBtnRegenerate">Заменить Key File</sys:String>
     <sys:String x:Key="SettingsLanguageTitle">Язык</sys:String>
     <sys:String x:Key="SettingsLanguageSubtitle">Выберите предпочтительный язык интерфейса приложения.</sys:String>
 

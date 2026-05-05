@@ -41,15 +41,41 @@ public interface IMasterPasswordService
 
     Task<bool> HasMasterPasswordAsync(CancellationToken cancellationToken = default);
 
-    Task SetMasterPasswordAsync(string password, CancellationToken cancellationToken = default);
+    Task SetMasterPasswordAsync(string password, byte[]? keyFileSecret = null, CancellationToken cancellationToken = default);
 
-    Task ChangeMasterPasswordAsync(string newPassword, CancellationToken cancellationToken = default);
+    Task ChangeMasterPasswordAsync(string newPassword, byte[]? newKeyFileSecret = null, CancellationToken cancellationToken = default);
 
     Task ResetAsync(CancellationToken cancellationToken = default);
 
-    Task<bool> TryUnlockAsync(string password, CancellationToken cancellationToken = default);
+    Task<bool> TryUnlockAsync(string password, byte[]? keyFileSecret = null, CancellationToken cancellationToken = default);
 
     void Lock();
+
+    Task<bool> VerifyPasswordAsync(string password, CancellationToken cancellationToken = default);
+
+    Task EnableKeyFileAsync(
+        string password,
+        KeyFileMetadata keyFileMetadata,
+        byte[] keyFileSecret,
+        CancellationToken cancellationToken = default
+    );
+
+    Task DisableKeyFileAsync(string password, CancellationToken cancellationToken = default);
+}
+
+public interface IKeyFileService
+{
+    Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default);
+
+    Task<KeyFileMetadata?> GetMetadataAsync(CancellationToken cancellationToken = default);
+
+    Task<KeyFileCreationResult> CreateKeyFileAsync(string filePath, CancellationToken cancellationToken = default);
+
+    Task<bool> VerifyAsync(string filePath, CancellationToken cancellationToken = default);
+
+    Task<byte[]?> GetAndVerifySecretAsync(string filePath, CancellationToken cancellationToken = default);
+
+    Task DisableAsync(CancellationToken cancellationToken = default);
 }
 
 public interface IVaultService
@@ -126,6 +152,10 @@ public interface IDialogService
     Task<string?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default);
 
     Task<string?> PromptForUnlockPasswordAsync(CancellationToken cancellationToken = default);
+
+    string? PromptForSaveKeyFilePath();
+
+    string? PromptForOpenKeyFilePath();
 
     Task<bool> ConfirmAsync(
         string title,

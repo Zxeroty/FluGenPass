@@ -157,6 +157,22 @@
                            Text="{DynamicResource SettingsSecuritySubtitle}"
                            TextWrapping="Wrap" />
 
+                <TextBlock FontWeight="SemiBold"
+                           Text="{DynamicResource SettingsKeyFileTitle}" />
+                <TextBlock Margin="0,8,0,12"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Text="{Binding KeyFileDescription}"
+                           TextWrapping="Wrap" />
+                <ui:ToggleSwitch Margin="0,0,0,12"
+                                 IsChecked="{Binding IsKeyFileEnabled}"
+                                 Content="{DynamicResource SettingsKeyFileSwitch}" />
+                <ui:Button Width="180"
+                           Margin="0,0,0,18"
+                           Command="{Binding RegenerateKeyFileCommand}"
+                           Content="{DynamicResource SettingsKeyFileBtnRegenerate}"
+                           Icon="{ui:SymbolIcon Symbol=Key24}"
+                           Visibility="{Binding IsKeyFileEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
                 <ui:Button Width="180"
                            Command="{Binding LockVaultCommand}"
                            Content="{DynamicResource CommonBtnLock}"

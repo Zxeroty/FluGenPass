@@ -110,3 +110,4 @@ C:\Users\GGProuLiks\Documents\GitHub\FluGenPass\FluGenPass.Tests\bin\Debug\net8.
 C:\Users\GGProuLiks\Documents\GitHub\FluGenPass\FluGenPass.Tests\bin\Debug\net8.0-windows\Konscious.Security.Cryptography.Blake2.dll
 C:\Users\GGProuLiks\Documents\GitHub\FluGenPass\FluGenPass.Tests\bin\Debug\net8.0-windows\CsvHelper.dll
 C:\Users\GGProuLiks\Documents\GitHub\FluGenPass\FluGenPass.Tests\bin\Debug\net8.0-windows\System.Linq.Async.dll
+C:\Users\GGProuLiks\Documents\GitHub\FluGenPass\FluGenPass.Tests\obj\Debug\net8.0-windows\FluGenPass.Tests.sourcelink.json

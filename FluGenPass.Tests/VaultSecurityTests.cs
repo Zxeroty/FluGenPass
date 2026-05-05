@@ -1,5 +1,6 @@
 using FluGenPass.Models;
 using FluGenPass.Services;
+using System.Security.Cryptography;
 
 namespace FluGenPass.Tests;
 
@@ -194,7 +195,7 @@ public sealed class VaultSecurityTests : IDisposable
     }
 
     [Fact]
-    public async Task ChangeMasterPasswordAsync_ReencryptsExistingEntries()
+    public async Task ChangeMasterPasswordAsync_PreservesExistingEntries()
     {
         TestServices services = CreateServices();
         await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
@@ -223,6 +224,192 @@ public sealed class VaultSecurityTests : IDisposable
     }
 
     [Fact]
+    public async Task KeyFileSetupAndVerification_WorksAfterLockCycle()
+    {
+        TestServices services = CreateServices();
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+
+        VaultEntry entry = new()
+        {
+            SiteName = "keyfile.example",
+            Password = "KeyFileSecret!8",
+            CreatedUtc = DateTimeOffset.UtcNow,
+        };
+
+        await services.Vault.SaveAsync([entry]);
+
+        string keyFilePath = Path.Combine(_tempDirectory, "vault.fgpkey");
+        await CreateAndEnableKeyFileAsync(services, keyFilePath);
+        services.MasterPassword.Lock();
+
+        byte[]? keyFileSecret = await services.KeyFile.GetAndVerifySecretAsync(keyFilePath);
+
+        Assert.True(await services.KeyFile.IsEnabledAsync());
+        Assert.NotNull(keyFileSecret);
+        Assert.False(services.Session.IsUnlocked);
+        ZeroIfPresent(keyFileSecret);
+    }
+
+    [Fact]
+    public async Task KeyFileVerification_FailsForWrongFile()
+    {
+        TestServices services = CreateServices();
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+
+        string keyFilePath = Path.Combine(_tempDirectory, "vault.fgpkey");
+        string wrongKeyFilePath = Path.Combine(_tempDirectory, "wrong.fgpkey");
+
+        await CreateAndEnableKeyFileAsync(services, keyFilePath);
+        await File.WriteAllTextAsync(wrongKeyFilePath, "{}");
+        services.MasterPassword.Lock();
+
+        byte[]? keyFileSecret = await services.KeyFile.GetAndVerifySecretAsync(wrongKeyFilePath);
+
+        Assert.Null(keyFileSecret);
+        Assert.False(services.Session.IsUnlocked);
+    }
+
+    [Fact]
+    public async Task ChangeMasterPasswordAsync_KeepsExistingKeyFileValid()
+    {
+        TestServices services = CreateServices();
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+
+        VaultEntry entry = new()
+        {
+            SiteName = "stable-keyfile.example",
+            Password = "StillWorks!9",
+            CreatedUtc = DateTimeOffset.UtcNow,
+        };
+
+        await services.Vault.SaveAsync([entry]);
+
+        string keyFilePath = Path.Combine(_tempDirectory, "stable.fgpkey");
+        await CreateAndEnableKeyFileAsync(services, keyFilePath);
+
+        byte[] keyFileSecret = (await services.KeyFile.GetAndVerifySecretAsync(keyFilePath))!;
+        await services.MasterPassword.ChangeMasterPasswordAsync("NewMasterPassword!123", keyFileSecret);
+        services.MasterPassword.Lock();
+
+        bool passwordOnlyUnlocked = await services.MasterPassword.TryUnlockAsync("NewMasterPassword!123");
+        byte[] restoredKeyFileSecret = (await services.KeyFile.GetAndVerifySecretAsync(keyFilePath))!;
+        bool passwordAndKeyFileUnlocked = await services.MasterPassword.TryUnlockAsync(
+            "NewMasterPassword!123",
+            restoredKeyFileSecret
+        );
+        IReadOnlyList<VaultEntry> entries = await services.Vault.LoadAsync();
+
+        Assert.False(passwordOnlyUnlocked);
+        Assert.True(passwordAndKeyFileUnlocked);
+        VaultEntry restored = Assert.Single(entries);
+        Assert.Equal(entry.Password, restored.Password);
+        ZeroIfPresent(keyFileSecret);
+        ZeroIfPresent(restoredKeyFileSecret);
+    }
+
+    [Fact]
+    public async Task KeyFileProtectedVault_FailsWithCorrectPasswordOnly()
+    {
+        TestServices services = CreateServices();
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+
+        string keyFilePath = Path.Combine(_tempDirectory, "required.fgpkey");
+        await CreateAndEnableKeyFileAsync(services, keyFilePath);
+        services.MasterPassword.Lock();
+
+        bool unlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!");
+
+        Assert.False(unlocked);
+        Assert.False(services.Session.IsUnlocked);
+    }
+
+    [Fact]
+    public async Task LegacyKeyFileSettings_MigrateToCompositeWrappingAfterTwoStepUnlock()
+    {
+        TestServices services = CreateServices();
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+
+        string keyFilePath = Path.Combine(_tempDirectory, "legacy.fgpkey");
+        KeyFileCreationResult result = await services.KeyFile.CreateKeyFileAsync(keyFilePath);
+        try
+        {
+            AppSettings settings = await services.Settings.GetAsync();
+            settings.KeyFile = result.Metadata;
+            await services.Settings.SaveAsync(settings);
+        }
+        finally
+        {
+            ZeroIfPresent(result.Secret);
+        }
+
+        services.MasterPassword.Lock();
+        byte[] keyFileSecret = (await services.KeyFile.GetAndVerifySecretAsync(keyFilePath))!;
+        bool unlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!", keyFileSecret);
+        AppSettings migratedSettings = await services.Settings.GetAsync();
+        services.MasterPassword.Lock();
+
+        bool passwordOnlyUnlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!");
+        bool passwordAndKeyFileUnlocked = await services.MasterPassword.TryUnlockAsync(
+            "CorrectHorseBatteryStaple!",
+            keyFileSecret
+        );
+
+        Assert.True(unlocked);
+        Assert.Equal(VaultKeyProtectionMode.PasswordAndKeyFile, migratedSettings.MasterPassword!.VaultKeyProtectionMode);
+        Assert.False(passwordOnlyUnlocked);
+        Assert.True(passwordAndKeyFileUnlocked);
+        ZeroIfPresent(keyFileSecret);
+    }
+
+    [Fact]
+    public async Task ReplacingKeyFile_InvalidatesOldKeyFileAndPreservesEntries()
+    {
+        TestServices services = CreateServices();
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+
+        VaultEntry entry = new()
+        {
+            SiteName = "replace-keyfile.example",
+            Password = "ReplacementKeepsMe!10",
+            CreatedUtc = DateTimeOffset.UtcNow,
+        };
+        await services.Vault.SaveAsync([entry]);
+
+        string oldKeyFilePath = Path.Combine(_tempDirectory, "old.fgpkey");
+        string newKeyFilePath = Path.Combine(_tempDirectory, "new.fgpkey");
+        await CreateAndEnableKeyFileAsync(services, oldKeyFilePath);
+
+        byte[] oldSecret = (await services.KeyFile.GetAndVerifySecretAsync(oldKeyFilePath))!;
+        KeyFileCreationResult newKeyFile = await services.KeyFile.CreateKeyFileAsync(newKeyFilePath);
+        try
+        {
+            await services.MasterPassword.EnableKeyFileAsync(
+                "CorrectHorseBatteryStaple!",
+                newKeyFile.Metadata,
+                newKeyFile.Secret
+            );
+        }
+        finally
+        {
+            ZeroIfPresent(newKeyFile.Secret);
+        }
+
+        services.MasterPassword.Lock();
+        bool oldSecretUnlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!", oldSecret);
+        byte[] newSecret = (await services.KeyFile.GetAndVerifySecretAsync(newKeyFilePath))!;
+        bool newSecretUnlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!", newSecret);
+        IReadOnlyList<VaultEntry> entries = await services.Vault.LoadAsync();
+
+        Assert.False(oldSecretUnlocked);
+        Assert.True(newSecretUnlocked);
+        VaultEntry restored = Assert.Single(entries);
+        Assert.Equal(entry.Password, restored.Password);
+        Assert.Null(await services.KeyFile.GetAndVerifySecretAsync(oldKeyFilePath));
+        ZeroIfPresent(oldSecret);
+        ZeroIfPresent(newSecret);
+    }
+
+    [Fact]
     public async Task ResetAsync_RemovesMasterPasswordAndClearsVault()
     {
         TestServices services = CreateServices();
@@ -239,6 +426,7 @@ public sealed class VaultSecurityTests : IDisposable
         await services.MasterPassword.ResetAsync();
 
         Assert.False(await services.MasterPassword.HasMasterPasswordAsync());
+        Assert.False(await services.KeyFile.IsEnabledAsync());
         Assert.False(services.Session.IsUnlocked);
         Assert.False(File.Exists(services.Vault.VaultFilePath));
     }
@@ -259,8 +447,9 @@ public sealed class VaultSecurityTests : IDisposable
         SessionStateService session = new();
         VaultService vault = new(_tempDirectory, session);
         MasterPasswordService masterPassword = new(settings, session, vault);
+        KeyFileService keyFile = new(settings, session);
 
-        return new TestServices(settings, session, masterPassword, vault);
+        return new TestServices(settings, session, masterPassword, keyFile, vault);
     }
 
     private static string GetTempVaultFilePath(VaultService vault)
@@ -272,6 +461,32 @@ public sealed class VaultSecurityTests : IDisposable
         SettingsService Settings,
         SessionStateService Session,
         MasterPasswordService MasterPassword,
+        KeyFileService KeyFile,
         VaultService Vault
     );
+
+    private static async Task CreateAndEnableKeyFileAsync(
+        TestServices services,
+        string keyFilePath,
+        string password = "CorrectHorseBatteryStaple!"
+    )
+    {
+        KeyFileCreationResult result = await services.KeyFile.CreateKeyFileAsync(keyFilePath);
+        try
+        {
+            await services.MasterPassword.EnableKeyFileAsync(password, result.Metadata, result.Secret);
+        }
+        finally
+        {
+            ZeroIfPresent(result.Secret);
+        }
+    }
+
+    private static void ZeroIfPresent(byte[]? value)
+    {
+        if (value is not null)
+        {
+            CryptographicOperations.ZeroMemory(value);
+        }
+    }
 }
