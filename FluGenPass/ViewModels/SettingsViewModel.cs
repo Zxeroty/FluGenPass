@@ -257,16 +257,16 @@ public partial class SettingsViewModel : ObservableObject
                 }
 
                 _notificationService.ShowSuccess(
-                    "Master password updated",
-                    "Vault access now uses the new master password."
+                    _localizationService.GetString("NotifPasswordUpdated"),
+                    _localizationService.GetString("NotifPasswordUpdatedMsg")
                 );
             }
             else
             {
                 await _masterPasswordService.SetMasterPasswordAsync(newPassword);
                 _notificationService.ShowSuccess(
-                    "Master password created",
-                    "Vault protection is now enabled for this device."
+                    _localizationService.GetString("NotifPasswordCreated"),
+                    _localizationService.GetString("NotifPasswordCreatedMsg")
                 );
             }
 
@@ -274,7 +274,10 @@ public partial class SettingsViewModel : ObservableObject
         }
         catch (Exception exception)
         {
-            _notificationService.ShowError("Password update failed", exception.Message);
+            _notificationService.ShowError(
+                _localizationService.GetString("NotifPasswordUpdateFailed"),
+                exception.Message
+            );
         }
         finally
         {
@@ -291,9 +294,9 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         bool confirmed = await _dialogService.ConfirmAsync(
-            "Reset vault protection",
-            "This will remove the master password, delete all saved vault entries, and lock the vault. This cannot be undone.",
-            "Reset vault"
+            _localizationService.GetString("DlgResetTitle"),
+            _localizationService.GetString("DlgResetMsg"),
+            _localizationService.GetString("DlgResetBtn")
         );
 
         if (!confirmed)
@@ -307,14 +310,17 @@ public partial class SettingsViewModel : ObservableObject
         {
             await _masterPasswordService.ResetAsync();
             _notificationService.ShowInfo(
-                "Vault reset",
-                "Master password removed and local vault contents cleared."
+                _localizationService.GetString("NotifResetTitle"),
+                _localizationService.GetString("NotifResetMsg")
             );
             await InitializeAsync();
         }
         catch (Exception exception)
         {
-            _notificationService.ShowError("Reset failed", exception.Message);
+            _notificationService.ShowError(
+                _localizationService.GetString("NotifResetFailed"),
+                exception.Message
+            );
         }
         finally
         {
@@ -348,9 +354,9 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         bool confirmed = await _dialogService.ConfirmAsync(
-            "Disable key file requirement",
-            "The vault will stop asking for the key file after the master password. The file itself will not be deleted from disk.",
-            "Disable"
+            _localizationService.GetString("DlgKeyFileDisableTitle"),
+            _localizationService.GetString("DlgKeyFileDisableMsg"),
+            _localizationService.GetString("DlgKeyFileDisableBtn")
         );
 
         if (!confirmed)
@@ -372,7 +378,10 @@ public partial class SettingsViewModel : ObservableObject
             {
                 await _masterPasswordService.DisableKeyFileAsync(auth.Password);
                 KeyFileName = string.Empty;
-                _notificationService.ShowInfo("Key file disabled", "The vault will only require the master password.");
+                _notificationService.ShowInfo(
+                    _localizationService.GetString("NotifKeyFileDisabled"),
+                    _localizationService.GetString("NotifKeyFileDisabledMsg")
+                );
             }
             finally
             {
@@ -382,7 +391,10 @@ public partial class SettingsViewModel : ObservableObject
         catch (Exception exception)
         {
             SetKeyFileEnabledWithoutPrompt(true);
-            _notificationService.ShowError("Key file update failed", exception.Message);
+            _notificationService.ShowError(
+                _localizationService.GetString("NotifKeyFileUpdateFailed"),
+                exception.Message
+            );
         }
     }
 
@@ -415,7 +427,10 @@ public partial class SettingsViewModel : ObservableObject
                 _masterPasswordService.Lock();
             }
 
-            _notificationService.ShowError("Access denied", "That key file did not match this vault.");
+            _notificationService.ShowError(
+                _localizationService.GetString("NotifAccessDenied"),
+                _localizationService.GetString("NotifAccessDeniedKeyFileMsg")
+            );
             return null;
         }
 
@@ -428,7 +443,10 @@ public partial class SettingsViewModel : ObservableObject
                 _masterPasswordService.Lock();
             }
 
-            _notificationService.ShowError("Access denied", "That key file did not match this vault.");
+            _notificationService.ShowError(
+                _localizationService.GetString("NotifAccessDenied"),
+                _localizationService.GetString("NotifAccessDeniedKeyFileMsg")
+            );
             return null;
         }
 
@@ -482,7 +500,10 @@ public partial class SettingsViewModel : ObservableObject
                     {
                         SetKeyFileEnabledWithoutPrompt(false);
                     }
-                    _notificationService.ShowError("Access denied", "That master password did not unlock the vault.");
+                    _notificationService.ShowError(
+                        _localizationService.GetString("NotifAccessDenied"),
+                        _localizationService.GetString("NotifAccessDeniedMsg")
+                    );
                     return;
                 }
             }
@@ -517,8 +538,8 @@ public partial class SettingsViewModel : ObservableObject
             }
 
             _notificationService.ShowSuccess(
-                "Key file ready",
-                "The generated key file is now required after the master password."
+                _localizationService.GetString("NotifKeyFileReady"),
+                _localizationService.GetString("NotifKeyFileReadyMsg")
             );
         }
         catch (Exception exception)
@@ -528,7 +549,10 @@ public partial class SettingsViewModel : ObservableObject
                 SetKeyFileEnabledWithoutPrompt(false);
             }
 
-            _notificationService.ShowError("Key file update failed", exception.Message);
+            _notificationService.ShowError(
+                _localizationService.GetString("NotifKeyFileUpdateFailed"),
+                exception.Message
+            );
         }
         finally
         {
@@ -556,7 +580,10 @@ public partial class SettingsViewModel : ObservableObject
             return password;
         }
 
-        _notificationService.ShowError("Access denied", "That master password did not unlock the vault.");
+        _notificationService.ShowError(
+            _localizationService.GetString("NotifAccessDenied"),
+            _localizationService.GetString("NotifAccessDeniedMsg")
+        );
         return null;
     }
 
@@ -571,7 +598,10 @@ public partial class SettingsViewModel : ObservableObject
         byte[]? keyFileSecret = await _keyFileService.GetAndVerifySecretAsync(keyFilePath);
         if (keyFileSecret is null)
         {
-            _notificationService.ShowError("Access denied", "That key file did not match this vault.");
+            _notificationService.ShowError(
+                _localizationService.GetString("NotifAccessDenied"),
+                _localizationService.GetString("NotifAccessDeniedKeyFileMsg")
+            );
         }
 
         return keyFileSecret;

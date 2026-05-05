@@ -6,6 +6,7 @@ public sealed class ClipboardService : IClipboardService
 {
     private System.Timers.Timer? _clearTimer;
     private bool _hasPendingClipboard;
+    private string? _lastCopiedText;
 
     public void SetText(string text)
     {
@@ -14,6 +15,7 @@ public sealed class ClipboardService : IClipboardService
             return;
         }
 
+        _lastCopiedText = text;
         Clipboard.SetText(text);
         StartClearTimer();
     }
@@ -41,14 +43,19 @@ public sealed class ClipboardService : IClipboardService
             {
                 try
                 {
-                    if (Clipboard.ContainsText())
+                    // Only clear if the clipboard still contains the text we copied
+                    if (Clipboard.ContainsText() && Clipboard.GetText() == _lastCopiedText)
                     {
                         Clipboard.Clear();
                     }
                 }
                 catch
                 {
-                    
+                    // Ignore clipboard access errors
+                }
+                finally
+                {
+                    _lastCopiedText = null;
                 }
             });
         }

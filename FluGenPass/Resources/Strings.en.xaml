@@ -128,4 +128,67 @@
     <sys:String x:Key="NotifResetMsg">Master password removed and local vault contents cleared.</sys:String>
     <sys:String x:Key="NotifSuccess">Success</sys:String>
     <sys:String x:Key="NotifError">Error</sys:String>
+    <sys:String x:Key="NotifVaultReady">Vault ready</sys:String>
+    <sys:String x:Key="NotifVaultReadyMsg">Master password created and vault unlocked.</sys:String>
+    <sys:String x:Key="NotifAccessDenied">Access denied</sys:String>
+    <sys:String x:Key="NotifAccessDeniedMsg">That master password did not unlock the vault.</sys:String>
+    <sys:String x:Key="NotifAccessDeniedKeyFileMsg">That key file did not match this vault.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdated">Master password updated</sys:String>
+    <sys:String x:Key="NotifPasswordUpdatedMsg">Vault access now uses the new master password.</sys:String>
+    <sys:String x:Key="NotifPasswordCreated">Master password created</sys:String>
+    <sys:String x:Key="NotifPasswordCreatedMsg">Vault protection is now enabled for this device.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdateFailed">Password update failed</sys:String>
+    <sys:String x:Key="NotifResetFailed">Reset failed</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabled">Key file disabled</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabledMsg">The vault will only require the master password.</sys:String>
+    <sys:String x:Key="NotifKeyFileUpdateFailed">Key file update failed</sys:String>
+    <sys:String x:Key="NotifKeyFileReady">Key file ready</sys:String>
+    <sys:String x:Key="NotifKeyFileReadyMsg">The generated key file is now required after the master password.</sys:String>
+
+    <!-- Transfer / Import / Export -->
+    <sys:String x:Key="TransferTitle">Portable transfer</sys:String>
+    <sys:String x:Key="TransferDesc">Export a FluGenPass backup with embedded SHA-256 and ECDSA signature verification, or create a Bitwarden-compatible CSV with .sha256 and .sig.json sidecars. CSV imports currently keep site and password fields.</sys:String>
+    <sys:String x:Key="TransferStatusReady">Ready</sys:String>
+    <sys:String x:Key="TransferStatusStarted">Started...</sys:String>
+    <sys:String x:Key="TransferStatusCompleted">Completed</sys:String>
+    <sys:String x:Key="TransferStatusFailed">Failed</sys:String>
+    <sys:String x:Key="TransferStatusCancelled">Cancelled</sys:String>
+    <sys:String x:Key="TransferStatusIntegrityChecked">Integrity checked</sys:String>
+    <sys:String x:Key="TransferStatusExportReady">Export ready</sys:String>
+    
+    <sys:String x:Key="TransferImportTitle">Import passwords</sys:String>
+    <sys:String x:Key="TransferImportFilter">Supported files (*.fgpexport.json;*.json;*.csv)|*.fgpexport.json;*.json;*.csv|FluGenPass secure export (*.fgpexport.json;*.json)|*.fgpexport.json;*.json|CSV files (*.csv)|*.csv</sys:String>
+    <sys:String x:Key="TransferImportSummary">Import summary</sys:String>
+    <sys:String x:Key="TransferImportSuccessMsg">{0} item(s) added, {1} skipped. {2}</sys:String>
+    <sys:String x:Key="TransferImportNotifSuccess">{0} password(s) imported.</sys:String>
+    <sys:String x:Key="TransferImportDialogSummary">{0} password(s) imported.\n{1} duplicate or invalid row(s) skipped.\n{2}\n{3}</sys:String>
+    <sys:String x:Key="TransferImportNoWarnings">No import warnings.</sys:String>
+    
+    <sys:String x:Key="TransferExportSecureTitle">Export secure backup</sys:String>
+    <sys:String x:Key="TransferExportCsvTitle">Export Bitwarden CSV</sys:String>
+    <sys:String x:Key="TransferExportSuccessMsg">{0} password(s) exported.</sys:String>
+    <sys:String x:Key="TransferExportCsvSuccessMsg">{0} password(s) exported to CSV.</sys:String>
+    <sys:String x:Key="TransferExportSidecarsMsg">Sidecars saved next to the CSV file.</sys:String>
+    
+    <sys:String x:Key="TransferVerifyTitle">Verify transfer file</sys:String>
+    <sys:String x:Key="TransferVerifySuccess">Verification passed</sys:String>
+    <sys:String x:Key="TransferVerifySuccessMsg">The selected file passed integrity verification.</sys:String>
+    <sys:String x:Key="TransferVerifyIncomplete">Verification incomplete</sys:String>
+    <sys:String x:Key="TransferVerifyNoChecksum">Checksum file was not found for the selected CSV.</sys:String>
+    <sys:String x:Key="TransferVerifyNoSignature">Digital signature was not found for the selected file.</sys:String>
+    <sys:String x:Key="TransferVerifySummary">Verification summary</sys:String>
+    
+    <sys:String x:Key="TransferDlgChecksumTitle">Checksum not found</sys:String>
+    <sys:String x:Key="TransferDlgChecksumMsg">The selected CSV file has no .sha256 checksum next to it. Import anyway?</sys:String>
+    <sys:String x:Key="TransferDlgChecksumBtn">Import anyway</sys:String>
+    
+    <sys:String x:Key="TransferDlgSignatureTitle">Signature not found</sys:String>
+    <sys:String x:Key="TransferDlgSignatureMsg">The selected file has no digital signature, or the CSV .sig.json sidecar is missing. Import anyway?</sys:String>
+    
+    <sys:String x:Key="TransferDlgTrustTitle">Unknown signer</sys:String>
+    <sys:String x:Key="TransferDlgTrustMsg">The file signature is cryptographically valid, but the signer is not trusted by this FluGenPass instance. Import anyway?</sys:String>
+
+    <sys:String x:Key="DlgKeyFileDisableTitle">Disable key file requirement</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableMsg">The vault will stop asking for the key file after the master password. The file itself will not be deleted from disk.</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableBtn">Disable</sys:String>
 </ResourceDictionary>

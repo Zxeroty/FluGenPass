@@ -127,4 +127,67 @@
     <sys:String x:Key="NotifResetMsg">Мастер-пароль удален, данные хранилища очищены.</sys:String>
     <sys:String x:Key="NotifSuccess">Успех</sys:String>
     <sys:String x:Key="NotifError">Ошибка</sys:String>
+    <sys:String x:Key="NotifVaultReady">Хранилище готово</sys:String>
+    <sys:String x:Key="NotifVaultReadyMsg">Мастер-пароль создан, хранилище разблокировано.</sys:String>
+    <sys:String x:Key="NotifAccessDenied">Доступ запрещен</sys:String>
+    <sys:String x:Key="NotifAccessDeniedMsg">Этот мастер-пароль не подходит.</sys:String>
+    <sys:String x:Key="NotifAccessDeniedKeyFileMsg">Этот Key File не подходит для данного хранилища.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdated">Пароль обновлен</sys:String>
+    <sys:String x:Key="NotifPasswordUpdatedMsg">Теперь для доступа используется новый мастер-пароль.</sys:String>
+    <sys:String x:Key="NotifPasswordCreated">Защита включена</sys:String>
+    <sys:String x:Key="NotifPasswordCreatedMsg">Мастер-пароль успешно установлен для этого устройства.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdateFailed">Ошибка обновления пароля</sys:String>
+    <sys:String x:Key="NotifResetFailed">Ошибка сброса</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabled">Key File отключен</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabledMsg">Хранилище теперь требует только мастер-пароль.</sys:String>
+    <sys:String x:Key="NotifKeyFileUpdateFailed">Ошибка обновления Key File</sys:String>
+    <sys:String x:Key="NotifKeyFileReady">Key File готов</sys:String>
+    <sys:String x:Key="NotifKeyFileReadyMsg">Созданный Key File теперь обязателен для входа после мастер-пароля.</sys:String>
+
+    <!-- Перенос / Импорт / Экспорт -->
+    <sys:String x:Key="TransferTitle">Перенос данных</sys:String>
+    <sys:String x:Key="TransferDesc">Экспортируйте бэкап FluGenPass с проверкой SHA-256 и подписью ECDSA или создайте CSV для Bitwarden. При импорте CSV сохраняются поля сайта и пароля.</sys:String>
+    <sys:String x:Key="TransferStatusReady">Готов</sys:String>
+    <sys:String x:Key="TransferStatusStarted">Запуск...</sys:String>
+    <sys:String x:Key="TransferStatusCompleted">Завершено</sys:String>
+    <sys:String x:Key="TransferStatusFailed">Ошибка</sys:String>
+    <sys:String x:Key="TransferStatusCancelled">Отменено</sys:String>
+    <sys:String x:Key="TransferStatusIntegrityChecked">Целостность проверена</sys:String>
+    <sys:String x:Key="TransferStatusExportReady">Экспорт готов</sys:String>
+    
+    <sys:String x:Key="TransferImportTitle">Импорт паролей</sys:String>
+    <sys:String x:Key="TransferImportFilter">Поддерживаемые файлы (*.fgpexport.json;*.json;*.csv)|*.fgpexport.json;*.json;*.csv|Бэкап FluGenPass (*.fgpexport.json;*.json)|*.fgpexport.json;*.json|CSV файлы (*.csv)|*.csv</sys:String>
+    <sys:String x:Key="TransferImportSummary">Итоги импорта</sys:String>
+    <sys:String x:Key="TransferImportSuccessMsg">Добавлено: {0}, пропущено: {1}. {2}</sys:String>
+    <sys:String x:Key="TransferImportNotifSuccess">Импортировано паролей: {0}.</sys:String>
+    <sys:String x:Key="TransferImportDialogSummary">Импортировано паролей: {0}.\nПропущено дублей или неверных строк: {1}.\n{2}\n{3}</sys:String>
+    <sys:String x:Key="TransferImportNoWarnings">Предупреждений нет.</sys:String>
+    
+    <sys:String x:Key="TransferExportSecureTitle">Экспорт защищенного бэкапа</sys:String>
+    <sys:String x:Key="TransferExportCsvTitle">Экспорт Bitwarden CSV</sys:String>
+    <sys:String x:Key="TransferExportSuccessMsg">Экспортировано паролей: {0}.</sys:String>
+    <sys:String x:Key="TransferExportCsvSuccessMsg">Экспортировано в CSV: {0}.</sys:String>
+    <sys:String x:Key="TransferExportSidecarsMsg">Файлы подписи сохранены рядом с CSV.</sys:String>
+    
+    <sys:String x:Key="TransferVerifyTitle">Проверка файла</sys:String>
+    <sys:String x:Key="TransferVerifySuccess">Проверка пройдена</sys:String>
+    <sys:String x:Key="TransferVerifySuccessMsg">Файл успешно прошел проверку целостности.</sys:String>
+    <sys:String x:Key="TransferVerifyIncomplete">Проверка не полная</sys:String>
+    <sys:String x:Key="TransferVerifyNoChecksum">Файл контрольной суммы (.sha256) не найден.</sys:String>
+    <sys:String x:Key="TransferVerifyNoSignature">Цифровая подпись (.sig.json) не найдена.</sys:String>
+    <sys:String x:Key="TransferVerifySummary">Результаты проверки</sys:String>
+    
+    <sys:String x:Key="TransferDlgChecksumTitle">Контрольная сумма не найдена</sys:String>
+    <sys:String x:Key="TransferDlgChecksumMsg">У этого CSV нет файла .sha256. Импортировать без проверки?</sys:String>
+    <sys:String x:Key="TransferDlgChecksumBtn">Все равно импортировать</sys:String>
+    
+    <sys:String x:Key="TransferDlgSignatureTitle">Подпись не найдена</sys:String>
+    <sys:String x:Key="TransferDlgSignatureMsg">У файла нет цифровой подписи или отсутствует файл .sig.json. Продолжить импорт?</sys:String>
+    
+    <sys:String x:Key="TransferDlgTrustTitle">Неизвестный автор</sys:String>
+    <sys:String x:Key="TransferDlgTrustMsg">Подпись верна, но автор не является доверенным в этом приложении. Все равно импортировать?</sys:String>
+
+    <sys:String x:Key="DlgKeyFileDisableTitle">Отключение Key File</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableMsg">Приложение перестанет требовать ключевой файл после ввода пароля. Сам файл не будет удален с диска.</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableBtn">Отключить</sys:String>
 </ResourceDictionary>

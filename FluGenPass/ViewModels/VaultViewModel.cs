@@ -29,11 +29,10 @@ public partial class VaultViewModel : ObservableObject
     private string _statusMessage = string.Empty;
 
     [ObservableProperty]
-    private string _transferHeadline = "Portable transfer";
+    private string _transferHeadline = string.Empty;
 
     [ObservableProperty]
-    private string _transferMessage =
-        "Export a FluGenPass backup with embedded SHA-256 and ECDSA signature verification, or create a Bitwarden-compatible CSV with .sha256 and .sig.json sidecars. CSV imports currently keep site and password fields.";
+    private string _transferMessage = string.Empty;
 
     [ObservableProperty]
     private string _selectedTagFilter = string.Empty;
@@ -63,6 +62,8 @@ public partial class VaultViewModel : ObservableObject
 
         Headline = _localizationService.GetString("VaultHeadLocked");
         StatusMessage = _localizationService.GetString("VaultMsgLocked");
+        TransferHeadline = _localizationService.GetString("TransferTitle");
+        TransferMessage = _localizationService.GetString("TransferDesc");
 
         AvailableTags.Add(AllTagsLabel);
         SelectedTagFilter = AllTagsLabel;
@@ -120,17 +121,17 @@ public partial class VaultViewModel : ObservableObject
     {
         if (!IsVaultUnlocked)
         {
-            _notificationService.ShowError("Vault locked", "Unlock the vault before importing passwords.");
+            _notificationService.ShowError(
+                _localizationService.GetString("VaultHeadLocked"),
+                _localizationService.GetString("VaultMsgLocked")
+            );
             return;
         }
 
         OpenFileDialog dialog = new()
         {
-            Title = "Import passwords",
-            Filter =
-                "Supported files (*.fgpexport.json;*.json;*.csv)|*.fgpexport.json;*.json;*.csv|" +
-                "FluGenPass secure export (*.fgpexport.json;*.json)|*.fgpexport.json;*.json|" +
-                "CSV files (*.csv)|*.csv",
+            Title = _localizationService.GetString("TransferImportTitle"),
+            Filter = _localizationService.GetString("TransferImportFilter"),
             CheckFileExists = true,
             Multiselect = false,
         };
@@ -148,32 +149,35 @@ public partial class VaultViewModel : ObservableObject
             if (result.IntegrityStatus == VaultIntegrityStatus.MissingChecksum)
             {
                 bool continueImport = await _dialogService.ConfirmAsync(
-                    "Checksum not found",
-                    "The selected CSV file has no .sha256 checksum next to it. Import anyway?",
-                    primaryButtonText: "Import anyway",
-                    closeButtonText: "Cancel"
+                    _localizationService.GetString("TransferDlgChecksumTitle"),
+                    _localizationService.GetString("TransferDlgChecksumMsg"),
+                    primaryButtonText: _localizationService.GetString("TransferDlgChecksumBtn"),
+                    closeButtonText: _localizationService.GetString("CommonBtnCancel")
                 );
 
                 if (!continueImport)
                 {
-                    SetTransferStatus("Import cancelled", "CSV import was cancelled because checksum verification was unavailable.");
+                    SetTransferStatus(
+                        _localizationService.GetString("TransferStatusCancelled"),
+                        _localizationService.GetString("TransferVerifyNoChecksum")
+                    );
                     return;
                 }
             }
             else if (result.IntegrityStatus == VaultIntegrityStatus.MissingSignature)
             {
                 bool continueImport = await _dialogService.ConfirmAsync(
-                    "Signature not found",
-                    "The selected file has no digital signature, or the CSV .sig.json sidecar is missing. Import anyway?",
-                    primaryButtonText: "Import anyway",
-                    closeButtonText: "Cancel"
+                    _localizationService.GetString("TransferDlgSignatureTitle"),
+                    _localizationService.GetString("TransferDlgSignatureMsg"),
+                    primaryButtonText: _localizationService.GetString("TransferDlgChecksumBtn"),
+                    closeButtonText: _localizationService.GetString("CommonBtnCancel")
                 );
 
                 if (!continueImport)
                 {
                     SetTransferStatus(
                         _localizationService.GetString("NotifError"),
-                        "Import was cancelled because digital signature verification was unavailable."
+                        _localizationService.GetString("TransferVerifyNoSignature")
                     );
                     return;
                 }
@@ -181,15 +185,18 @@ public partial class VaultViewModel : ObservableObject
             else if (result.IntegrityStatus == VaultIntegrityStatus.UntrustedSignature)
             {
                 bool continueImport = await _dialogService.ConfirmAsync(
-                    "Unknown signer",
-                    "The file signature is cryptographically valid, but the signer is not trusted by this FluGenPass instance. Import anyway?",
-                    primaryButtonText: "Import anyway",
-                    closeButtonText: "Cancel"
+                    _localizationService.GetString("TransferDlgTrustTitle"),
+                    _localizationService.GetString("TransferDlgTrustMsg"),
+                    primaryButtonText: _localizationService.GetString("TransferDlgChecksumBtn"),
+                    closeButtonText: _localizationService.GetString("CommonBtnCancel")
                 );
 
                 if (!continueImport)
                 {
-                    SetTransferStatus("Import cancelled", "Import was cancelled because the signer is not trusted locally.");
+                    SetTransferStatus(
+                        _localizationService.GetString("TransferStatusCancelled"),
+                        _localizationService.GetString("TransferVerifyNoSignature")
+                    );
                     return;
                 }
             }
@@ -198,30 +205,41 @@ public partial class VaultViewModel : ObservableObject
             await LoadEntriesAsync();
 
             string warningSummary = result.Warnings.Count == 0
-                ? "No import warnings."
+                ? _localizationService.GetString("TransferImportNoWarnings")
                 : string.Join(Environment.NewLine, result.Warnings.Take(6));
 
             SetTransferStatus(
-                "Import completed",
-                $"{result.ImportedCount} item(s) added, {result.SkippedCount} skipped. {result.IntegritySummary}"
+                _localizationService.GetString("TransferStatusCompleted"),
+                string.Format(
+                    _localizationService.GetString("TransferImportSuccessMsg"),
+                    result.ImportedCount,
+                    result.SkippedCount,
+                    result.IntegritySummary
+                )
             );
 
             _notificationService.ShowSuccess(
                 _localizationService.GetString("NotifSuccess"),
-                $"{result.ImportedCount} password(s) imported."
+                string.Format(_localizationService.GetString("TransferImportNotifSuccess"), result.ImportedCount)
             );
             await _dialogService.ShowMessageAsync(
-                "Import summary",
-                $"{result.ImportedCount} password(s) imported.\n" +
-                $"{result.SkippedCount} duplicate or invalid row(s) skipped.\n" +
-                $"{result.IntegritySummary}\n" +
-                warningSummary
+                _localizationService.GetString("TransferImportSummary"),
+                string.Format(
+                    _localizationService.GetString("TransferImportDialogSummary"),
+                    result.ImportedCount,
+                    result.SkippedCount,
+                    result.IntegritySummary,
+                    warningSummary
+                )
             );
         }
         catch (Exception exception)
         {
-            SetTransferStatus("Import failed", exception.Message);
-            _notificationService.ShowError("Import failed", "The selected file could not be imported.");
+            SetTransferStatus(_localizationService.GetString("TransferStatusFailed"), exception.Message);
+            _notificationService.ShowError(
+                _localizationService.GetString("TransferStatusFailed"),
+                _localizationService.GetString("NotifError")
+            );
         }
     }
 
@@ -230,13 +248,16 @@ public partial class VaultViewModel : ObservableObject
     {
         if (!IsVaultUnlocked)
         {
-            _notificationService.ShowError("Vault locked", "Unlock the vault before exporting passwords.");
+            _notificationService.ShowError(
+                _localizationService.GetString("VaultHeadLocked"),
+                _localizationService.GetString("VaultMsgLocked")
+            );
             return;
         }
 
         SaveFileDialog dialog = new()
         {
-            Title = "Export secure backup",
+            Title = _localizationService.GetString("TransferExportSecureTitle"),
             Filter = "FluGenPass secure export (*.fgpexport.json)|*.fgpexport.json",
             AddExtension = true,
             DefaultExt = ".fgpexport.json",
@@ -255,13 +276,19 @@ public partial class VaultViewModel : ObservableObject
                 dialog.FileName
             );
 
-            SetTransferStatus("Secure export ready", result.IntegritySummary);
-            _notificationService.ShowSuccess("Export completed", $"{result.ExportedCount} password(s) exported.");
+            SetTransferStatus(_localizationService.GetString("TransferStatusExportReady"), result.IntegritySummary);
+            _notificationService.ShowSuccess(
+                _localizationService.GetString("NotifSuccess"),
+                string.Format(_localizationService.GetString("TransferExportSuccessMsg"), result.ExportedCount)
+            );
         }
         catch (Exception exception)
         {
-            SetTransferStatus("Export failed", exception.Message);
-            _notificationService.ShowError("Export failed", "The secure export file could not be created.");
+            SetTransferStatus(_localizationService.GetString("TransferStatusFailed"), exception.Message);
+            _notificationService.ShowError(
+                _localizationService.GetString("TransferStatusFailed"),
+                _localizationService.GetString("NotifError")
+            );
         }
     }
 
@@ -270,13 +297,16 @@ public partial class VaultViewModel : ObservableObject
     {
         if (!IsVaultUnlocked)
         {
-            _notificationService.ShowError("Vault locked", "Unlock the vault before exporting passwords.");
+            _notificationService.ShowError(
+                _localizationService.GetString("VaultHeadLocked"),
+                _localizationService.GetString("VaultMsgLocked")
+            );
             return;
         }
 
         SaveFileDialog dialog = new()
         {
-            Title = "Export Bitwarden CSV",
+            Title = _localizationService.GetString("TransferExportCsvTitle"),
             Filter = "Bitwarden CSV (*.csv)|*.csv",
             AddExtension = true,
             DefaultExt = ".csv",
@@ -297,15 +327,21 @@ public partial class VaultViewModel : ObservableObject
 
             string checksumMessage = result.ChecksumFilePath is null
                 ? result.IntegritySummary
-                : $"{result.IntegritySummary} Sidecars saved next to the CSV file.";
+                : $"{result.IntegritySummary} " + _localizationService.GetString("TransferExportSidecarsMsg");
 
-            SetTransferStatus("CSV export ready", checksumMessage);
-            _notificationService.ShowSuccess("Export completed", $"{result.ExportedCount} password(s) exported to CSV.");
+            SetTransferStatus(_localizationService.GetString("TransferStatusExportReady"), checksumMessage);
+            _notificationService.ShowSuccess(
+                _localizationService.GetString("NotifSuccess"),
+                string.Format(_localizationService.GetString("TransferExportCsvSuccessMsg"), result.ExportedCount)
+            );
         }
         catch (Exception exception)
         {
-            SetTransferStatus("Export failed", exception.Message);
-            _notificationService.ShowError("Export failed", "The CSV export file could not be created.");
+            SetTransferStatus(_localizationService.GetString("TransferStatusFailed"), exception.Message);
+            _notificationService.ShowError(
+                _localizationService.GetString("TransferStatusFailed"),
+                _localizationService.GetString("NotifError")
+            );
         }
     }
 
@@ -314,11 +350,8 @@ public partial class VaultViewModel : ObservableObject
     {
         OpenFileDialog dialog = new()
         {
-            Title = "Verify transfer file",
-            Filter =
-                "Transfer files (*.fgpexport.json;*.json;*.csv)|*.fgpexport.json;*.json;*.csv|" +
-                "FluGenPass secure export (*.fgpexport.json;*.json)|*.fgpexport.json;*.json|" +
-                "CSV files (*.csv)|*.csv",
+            Title = _localizationService.GetString("TransferVerifyTitle"),
+            Filter = _localizationService.GetString("TransferImportFilter"),
             CheckFileExists = true,
             Multiselect = false,
         };
@@ -331,38 +364,56 @@ public partial class VaultViewModel : ObservableObject
         try
         {
             VaultVerificationResult result = await _vaultTransferService.VerifyAsync(dialog.FileName);
-            SetTransferStatus("Integrity checked", $"{result.IntegritySummary} Entries detected: {result.EntryCount}.");
+            SetTransferStatus(
+                _localizationService.GetString("TransferStatusIntegrityChecked"),
+                $"{result.IntegritySummary}"
+            );
 
             if (result.IntegrityStatus == VaultIntegrityStatus.MissingChecksum)
             {
-                _notificationService.ShowInfo("Verification incomplete", "Checksum file was not found for the selected CSV.");
+                _notificationService.ShowInfo(
+                    _localizationService.GetString("TransferVerifyIncomplete"),
+                    _localizationService.GetString("TransferVerifyNoChecksum")
+                );
             }
             else if (result.IntegrityStatus == VaultIntegrityStatus.MissingSignature)
             {
-                _notificationService.ShowInfo("Verification incomplete", "Digital signature was not found for the selected file.");
+                _notificationService.ShowInfo(
+                    _localizationService.GetString("TransferVerifyIncomplete"),
+                    _localizationService.GetString("TransferVerifyNoSignature")
+                );
             }
             else if (result.IntegrityStatus == VaultIntegrityStatus.UntrustedSignature)
             {
-                _notificationService.ShowInfo("Unknown signer", "The signature is valid, but the signer is not trusted locally.");
+                _notificationService.ShowInfo(
+                    _localizationService.GetString("TransferDlgTrustTitle"),
+                    _localizationService.GetString("TransferDlgTrustMsg")
+                );
             }
             else
             {
-                _notificationService.ShowSuccess("Verification passed", "The selected file passed integrity verification.");
+                _notificationService.ShowSuccess(
+                    _localizationService.GetString("TransferVerifySuccess"),
+                    _localizationService.GetString("TransferVerifySuccessMsg")
+                );
             }
 
             string warningSummary = result.Warnings.Count == 0
-                ? "No warnings."
+                ? _localizationService.GetString("TransferImportNoWarnings")
                 : string.Join(Environment.NewLine, result.Warnings.Take(6));
 
             await _dialogService.ShowMessageAsync(
-                "Verification summary",
-                $"{result.IntegritySummary}\nEntries detected: {result.EntryCount}\n{warningSummary}"
+                _localizationService.GetString("TransferVerifySummary"),
+                $"{result.IntegritySummary}\n{warningSummary}"
             );
         }
         catch (Exception exception)
         {
-            SetTransferStatus("Verification failed", exception.Message);
-            _notificationService.ShowError("Verification failed", "The selected file did not pass integrity verification.");
+            SetTransferStatus(_localizationService.GetString("TransferStatusFailed"), exception.Message);
+            _notificationService.ShowError(
+                _localizationService.GetString("TransferStatusFailed"),
+                _localizationService.GetString("NotifError")
+            );
         }
     }
 
