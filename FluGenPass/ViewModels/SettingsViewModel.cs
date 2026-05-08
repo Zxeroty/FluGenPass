@@ -460,6 +460,21 @@ public partial class SettingsViewModel : ObservableObject
             return;
         }
 
+        bool userUnderstands = await _dialogService.ConfirmAsync(
+            _localizationService.GetString("DlgKeyFileWarningTitle"),
+            _localizationService.GetString("DlgKeyFileWarningMsg"),
+            _localizationService.GetString("DlgKeyFileWarningBtn")
+        );
+
+        if (!userUnderstands)
+        {
+            if (revertToggleOnCancel)
+            {
+                SetKeyFileEnabledWithoutPrompt(false);
+            }
+            return;
+        }
+
         IsBusy = true;
 
         try

@@ -15,15 +15,33 @@ public sealed class MasterPasswordService(
     private const int SaltSize = 16;
     private const int KeySize = 32;
 
-    private const int Argon2Iterations = 3;
-    private const int Argon2MemoryKb = 65536;
-    private const int Argon2Parallelism = 4;
-
     private static readonly byte[] VerificationPurpose = Encoding.UTF8.GetBytes("FluGenPass.Verify");
     private static readonly byte[] VaultPurpose = Encoding.UTF8.GetBytes("FluGenPass.Vault");
     private static readonly byte[] VaultWrappingPurpose = Encoding.UTF8.GetBytes("FluGenPass.VaultKeyWrap");
     private static readonly byte[] CompositeVaultWrappingPurpose =
         Encoding.UTF8.GetBytes("FluGenPass.CompositeVaultKeyWrap.v1");
+
+    private record Argon2Parameters(int Iterations, int MemoryKb, int Parallelism);
+
+    private static Argon2Parameters GetAdaptiveParameters()
+    {
+        // Parallelism: Use available cores, but cap at 8 to avoid excessive overhead
+        int parallelism = Math.Clamp(Environment.ProcessorCount, 1, 8);
+
+        // Memory: Aim for 256MB as a modern baseline, but adjust based on system RAM
+        // We'll try to use ~1/32 of total RAM, but between 128MB and 1GB
+        long totalMemoryBytes = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
+        int memoryKb = 262144; // Default 256MB
+
+        if (totalMemoryBytes > 0)
+        {
+            long targetMemoryKb = totalMemoryBytes / 1024 / 32;
+            memoryKb = (int)Math.Clamp(targetMemoryKb, 131072, 1048576); // 128MB to 1GB
+        }
+
+        // Iterations: 3 is a good balance for Argon2id
+        return new Argon2Parameters(3, memoryKb, parallelism);
+    }
 
     public bool IsUnlocked => sessionStateService.IsUnlocked;
 
@@ -73,7 +91,8 @@ public sealed class MasterPasswordService(
         }
 
         byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
-        byte[] baseKey = DeriveBaseKeyArgon2id(password, salt, Argon2Iterations, Argon2MemoryKb, Argon2Parallelism);
+        Argon2Parameters argon2 = GetAdaptiveParameters();
+        byte[] baseKey = DeriveBaseKeyArgon2id(password, salt, argon2.Iterations, argon2.MemoryKb, argon2.Parallelism);
         byte[] verificationHash = DerivePurposeHash(baseKey, VerificationPurpose);
         byte[] passwordWrappingKey = DerivePurposeHash(baseKey, VaultWrappingPurpose);
         byte[]? effectiveWrappingKey = keyFileSecret is null
@@ -89,7 +108,8 @@ public sealed class MasterPasswordService(
                 salt,
                 verificationHash,
                 wrappedVaultKey,
-                keyFileSecret is null ? VaultKeyProtectionMode.PasswordOnly : VaultKeyProtectionMode.PasswordAndKeyFile
+                keyFileSecret is null ? VaultKeyProtectionMode.PasswordOnly : VaultKeyProtectionMode.PasswordAndKeyFile,
+                argon2
             );
 
             await settingsService.SaveAsync(settings, cancellationToken);
@@ -138,7 +158,8 @@ public sealed class MasterPasswordService(
 
         byte[] currentVaultKey = sessionStateService.GetRequiredVaultKey();
         byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
-        byte[] baseKey = DeriveBaseKeyArgon2id(newPassword, salt, Argon2Iterations, Argon2MemoryKb, Argon2Parallelism);
+        Argon2Parameters argon2 = GetAdaptiveParameters();
+        byte[] baseKey = DeriveBaseKeyArgon2id(newPassword, salt, argon2.Iterations, argon2.MemoryKb, argon2.Parallelism);
         byte[] verificationHash = DerivePurposeHash(baseKey, VerificationPurpose);
         byte[] passwordWrappingKey = DerivePurposeHash(baseKey, VaultWrappingPurpose);
         byte[]? effectiveWrappingKey = requiresKeyFile
@@ -152,7 +173,8 @@ public sealed class MasterPasswordService(
                 salt,
                 verificationHash,
                 wrappedVaultKey,
-                requiresKeyFile ? VaultKeyProtectionMode.PasswordAndKeyFile : VaultKeyProtectionMode.PasswordOnly
+                requiresKeyFile ? VaultKeyProtectionMode.PasswordAndKeyFile : VaultKeyProtectionMode.PasswordOnly,
+                argon2
             );
 
             await settingsService.SaveAsync(settings, cancellationToken);
@@ -542,7 +564,8 @@ public sealed class MasterPasswordService(
         byte[] salt,
         byte[] verificationHash,
         WrappedVaultKey wrappedVaultKey,
-        VaultKeyProtectionMode protectionMode
+        VaultKeyProtectionMode protectionMode,
+        Argon2Parameters argon2
     )
     {
         return new MasterPasswordMetadata
@@ -550,9 +573,9 @@ public sealed class MasterPasswordService(
             Algorithm = KdfAlgorithm.Argon2id,
             SaltBase64 = Convert.ToBase64String(salt),
             VerificationHashBase64 = Convert.ToBase64String(verificationHash),
-            Iterations = Argon2Iterations,
-            MemorySizeKb = Argon2MemoryKb,
-            DegreeOfParallelism = Argon2Parallelism,
+            Iterations = argon2.Iterations,
+            MemorySizeKb = argon2.MemoryKb,
+            DegreeOfParallelism = argon2.Parallelism,
             VaultKeyNonceBase64 = Convert.ToBase64String(wrappedVaultKey.Nonce),
             VaultKeyCiphertextBase64 = Convert.ToBase64String(wrappedVaultKey.Ciphertext),
             VaultKeyTagBase64 = Convert.ToBase64String(wrappedVaultKey.Tag),

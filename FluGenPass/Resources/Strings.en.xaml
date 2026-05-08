@@ -190,5 +190,8 @@
 
     <sys:String x:Key="DlgKeyFileDisableTitle">Disable key file requirement</sys:String>
     <sys:String x:Key="DlgKeyFileDisableMsg">The vault will stop asking for the key file after the master password. The file itself will not be deleted from disk.</sys:String>
-    <sys:String x:Key="DlgKeyFileDisableBtn">Disable</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableBtn">Disable security</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningTitle">Important: Key File Warning</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningMsg">If you lose this key file, your vault data will be lost FOREVER. There is no way to recover your passwords without it. Are you sure you want to proceed?</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningBtn">I understand, proceed</sys:String>
 </ResourceDictionary>

@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "FluGenPass"
-#define MyAppVersion "1.2.1"
+#define MyAppVersion "1.2.2"
 #define MyAppPublisher "Zxeroty"
 #define MyAppURL "https://github.com/Zxeroty/FluGenPass"
 #define MyAppExeName "FluGenPass.exe"

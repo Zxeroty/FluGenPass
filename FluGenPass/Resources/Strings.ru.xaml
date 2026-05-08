@@ -187,7 +187,10 @@
     <sys:String x:Key="TransferDlgTrustTitle">Неизвестный автор</sys:String>
     <sys:String x:Key="TransferDlgTrustMsg">Подпись верна, но автор не является доверенным в этом приложении. Все равно импортировать?</sys:String>
 
-    <sys:String x:Key="DlgKeyFileDisableTitle">Отключение Key File</sys:String>
-    <sys:String x:Key="DlgKeyFileDisableMsg">Приложение перестанет требовать ключевой файл после ввода пароля. Сам файл не будет удален с диска.</sys:String>
-    <sys:String x:Key="DlgKeyFileDisableBtn">Отключить</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableTitle">Отключение требования ключ-файла</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableMsg">Хранилище перестанет запрашивать ключ-файл после мастер-пароля. Сам файл не будет удален с диска.</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableBtn">Отключить защиту</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningTitle">Важно: Предупреждение о Ключ-файле</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningMsg">Если вы потеряете этот ключ-файл, ваши данные в хранилище будут утеряны НАВСЕГДА. Без него восстановить пароли невозможно. Вы уверены, что хотите продолжить?</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningBtn">Я понимаю, продолжить</sys:String>
 </ResourceDictionary>
