@@ -21,8 +21,8 @@ public sealed class Argon2idSecurityTests : IDisposable
 
         Assert.True(unlocked);
         Assert.Equal(KdfAlgorithm.Argon2id, settings.MasterPassword!.Algorithm);
-        Assert.Equal(65536, settings.MasterPassword.MemorySizeKb);
-        Assert.Equal(4, settings.MasterPassword.DegreeOfParallelism);
+        Assert.InRange(settings.MasterPassword.MemorySizeKb, 131_072, 1_048_576);
+        Assert.InRange(settings.MasterPassword.DegreeOfParallelism, 1, 8);
     }
 
     [Fact]

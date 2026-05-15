@@ -6,195 +6,216 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
       Loaded="OnLoaded">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Page.Resources>
+    
     <Grid Margin="24">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+            <StackPanel>
+                <!-- Title Section -->
+                <ui:Card Margin="0,0,0,24">
+                    <StackPanel Margin="28">
+                        <TextBlock FontSize="30"
+                                   FontWeight="SemiBold"
+                                   Text="{DynamicResource SettingsTitle}" />
+                        <TextBlock Margin="0,10,0,0"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   Text="{DynamicResource SettingsSubtitle}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </ui:Card>
 
-        <ui:Card Margin="0,0,0,24">
-            <StackPanel Margin="28">
-                <TextBlock FontSize="30"
-                           FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsTitle}" />
-                <TextBlock Margin="0,10,0,20"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="{DynamicResource SettingsSubtitle}"
-                           TextWrapping="Wrap" />
+                <!-- Personalization Section -->
+                <ui:Card Margin="0,0,0,24">
+                    <StackPanel Margin="28">
+                        <TextBlock FontSize="24"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,20"
+                                   Text="{DynamicResource SettingsPersonalizationTitle}" />
 
-                <TextBlock FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsThemeTitle}" />
-                <ComboBox Width="240"
-                          Margin="0,12,0,0"
-                          ItemsSource="{Binding ThemeOptions}"
-                          SelectedItem="{Binding SelectedTheme}" />
+                        <!-- Theme -->
+                        <StackPanel Margin="0,0,0,24">
+                            <TextBlock FontSize="16"
+                                       FontWeight="Medium"
+                                       Text="{DynamicResource SettingsThemeTitle}" />
+                            <ComboBox Width="240"
+                                      Margin="0,8,0,0"
+                                      HorizontalAlignment="Left"
+                                      ItemsSource="{Binding ThemeOptions}"
+                                      SelectedItem="{Binding SelectedTheme}" />
+                        </StackPanel>
+
+                        <!-- Language -->
+                        <StackPanel>
+                            <TextBlock FontSize="16"
+                                       FontWeight="Medium"
+                                       Text="{DynamicResource SettingsLanguageTitle}" />
+                            <TextBlock FontSize="13"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       Text="{DynamicResource SettingsLanguageSubtitle}" />
+                            <ComboBox Width="240"
+                                      Margin="0,10,0,0"
+                                      HorizontalAlignment="Left"
+                                      ItemsSource="{Binding LanguageOptions}"
+                                      SelectedItem="{Binding SelectedLanguage}" />
+                        </StackPanel>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- Auto-Lock Section -->
+                <ui:Card Margin="0,0,0,24">
+                    <StackPanel Margin="28">
+                        <TextBlock FontSize="24"
+                                   FontWeight="SemiBold"
+                                   Text="{DynamicResource SettingsAutoLockTitle}" />
+                        <TextBlock Margin="0,10,0,24"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   Text="{DynamicResource SettingsAutoLockSubtitle}"
+                                   TextWrapping="Wrap" />
+
+                        <StackPanel Margin="0,0,0,24">
+                            <TextBlock FontSize="16"
+                                       FontWeight="Medium"
+                                       Text="{DynamicResource SettingsAutoLockSwitch}" />
+                            <ui:ToggleSwitch Margin="0,8,0,0"
+                                             HorizontalAlignment="Left"
+                                             IsChecked="{Binding AutoLockEnabled}" />
+                        </StackPanel>
+
+                        <StackPanel IsEnabled="{Binding AutoLockEnabled}">
+                            <TextBlock FontSize="16"
+                                       FontWeight="Medium"
+                                       Text="{DynamicResource SettingsAutoLockAfter}" />
+                            <TextBlock FontSize="13"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       Text="{DynamicResource SettingsAutoLockMinutes}" />
+                            <ComboBox Width="180"
+                                      Margin="0,10,0,0"
+                                      HorizontalAlignment="Left"
+                                      ItemsSource="{Binding AutoLockTimeoutOptions}"
+                                      SelectedItem="{Binding AutoLockTimeoutMinutes}" />
+                        </StackPanel>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- Security Section -->
+                <ui:Card Margin="0,0,0,24">
+                    <StackPanel Margin="28">
+                        <TextBlock FontSize="24"
+                                   FontWeight="SemiBold"
+                                   Text="{DynamicResource SettingsSecurityTitle}" />
+                        <TextBlock Margin="0,10,0,24"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   Text="{DynamicResource SettingsSecuritySubtitle}"
+                                   TextWrapping="Wrap" />
+
+                        <StackPanel Margin="0,0,0,16">
+                            <TextBlock FontSize="16"
+                                       FontWeight="Medium"
+                                       Text="{DynamicResource SettingsKeyFileTitle}" />
+                            <TextBlock FontSize="13"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       Text="{Binding KeyFileDescription}"
+                                       TextWrapping="Wrap" />
+                            <ui:ToggleSwitch Margin="0,10,0,0"
+                                             HorizontalAlignment="Left"
+                                             IsChecked="{Binding IsKeyFileEnabled}" />
+                        </StackPanel>
+
+                        <StackPanel HorizontalAlignment="Left" 
+                                    Visibility="{Binding IsKeyFileEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <ui:Button Command="{Binding RegenerateKeyFileCommand}"
+                                       Content="{DynamicResource SettingsKeyFileBtnRegenerate}"
+                                       Icon="{ui:SymbolIcon Symbol=Key24}" />
+                        </StackPanel>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- Vault Access Section -->
+                <ui:Card Margin="0,0,0,24">
+                    <StackPanel Margin="28">
+                        <TextBlock FontSize="24"
+                                   FontWeight="SemiBold"
+                                   Text="{DynamicResource SettingsVaultAccessTitle}" />
+                        <TextBlock Margin="0,10,0,24"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   Text="{Binding VaultAccessDescription}"
+                                   TextWrapping="Wrap" />
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <ui:Button Margin="0,0,12,0"
+                                       Command="{Binding ConfigureMasterPasswordCommand}"
+                                       Content="{Binding PrimaryVaultPasswordActionLabel}"
+                                       Icon="{ui:SymbolIcon Symbol=Key24}" />
+                            <ui:Button Appearance="Danger"
+                                       Command="{Binding ResetVaultProtectionCommand}"
+                                       Content="{DynamicResource SettingsVaultBtnReset}"
+                                       Icon="{ui:SymbolIcon Symbol=Delete24}"
+                                       Visibility="{Binding HasMasterPassword, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </StackPanel>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- Storage Section -->
+                <ui:Card Margin="0,0,0,24">
+                    <StackPanel Margin="28">
+                        <TextBlock FontSize="24"
+                                   FontWeight="SemiBold"
+                                   Text="{DynamicResource SettingsStorageTitle}" />
+                        <TextBlock Margin="0,10,0,24"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   Text="{DynamicResource SettingsStorageSubtitle}"
+                                   TextWrapping="Wrap" />
+
+                        <StackPanel Margin="0,0,0,16">
+                            <TextBlock FontSize="15"
+                                       FontWeight="Medium"
+                                       Text="{DynamicResource SettingsPathAppData}" />
+                            <Border Margin="0,8,0,0"
+                                    Padding="12,10"
+                                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8">
+                                <TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                           Text="{Binding AppDirectory}"
+                                           TextWrapping="Wrap" />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,16">
+                            <TextBlock FontSize="15"
+                                       FontWeight="Medium"
+                                       Text="{DynamicResource SettingsPathSettings}" />
+                            <Border Margin="0,8,0,0"
+                                    Padding="12,10"
+                                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8">
+                                <TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                           Text="{Binding SettingsFilePath}"
+                                           TextWrapping="Wrap" />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock FontSize="15"
+                                       FontWeight="Medium"
+                                       Text="{DynamicResource SettingsPathVault}" />
+                            <Border Margin="0,8,0,0"
+                                    Padding="12,10"
+                                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8">
+                                <TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                           Text="{Binding VaultFilePath}"
+                                           TextWrapping="Wrap" />
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </ui:Card>
             </StackPanel>
-        </ui:Card>
-
-        <ui:Card Grid.Row="1"
-                 Margin="0,0,0,24">
-            <StackPanel Margin="28">
-                <TextBlock FontSize="24"
-                           FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsAutoLockTitle}" />
-                <TextBlock Margin="0,10,0,18"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="{DynamicResource SettingsAutoLockSubtitle}"
-                           TextWrapping="Wrap" />
-
-                <ui:ToggleSwitch Margin="0,0,0,12"
-                              IsChecked="{Binding AutoLockEnabled}"
-                              Content="{DynamicResource SettingsAutoLockSwitch}" />
-
-                <StackPanel Margin="0,8,0,0"
-                            IsEnabled="{Binding AutoLockEnabled}">
-                    <TextBlock FontWeight="SemiBold"
-                               Text="{DynamicResource SettingsAutoLockAfter}" />
-                    <ComboBox Width="180"
-                               Margin="0,8,0,0"
-                               ItemsSource="{Binding AutoLockTimeoutOptions}"
-                               SelectedItem="{Binding AutoLockTimeoutMinutes}" />
-                    <TextBlock Margin="0,4,0,0"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               Text="{DynamicResource SettingsAutoLockMinutes}"
-                               TextWrapping="Wrap" />
-                </StackPanel>
-            </StackPanel>
-        </ui:Card>
-
-        <ui:Card Grid.Row="2"
-                 Margin="0,0,0,24">
-            <StackPanel Margin="28">
-                <TextBlock FontSize="24"
-                           FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsVaultAccessTitle}" />
-                <TextBlock Margin="0,10,0,18"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="{Binding VaultAccessDescription}"
-                           TextWrapping="Wrap" />
-
-                <WrapPanel>
-                    <ui:Button Margin="0,0,12,12"
-                               Command="{Binding ConfigureMasterPasswordCommand}"
-                               Content="{Binding PrimaryVaultPasswordActionLabel}"
-                               Icon="{ui:SymbolIcon Symbol=Key24}" />
-                    <ui:Button Margin="0,0,0,12"
-                               Appearance="Danger"
-                               Command="{Binding ResetVaultProtectionCommand}"
-                               Content="{DynamicResource SettingsVaultBtnReset}"
-                               Icon="{ui:SymbolIcon Symbol=Delete24}"
-                               Visibility="{Binding HasMasterPassword, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                </WrapPanel>
-            </StackPanel>
-        </ui:Card>
-
-        <ui:Card Grid.Row="3"
-                 Margin="0,0,0,24">
-            <StackPanel Margin="28">
-                <TextBlock FontSize="24"
-                           FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsStorageTitle}" />
-                <TextBlock Margin="0,10,0,18"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="{DynamicResource SettingsStorageSubtitle}"
-                           TextWrapping="Wrap" />
-
-                <TextBlock FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsPathAppData}" />
-                <Border Margin="0,8,0,0"
-                        Padding="12,10"
-                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="8">
-                    <TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                               Text="{Binding AppDirectory}"
-                               TextWrapping="Wrap" />
-                </Border>
-
-                <TextBlock Margin="0,16,0,0"
-                           FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsPathSettings}" />
-                <Border Margin="0,8,0,0"
-                        Padding="12,10"
-                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="8">
-                    <TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                               Text="{Binding SettingsFilePath}"
-                               TextWrapping="Wrap" />
-                </Border>
-
-                <TextBlock Margin="0,16,0,0"
-                           FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsPathVault}" />
-                <Border Margin="0,8,0,0"
-                        Padding="12,10"
-                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="8">
-                    <TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                               Text="{Binding VaultFilePath}"
-                               TextWrapping="Wrap" />
-                </Border>
-            </StackPanel>
-        </ui:Card>
-
-        <ui:Card Grid.Row="4"
-                 Margin="0,0,0,24">
-            <StackPanel Margin="28">
-                <TextBlock FontSize="24"
-                           FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsSecurityTitle}" />
-                <TextBlock Margin="0,10,0,18"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="{DynamicResource SettingsSecuritySubtitle}"
-                           TextWrapping="Wrap" />
-
-                <TextBlock FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsKeyFileTitle}" />
-                <TextBlock Margin="0,8,0,12"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="{Binding KeyFileDescription}"
-                           TextWrapping="Wrap" />
-                <ui:ToggleSwitch Margin="0,0,0,12"
-                                 IsChecked="{Binding IsKeyFileEnabled}"
-                                 Content="{DynamicResource SettingsKeyFileSwitch}" />
-                <ui:Button Width="180"
-                           Margin="0,0,0,18"
-                           Command="{Binding RegenerateKeyFileCommand}"
-                           Content="{DynamicResource SettingsKeyFileBtnRegenerate}"
-                           Icon="{ui:SymbolIcon Symbol=Key24}"
-                           Visibility="{Binding IsKeyFileEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                <ui:Button Width="180"
-                           Command="{Binding LockVaultCommand}"
-                           Content="{DynamicResource CommonBtnLock}"
-                           Icon="{ui:SymbolIcon Symbol=LockClosed24}"
-                           Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            </StackPanel>
-        </ui:Card>
-
-        <ui:Card Grid.Row="5">
-            <StackPanel Margin="28">
-                <TextBlock FontSize="24"
-                           FontWeight="SemiBold"
-                           Text="{DynamicResource SettingsLanguageTitle}" />
-                <TextBlock Margin="0,10,0,18"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           Text="{DynamicResource SettingsLanguageSubtitle}"
-                           TextWrapping="Wrap" />
-
-                <ComboBox Width="240"
-                          ItemsSource="{Binding LanguageOptions}"
-                          SelectedItem="{Binding SelectedLanguage}" />
-            </StackPanel>
-        </ui:Card>
     </Grid>
 </Page>

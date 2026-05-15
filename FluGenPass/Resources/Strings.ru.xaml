@@ -47,7 +47,7 @@
     <sys:String x:Key="VaultColTags">Теги</sys:String>
     <sys:String x:Key="VaultColCreated">Создан</sys:String>
     <sys:String x:Key="VaultColActions">Действия</sys:String>
-    <sys:String x:Key="VaultFilterLabel">Фильтр по тегу</sys:String>
+    <sys:String x:Key="VaultFilterLabel">Фильтер по тегу</sys:String>
     <sys:String x:Key="VaultSearchPlaceholder">Поиск сайта или тега...</sys:String>
     <sys:String x:Key="VaultFilterAllTags">Все теги</sys:String>
     <sys:String x:Key="VaultFilterMatches">Показано {0} из {1} записей для тега '{2}'.</sys:String>
@@ -76,6 +76,7 @@
     <!-- Страница настроек -->
     <sys:String x:Key="SettingsTitle">Настройки</sys:String>
     <sys:String x:Key="SettingsSubtitle">Настройте поведение темы и проверьте, где FluGenPass хранит настройки и зашифрованное хранилище.</sys:String>
+    <sys:String x:Key="SettingsPersonalizationTitle">Персонализация</sys:String>
     <sys:String x:Key="SettingsThemeTitle">Тема</sys:String>
     <sys:String x:Key="SettingsAutoLockTitle">Автоблокировка</sys:String>
     <sys:String x:Key="SettingsAutoLockSubtitle">Автоматически блокировать хранилище после периода бездействия. Активность клавиатуры и мыши сбрасывает таймер.</sys:String>
@@ -190,7 +191,11 @@
     <sys:String x:Key="DlgKeyFileDisableTitle">Отключение требования ключ-файла</sys:String>
     <sys:String x:Key="DlgKeyFileDisableMsg">Хранилище перестанет запрашивать ключ-файл после мастер-пароля. Сам файл не будет удален с диска.</sys:String>
     <sys:String x:Key="DlgKeyFileDisableBtn">Отключить защиту</sys:String>
-    <sys:String x:Key="DlgKeyFileWarningTitle">Важно: Предупреждение о Ключ-файле</sys:String>
-    <sys:String x:Key="DlgKeyFileWarningMsg">Если вы потеряете этот ключ-файл, ваши данные в хранилище будут утеряны НАВСЕГДА. Без него восстановить пароли невозможно. Вы уверены, что хотите продолжить?</sys:String>
-    <sys:String x:Key="DlgKeyFileWarningBtn">Я понимаю, продолжить</sys:String>
+
+    <sys:String x:Key="DlgKeyFileWarningTitle">КРИТИЧЕСКОЕ ПРЕДУПРЕЖДЕНИЕ</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningMsg">Создание или замена файла-ключа — это действие, которое невозможно отменить. Для продолжения вы должны подтвердить все пункты:</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck1">Я понимаю, что без этого файла доступ к моим паролям будет невозможен.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck2">Я обязуюсь хранить копию файла-ключа в надежном месте.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck3">Я осознаю, что разработчик не имеет технической возможности восстановить мои данные.</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningBtn">Я всё осознаю, продолжить</sys:String>
 </ResourceDictionary>

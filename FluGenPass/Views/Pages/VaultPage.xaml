@@ -6,6 +6,9 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
       Loaded="OnLoaded">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Page.Resources>
     <Grid Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -19,7 +22,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel>
+                <StackPanel Margin="0,0,20,0">
                     <TextBlock FontSize="30"
                                FontWeight="SemiBold"
                                Text="{DynamicResource VaultTitle}" />
@@ -33,37 +36,49 @@
                 </StackPanel>
 
                 <WrapPanel Grid.Column="1"
-                           Margin="24,0,0,0"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top">
+                    <!-- Refresh Button -->
                     <ui:Button Margin="0,0,12,12"
                                Command="{Binding RefreshCommand}"
                                Content="{DynamicResource VaultBtnRefresh}"
                                Icon="{ui:SymbolIcon Symbol=ArrowClockwise24}" />
+                    
+                    <!-- Import & Export Dropdown -->
+                    <ui:DropDownButton Margin="0,0,12,12"
+                                       Content="{DynamicResource VaultBtnImport}"
+                                       Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
+                                       Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <ui:DropDownButton.Flyout>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ImportPasswordsCommand}"
+                                          Header="{DynamicResource VaultBtnImport}">
+                                    <MenuItem.Icon>
+                                        <ui:SymbolIcon Symbol="ArrowUpload24" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Command="{Binding ExportSecureCommand}"
+                                          Header="{DynamicResource VaultBtnExportBackup}">
+                                    <MenuItem.Icon>
+                                        <ui:SymbolIcon Symbol="SaveArrowRight20" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding ExportBitwardenCsvCommand}"
+                                          Header="{DynamicResource VaultBtnExportCsv}">
+                                    <MenuItem.Icon>
+                                        <ui:SymbolIcon Symbol="DocumentArrowRight24" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </ui:DropDownButton.Flyout>
+                    </ui:DropDownButton>
+
+                    <!-- Verify File Button -->
                     <ui:Button Margin="0,0,0,12"
-                               Command="{Binding ImportPasswordsCommand}"
-                               Content="{DynamicResource VaultBtnImport}"
-                               Icon="{ui:SymbolIcon Symbol=ArrowUpload24}"
-                               Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                    <ui:Button Margin="12,0,0,12"
-                               Command="{Binding ExportSecureCommand}"
-                               Content="{DynamicResource VaultBtnExportBackup}"
-                               Icon="{ui:SymbolIcon Symbol=SaveArrowRight20}" 
-                               Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                    <ui:Button Margin="12,0,0,12"
-                               Command="{Binding ExportBitwardenCsvCommand}"
-                               Content="{DynamicResource VaultBtnExportCsv}"
-                               Icon="{ui:SymbolIcon Symbol=DocumentArrowRight24}"
-                               Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                    <ui:Button Margin="12,0,12,12"
                                Command="{Binding VerifyTransferFileCommand}"
                                Content="{DynamicResource VaultBtnVerify}"
                                Icon="{ui:SymbolIcon Symbol=ShieldCheckmark24}" />
-                    <ui:Button Margin="0,0,0,12"
-                               Command="{Binding LockVaultCommand}"
-                               Content="{DynamicResource VaultBtnLock}"
-                               Icon="{ui:SymbolIcon Symbol=LockClosed24}"
-                               Visibility="{Binding IsVaultUnlocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 </WrapPanel>
             </Grid>
         </ui:Card>

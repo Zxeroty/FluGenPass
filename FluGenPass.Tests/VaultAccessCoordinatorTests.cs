@@ -24,7 +24,8 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
             new TestDialogService("CorrectHorseBatteryStaple!", keyFilePath),
             services.MasterPassword,
             services.KeyFile,
-            new TestNotificationService()
+            new TestNotificationService(),
+            services.Settings
         );
 
         bool accessGranted = await coordinator.EnsureAccessAsync();
@@ -47,7 +48,8 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
             new TestDialogService("CorrectHorseBatteryStaple!", keyFilePath: null),
             services.MasterPassword,
             services.KeyFile,
-            new TestNotificationService()
+            new TestNotificationService(),
+            services.Settings
         );
 
         bool accessGranted = await coordinator.EnsureAccessAsync();
@@ -72,7 +74,8 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
             new TestDialogService("CorrectHorseBatteryStaple!", wrongKeyFilePath),
             services.MasterPassword,
             services.KeyFile,
-            new TestNotificationService()
+            new TestNotificationService(),
+            services.Settings
         );
 
         bool accessGranted = await coordinator.EnsureAccessAsync();
@@ -182,6 +185,11 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
         )
         {
             return Task.CompletedTask;
+        }
+
+        public Task<bool> ShowKeyFileWarningAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(true);
         }
     }
 

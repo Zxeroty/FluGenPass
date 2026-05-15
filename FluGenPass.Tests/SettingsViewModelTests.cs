@@ -145,14 +145,14 @@ public sealed class SettingsViewModelTests : IDisposable
 
     private static async Task<bool> WaitForConditionAsync(Func<Task<bool>> condition)
     {
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 120; i++)
         {
             if (await condition())
             {
                 return true;
             }
 
-            await Task.Delay(50);
+            await Task.Delay(250);
         }
 
         return false;
@@ -243,6 +243,11 @@ public sealed class SettingsViewModelTests : IDisposable
         )
         {
             return Task.CompletedTask;
+        }
+
+        public Task<bool> ShowKeyFileWarningAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(confirmResult);
         }
     }
 

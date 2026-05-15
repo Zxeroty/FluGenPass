@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace FluGenPass.Models;
 
-public sealed class AppSettings
+public sealed record AppSettings
 {
     public AppThemeOption Theme { get; set; } = AppThemeOption.System;
     public AppLanguageOption Language { get; set; } = AppLanguageOption.English;
@@ -15,41 +15,8 @@ public sealed class AppSettings
 
     public bool AutoLockEnabled { get; set; } = true;
 
-    public AppSettings Clone()
-    {
-        return new AppSettings
-        {
-            Theme = Theme,
-            MasterPassword = MasterPassword is null
-                ? null
-                : new MasterPasswordMetadata
-                {
-                    Algorithm = MasterPassword.Algorithm,
-                    SaltBase64 = MasterPassword.SaltBase64,
-                    VerificationHashBase64 = MasterPassword.VerificationHashBase64,
-                    Iterations = MasterPassword.Iterations,
-                    MemorySizeKb = MasterPassword.MemorySizeKb,
-                    DegreeOfParallelism = MasterPassword.DegreeOfParallelism,
-                    VaultKeyNonceBase64 = MasterPassword.VaultKeyNonceBase64,
-                    VaultKeyCiphertextBase64 = MasterPassword.VaultKeyCiphertextBase64,
-                    VaultKeyTagBase64 = MasterPassword.VaultKeyTagBase64,
-                    VaultKeyProtectionMode = MasterPassword.VaultKeyProtectionMode,
-                },
-            KeyFile = KeyFile is null
-                ? null
-                : new KeyFileMetadata
-                {
-                    Version = KeyFile.Version,
-                    FileName = KeyFile.FileName,
-                    SaltBase64 = KeyFile.SaltBase64,
-                    VerificationHashBase64 = KeyFile.VerificationHashBase64,
-                    CreatedUtc = KeyFile.CreatedUtc,
-                },
-            AutoLockTimeoutMinutes = AutoLockTimeoutMinutes,
-            AutoLockEnabled = AutoLockEnabled,
-            Language = Language
-        };
-    }
+    public int AuthFailedAttempts { get; set; }
+    public DateTimeOffset? AuthLockoutUntilUtc { get; set; }
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -73,7 +40,7 @@ public enum VaultKeyProtectionMode
     PasswordAndKeyFile
 }
 
-public sealed class MasterPasswordMetadata
+public sealed record MasterPasswordMetadata
 {
     public KdfAlgorithm Algorithm { get; set; } = KdfAlgorithm.Pbkdf2;
 
@@ -93,7 +60,7 @@ public sealed class MasterPasswordMetadata
     public VaultKeyProtectionMode VaultKeyProtectionMode { get; set; } = VaultKeyProtectionMode.PasswordOnly;
 }
 
-public sealed class KeyFileMetadata
+public sealed record KeyFileMetadata
 {
     public int Version { get; set; } = 1;
 

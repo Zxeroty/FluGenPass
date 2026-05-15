@@ -13,11 +13,14 @@ namespace FluGenPass.Services;
 public sealed class DialogService : IDialogService
 {
     private readonly IContentDialogService _contentDialogService = new ContentDialogService();
+    private ContentDialogHost? _dialogHost;
     private Window? _ownerWindow;
     private bool _isInitialized;
 
     public void Initialize(ContentDialogHost dialogHost, Window ownerWindow)
     {
+        _dialogHost = dialogHost;
+        _dialogHost.IsHitTestVisible = false;
         _contentDialogService.SetDialogHost(dialogHost);
         _ownerWindow = ownerWindow;
         _isInitialized = true;
@@ -88,7 +91,7 @@ public sealed class DialogService : IDialogService
                 DefaultButton = ContentDialogButton.Primary,
             };
 
-            ContentDialogResult result = await _contentDialogService.ShowAsync(dialog, cancellationToken);
+            ContentDialogResult result = await ShowDialogAsync(dialog, cancellationToken);
 
             if (result != ContentDialogResult.Primary)
             {
@@ -192,7 +195,7 @@ public sealed class DialogService : IDialogService
             DefaultButton = ContentDialogButton.Close,
         };
 
-        ContentDialogResult result = await _contentDialogService.ShowAsync(dialog, cancellationToken);
+        ContentDialogResult result = await ShowDialogAsync(dialog, cancellationToken);
         return result == ContentDialogResult.Primary;
     }
 
@@ -222,7 +225,40 @@ public sealed class DialogService : IDialogService
             CloseButtonText = closeButtonText,
         };
 
-        await _contentDialogService.ShowAsync(dialog, cancellationToken);
+        await ShowDialogAsync(dialog, cancellationToken);
+    }
+
+    public async Task<bool> ShowKeyFileWarningAsync(CancellationToken cancellationToken = default)
+    {
+        if (!_isInitialized)
+        {
+            return false;
+        }
+
+        var warningView = new FluGenPass.Views.Dialogs.KeyFileWarningView();
+        
+        ContentDialog dialog = new()
+        {
+            Title = GetString("DlgKeyFileWarningTitle"),
+            Content = warningView,
+            PrimaryButtonText = GetString("DlgKeyFileWarningBtn"),
+            CloseButtonText = GetString("CommonBtnCancel"),
+            DefaultButton = ContentDialogButton.Close,
+            IsPrimaryButtonEnabled = false
+        };
+
+        warningView.ValidationChanged += (isValid) =>
+        {
+            dialog.IsPrimaryButtonEnabled = isValid;
+        };
+
+        ContentDialogResult result = await ShowDialogAsync(dialog, cancellationToken);
+        return result == ContentDialogResult.Primary;
+    }
+
+    private string GetString(string key)
+    {
+        return Application.Current.Resources[key] as string ?? key;
     }
 
     private async Task<string?> PromptForPasswordAsync(
@@ -254,7 +290,7 @@ public sealed class DialogService : IDialogService
                 DefaultButton = ContentDialogButton.Primary,
             };
 
-            ContentDialogResult result = await _contentDialogService.ShowAsync(dialog, cancellationToken);
+            ContentDialogResult result = await ShowDialogAsync(dialog, cancellationToken);
 
             if (result != ContentDialogResult.Primary)
             {
@@ -312,7 +348,7 @@ public sealed class DialogService : IDialogService
                 DefaultButton = ContentDialogButton.Primary,
             };
 
-            ContentDialogResult result = await _contentDialogService.ShowAsync(dialog, cancellationToken);
+            ContentDialogResult result = await ShowDialogAsync(dialog, cancellationToken);
 
             if (result != ContentDialogResult.Primary)
             {
@@ -340,5 +376,25 @@ public sealed class DialogService : IDialogService
             Text = message,
             TextWrapping = TextWrapping.Wrap,
         };
+    }
+
+    private async Task<ContentDialogResult> ShowDialogAsync(ContentDialog dialog, CancellationToken cancellationToken)
+    {
+        if (_dialogHost is not null)
+        {
+            _dialogHost.IsHitTestVisible = true;
+        }
+
+        try
+        {
+            return await _contentDialogService.ShowAsync(dialog, cancellationToken);
+        }
+        finally
+        {
+            if (_dialogHost is not null)
+            {
+                _dialogHost.IsHitTestVisible = false;
+            }
+        }
     }
 }

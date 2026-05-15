@@ -49,9 +49,16 @@ public partial class MainWindow : FluentWindow
     {
         Loaded -= OnLoaded;
 
-        await _themeService.InitializeAsync(this);
-        await InitializeAutoLockAsync();
-        RootNavigationView.Navigate(typeof(GeneratorPage));
+        try
+        {
+            await _themeService.InitializeAsync(this);
+            await InitializeAutoLockAsync();
+            RootNavigationView.Navigate(typeof(GeneratorPage));
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ShowError("Initialization error", ex.Message);
+        }
     }
 
     private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -79,9 +86,16 @@ public partial class MainWindow : FluentWindow
 
         args.Cancel = true;
 
-        if (await _vaultAccessCoordinator.EnsureAccessAsync())
+        try
         {
-            sender.Navigate(typeof(VaultPage));
+            if (await _vaultAccessCoordinator.EnsureAccessAsync())
+            {
+                sender.Navigate(typeof(VaultPage));
+            }
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ShowError("Navigation error", ex.Message);
         }
     }
 

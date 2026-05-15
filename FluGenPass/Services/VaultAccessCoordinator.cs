@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using FluGenPass.Models;
 
 namespace FluGenPass.Services;
 
@@ -6,11 +7,57 @@ public sealed class VaultAccessCoordinator(
     IDialogService dialogService,
     IMasterPasswordService masterPasswordService,
     IKeyFileService keyFileService,
-    INotificationService notificationService
+    INotificationService notificationService,
+    ISettingsService settingsService
 ) : IVaultAccessCoordinator
 {
+    private const int MaxFailedAttempts = 3;
+    private const int LockoutMinutes = 5;
+
+    private async Task RecordFailedAttemptAsync(CancellationToken ct)
+    {
+        var settings = await settingsService.GetAsync(ct);
+        settings.AuthFailedAttempts++;
+        
+        if (settings.AuthFailedAttempts >= MaxFailedAttempts)
+        {
+            settings.AuthLockoutUntilUtc = DateTimeOffset.UtcNow.AddMinutes(LockoutMinutes);
+        }
+        
+        await settingsService.SaveAsync(settings, ct);
+    }
+
+    private async Task ResetFailedAttemptsAsync(CancellationToken ct)
+    {
+        var settings = await settingsService.GetAsync(ct);
+        if (settings.AuthFailedAttempts > 0 || settings.AuthLockoutUntilUtc != null)
+        {
+            settings.AuthFailedAttempts = 0;
+            settings.AuthLockoutUntilUtc = null;
+            await settingsService.SaveAsync(settings, ct);
+        }
+    }
+
     public async Task<bool> EnsureAccessAsync(CancellationToken cancellationToken = default)
     {
+        var settings = await settingsService.GetAsync(cancellationToken);
+
+        if (settings.AuthLockoutUntilUtc.HasValue && DateTimeOffset.UtcNow < settings.AuthLockoutUntilUtc.Value)
+        {
+            TimeSpan remaining = settings.AuthLockoutUntilUtc.Value - DateTimeOffset.UtcNow;
+            notificationService.ShowError(
+                "Locked out", 
+                $"Too many failed attempts. Try again in {Math.Ceiling(remaining.TotalSeconds)} seconds."
+            );
+            return false;
+        }
+
+        // If lockout expired but we still have failed attempts, reset them on first attempt
+        if (settings.AuthFailedAttempts >= MaxFailedAttempts)
+        {
+            await ResetFailedAttemptsAsync(cancellationToken);
+        }
+
         if (masterPasswordService.IsUnlocked)
         {
             return true;
@@ -41,6 +88,7 @@ public sealed class VaultAccessCoordinator(
 
         if (!passwordVerified)
         {
+            await RecordFailedAttemptAsync(cancellationToken);
             notificationService.ShowError("Access denied", "That master password did not unlock the vault.");
             return false;
         }
@@ -53,10 +101,12 @@ public sealed class VaultAccessCoordinator(
             );
             if (!passwordUnlocked)
             {
+                await RecordFailedAttemptAsync(cancellationToken);
                 notificationService.ShowError("Access denied", "That master password did not unlock the vault.");
                 return false;
             }
 
+            await ResetFailedAttemptsAsync(cancellationToken);
             notificationService.ShowSuccess("Vault unlocked", "Saved credentials are available for this session.");
             return true;
         }
@@ -71,6 +121,7 @@ public sealed class VaultAccessCoordinator(
         byte[]? keyFileSecret = await keyFileService.GetAndVerifySecretAsync(keyFilePath, cancellationToken);
         if (keyFileSecret is null)
         {
+            await RecordFailedAttemptAsync(cancellationToken);
             masterPasswordService.Lock();
             notificationService.ShowError("Access denied", "That key file did not unlock the vault.");
             return false;
@@ -81,11 +132,13 @@ public sealed class VaultAccessCoordinator(
             bool unlocked = await masterPasswordService.TryUnlockAsync(password, keyFileSecret, cancellationToken);
             if (!unlocked)
             {
+                await RecordFailedAttemptAsync(cancellationToken);
                 masterPasswordService.Lock();
                 notificationService.ShowError("Access denied", "That key file did not unlock the vault.");
                 return false;
             }
 
+            await ResetFailedAttemptsAsync(cancellationToken);
             notificationService.ShowSuccess(
                 "Vault unlocked",
                 "Master password and key file were accepted for this session."

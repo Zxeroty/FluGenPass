@@ -70,6 +70,7 @@
             </ui:NavigationView>
 
             <ui:ContentDialogHost x:Name="RootContentDialogHost"
+                                  IsHitTestVisible="False"
                                   IsDisableSiblingsEnabled="False" />
 
             <ui:SnackbarPresenter x:Name="RootSnackbarPresenter"

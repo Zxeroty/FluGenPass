@@ -23,27 +23,45 @@ public sealed class MasterPasswordService(
 
     private record Argon2Parameters(int Iterations, int MemoryKb, int Parallelism);
 
+    private const int Argon2Iterations = 3;
+    private const int Argon2MinMemoryKb = 131_072;   // 128 MB floor
+    private const int Argon2MaxMemoryKb = 1_048_576;  // 1 GB ceiling
+    private const int Argon2DefaultMemoryKb = 262_144; // 256 MB fallback
+    private const int Argon2MaxParallelism = 8;
+    private const int RamDivisor = 32; // Use ~1/32 of total RAM
+
     private static Argon2Parameters GetAdaptiveParameters()
     {
-        // Parallelism: Use available cores, but cap at 8 to avoid excessive overhead
-        int parallelism = Math.Clamp(Environment.ProcessorCount, 1, 8);
+        int parallelism = Math.Clamp(Environment.ProcessorCount, 1, Argon2MaxParallelism);
 
-        // Memory: Aim for 256MB as a modern baseline, but adjust based on system RAM
-        // We'll try to use ~1/32 of total RAM, but between 128MB and 1GB
         long totalMemoryBytes = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
-        int memoryKb = 262144; // Default 256MB
+        int memoryKb = Argon2DefaultMemoryKb;
 
         if (totalMemoryBytes > 0)
         {
-            long targetMemoryKb = totalMemoryBytes / 1024 / 32;
-            memoryKb = (int)Math.Clamp(targetMemoryKb, 131072, 1048576); // 128MB to 1GB
+            long targetMemoryKb = totalMemoryBytes / 1024 / RamDivisor;
+            memoryKb = (int)Math.Clamp(targetMemoryKb, Argon2MinMemoryKb, Argon2MaxMemoryKb);
         }
 
-        // Iterations: 3 is a good balance for Argon2id
-        return new Argon2Parameters(3, memoryKb, parallelism);
+        return new Argon2Parameters(Argon2Iterations, memoryKb, parallelism);
     }
 
     public bool IsUnlocked => sessionStateService.IsUnlocked;
+
+    private const int MinPasswordLength = 8;
+
+    private static void ValidatePasswordStrength(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            throw new ArgumentException("Master password cannot be empty.");
+        }
+
+        if (password.Length < MinPasswordLength)
+        {
+            throw new ArgumentException($"Master password must be at least {MinPasswordLength} characters long.");
+        }
+    }
 
     public async Task<bool> HasMasterPasswordAsync(CancellationToken cancellationToken = default)
     {
@@ -85,10 +103,7 @@ public sealed class MasterPasswordService(
         CancellationToken cancellationToken = default
     )
     {
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            throw new ArgumentException("Master password cannot be empty.", nameof(password));
-        }
+        ValidatePasswordStrength(password);
 
         byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
         Argon2Parameters argon2 = GetAdaptiveParameters();
@@ -136,10 +151,7 @@ public sealed class MasterPasswordService(
         CancellationToken cancellationToken = default
     )
     {
-        if (string.IsNullOrWhiteSpace(newPassword))
-        {
-            throw new ArgumentException("Master password cannot be empty.", nameof(newPassword));
-        }
+        ValidatePasswordStrength(newPassword);
 
         if (!sessionStateService.IsUnlocked)
         {

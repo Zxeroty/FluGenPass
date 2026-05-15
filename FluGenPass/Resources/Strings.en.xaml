@@ -77,6 +77,7 @@
     <!-- Settings Page -->
     <sys:String x:Key="SettingsTitle">Settings</sys:String>
     <sys:String x:Key="SettingsSubtitle">Tune theme behavior and review where FluGenPass keeps its local settings and encrypted vault.</sys:String>
+    <sys:String x:Key="SettingsPersonalizationTitle">Personalization</sys:String>
     <sys:String x:Key="SettingsThemeTitle">Theme</sys:String>
     <sys:String x:Key="SettingsAutoLockTitle">Auto-Lock</sys:String>
     <sys:String x:Key="SettingsAutoLockSubtitle">Automatically lock the vault after a period of inactivity. Keyboard and mouse activity resets the timer.</sys:String>
@@ -191,7 +192,11 @@
     <sys:String x:Key="DlgKeyFileDisableTitle">Disable key file requirement</sys:String>
     <sys:String x:Key="DlgKeyFileDisableMsg">The vault will stop asking for the key file after the master password. The file itself will not be deleted from disk.</sys:String>
     <sys:String x:Key="DlgKeyFileDisableBtn">Disable security</sys:String>
-    <sys:String x:Key="DlgKeyFileWarningTitle">Important: Key File Warning</sys:String>
-    <sys:String x:Key="DlgKeyFileWarningMsg">If you lose this key file, your vault data will be lost FOREVER. There is no way to recover your passwords without it. Are you sure you want to proceed?</sys:String>
-    <sys:String x:Key="DlgKeyFileWarningBtn">I understand, proceed</sys:String>
+
+    <sys:String x:Key="DlgKeyFileWarningTitle">CRITICAL WARNING</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningMsg">Creating or replacing a key file is an irreversible action. To continue, you must confirm all of the following:</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck1">I understand that without this key file, access to my passwords will be impossible.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck2">I commit to keeping a backup copy of the key file in a secure location.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck3">I realize that the developer has no technical means to recover my data.</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningBtn">I fully understand, proceed</sys:String>
 </ResourceDictionary>

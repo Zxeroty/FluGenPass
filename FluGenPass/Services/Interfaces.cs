@@ -171,6 +171,8 @@ public interface IDialogService
         string closeButtonText = "Close",
         CancellationToken cancellationToken = default
     );
+
+    Task<bool> ShowKeyFileWarningAsync(CancellationToken cancellationToken = default);
 }
 
 public interface IThemeService

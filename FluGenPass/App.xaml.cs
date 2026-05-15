@@ -121,26 +121,26 @@ public partial class App : Application
         string type = exception.GetType().Name;
 
         string message = RedactSensitiveData(exception.Message);
-
         sb.AppendLine($"{indent}{type}: {message}");
+
+        if (!string.IsNullOrWhiteSpace(exception.StackTrace))
+        {
+            string stackTrace = RedactSensitiveData(exception.StackTrace);
+            sb.AppendLine($"{indent}Stack Trace:");
+            sb.AppendLine(stackTrace);
+        }
 
         if (exception.InnerException != null && depth < 5)
         {
             SanitizeException(exception.InnerException, sb, depth + 1);
         }
-
-        if (depth == 0)
-        {
-            
-            sb.AppendLine();
-            sb.AppendLine(exception.StackTrace ?? "(stack trace unavailable)");
-        }
     }
 
-    private static readonly string[] SensitivePatterns = new[]
-    {
-        "password", "master password", "vault key", "secret", "token", "credential"
-    };
+    // Require an explicit assignment operator (:, =) before redacting the next word,
+    // to avoid redacting normal sentences like "The password field is empty".
+    private static readonly System.Text.RegularExpressions.Regex SensitiveDataRegex = new(
+        @"(?i)(password|master password|vault key|secret|token|credential)\s*[:=]\s*[^\s]+",
+        System.Text.RegularExpressions.RegexOptions.Compiled);
 
     private static string RedactSensitiveData(string message)
     {
@@ -149,21 +149,14 @@ public partial class App : Application
             return message;
         }
 
-        string lower = message.ToLowerInvariant();
-        foreach (string pattern in SensitivePatterns)
+        string redacted = SensitiveDataRegex.Replace(message, "$1=[REDACTED]");
+
+        if (redacted.Length > 500)
         {
-            if (lower.Contains(pattern))
-            {
-                return "[REDACTED]";
-            }
+            return redacted[..500] + "... [truncated]";
         }
 
-        if (message.Length > 500)
-        {
-            return message[..500] + "... [truncated]";
-        }
-
-        return message;
+        return redacted;
     }
 
     private static ServiceProvider ConfigureServices()
@@ -186,17 +179,23 @@ public partial class App : Application
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<ILocalizationService, LocalizationService>();
-        services.AddSingleton<IVaultAccessCoordinator, VaultAccessCoordinator>();
+        services.AddSingleton<IVaultAccessCoordinator>(sp => new VaultAccessCoordinator(
+            sp.GetRequiredService<IDialogService>(),
+            sp.GetRequiredService<IMasterPasswordService>(),
+            sp.GetRequiredService<IKeyFileService>(),
+            sp.GetRequiredService<INotificationService>(),
+            sp.GetRequiredService<ISettingsService>()
+        ));
         services.AddSingleton<IInactivityAutoLockService>(serviceProvider =>
         {
             var sessionState = serviceProvider.GetRequiredService<ISessionStateService>();
             return new InactivityAutoLockService(sessionState, TimeSpan.FromMinutes(5));
         });
 
-        services.AddSingleton<MainViewModel>();
-        services.AddSingleton<GeneratorViewModel>();
-        services.AddSingleton<VaultViewModel>();
-        services.AddSingleton<SettingsViewModel>();
+        services.AddTransient<MainViewModel>();
+        services.AddTransient<GeneratorViewModel>();
+        services.AddTransient<VaultViewModel>();
+        services.AddTransient<SettingsViewModel>();
 
         services.AddSingleton<MainWindow>();
 

@@ -4,39 +4,63 @@ namespace FluGenPass.Services;
 
 public sealed class SessionStateService : ISessionStateService
 {
+    private readonly object _keyLock = new();
     private byte[]? _vaultKey;
 
     public event EventHandler<bool>? UnlockStateChanged;
 
-    public bool IsUnlocked => _vaultKey is { Length: > 0 };
+    public bool IsUnlocked
+    {
+        get
+        {
+            lock (_keyLock)
+            {
+                return _vaultKey is { Length: > 0 };
+            }
+        }
+    }
 
     public void SetVaultKey(byte[] key)
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        Lock();
+        lock (_keyLock)
+        {
+            if (_vaultKey is not null)
+            {
+                CryptographicOperations.ZeroMemory(_vaultKey);
+            }
 
-        _vaultKey = key.ToArray();
+            _vaultKey = key.ToArray();
+        }
+
         UnlockStateChanged?.Invoke(this, true);
     }
 
     public byte[] GetRequiredVaultKey()
     {
-        if (_vaultKey is null)
+        lock (_keyLock)
         {
-            throw new InvalidOperationException("The vault is locked.");
-        }
+            if (_vaultKey is null)
+            {
+                throw new InvalidOperationException("The vault is locked.");
+            }
 
-        return _vaultKey.ToArray();
+            return _vaultKey.ToArray();
+        }
     }
 
     public void Lock()
     {
-        if (_vaultKey is not null)
+        lock (_keyLock)
         {
-            CryptographicOperations.ZeroMemory(_vaultKey);
-            _vaultKey = null;
-            UnlockStateChanged?.Invoke(this, false);
+            if (_vaultKey is not null)
+            {
+                CryptographicOperations.ZeroMemory(_vaultKey);
+                _vaultKey = null;
+            }
         }
+
+        UnlockStateChanged?.Invoke(this, false);
     }
 }
