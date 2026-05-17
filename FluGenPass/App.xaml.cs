@@ -192,10 +192,10 @@ public partial class App : Application
             return new InactivityAutoLockService(sessionState, TimeSpan.FromMinutes(5));
         });
 
-        services.AddTransient<MainViewModel>();
-        services.AddTransient<GeneratorViewModel>();
-        services.AddTransient<VaultViewModel>();
-        services.AddTransient<SettingsViewModel>();
+        services.AddSingleton<MainViewModel>();
+        services.AddSingleton<GeneratorViewModel>();
+        services.AddSingleton<VaultViewModel>();
+        services.AddSingleton<SettingsViewModel>();
 
         services.AddSingleton<MainWindow>();
 

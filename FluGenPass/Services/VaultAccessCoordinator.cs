@@ -65,72 +65,70 @@ public sealed class VaultAccessCoordinator(
 
         if (!await masterPasswordService.HasMasterPasswordAsync(cancellationToken))
         {
-            string? newPassword = await dialogService.PromptForNewMasterPasswordAsync(cancellationToken);
+            char[]? newPassword = await dialogService.PromptForNewMasterPasswordAsync(cancellationToken);
 
-            if (string.IsNullOrWhiteSpace(newPassword))
+            if (newPassword == null || newPassword.Length == 0)
             {
                 return false;
             }
 
-            await masterPasswordService.SetMasterPasswordAsync(newPassword, cancellationToken: cancellationToken);
-            notificationService.ShowSuccess("Vault ready", "Master password created and vault unlocked.");
-            return true;
+            try
+            {
+                await masterPasswordService.SetMasterPasswordAsync(newPassword, cancellationToken: cancellationToken);
+                notificationService.ShowSuccess("Vault ready", "Master password created and vault unlocked.");
+                return true;
+            }
+            finally
+            {
+                newPassword.Clear();
+            }
         }
 
-        string? password = await dialogService.PromptForUnlockPasswordAsync(cancellationToken);
+        char[]? password = await dialogService.PromptForUnlockPasswordAsync(cancellationToken);
 
-        if (string.IsNullOrWhiteSpace(password))
+        if (password == null || password.Length == 0)
         {
             return false;
         }
 
-        bool passwordVerified = await masterPasswordService.VerifyPasswordAsync(password, cancellationToken);
-
-        if (!passwordVerified)
+        try
         {
-            await RecordFailedAttemptAsync(cancellationToken);
-            notificationService.ShowError("Access denied", "That master password did not unlock the vault.");
-            return false;
-        }
+            bool passwordVerified = await masterPasswordService.VerifyPasswordAsync(password, cancellationToken);
 
-        if (!await keyFileService.IsEnabledAsync(cancellationToken))
-        {
-            bool passwordUnlocked = await masterPasswordService.TryUnlockAsync(
-                password,
-                cancellationToken: cancellationToken
-            );
-            if (!passwordUnlocked)
+            if (!passwordVerified)
             {
                 await RecordFailedAttemptAsync(cancellationToken);
                 notificationService.ShowError("Access denied", "That master password did not unlock the vault.");
                 return false;
             }
 
-            await ResetFailedAttemptsAsync(cancellationToken);
-            notificationService.ShowSuccess("Vault unlocked", "Saved credentials are available for this session.");
-            return true;
-        }
+            if (!await keyFileService.IsEnabledAsync(cancellationToken))
+            {
+                bool passwordUnlocked = await masterPasswordService.TryUnlockAsync(
+                    password,
+                    cancellationToken: cancellationToken
+                );
+                if (!passwordUnlocked)
+                {
+                    await RecordFailedAttemptAsync(cancellationToken);
+                    notificationService.ShowError("Access denied", "That master password did not unlock the vault.");
+                    return false;
+                }
 
-        string? keyFilePath = dialogService.PromptForOpenKeyFilePath();
-        if (string.IsNullOrWhiteSpace(keyFilePath))
-        {
-            masterPasswordService.Lock();
-            return false;
-        }
+                await ResetFailedAttemptsAsync(cancellationToken);
+                notificationService.ShowSuccess("Vault unlocked", "Saved credentials are available for this session.");
+                return true;
+            }
 
-        byte[]? keyFileSecret = await keyFileService.GetAndVerifySecretAsync(keyFilePath, cancellationToken);
-        if (keyFileSecret is null)
-        {
-            await RecordFailedAttemptAsync(cancellationToken);
-            masterPasswordService.Lock();
-            notificationService.ShowError("Access denied", "That key file did not unlock the vault.");
-            return false;
-        }
+            string? keyFilePath = dialogService.PromptForOpenKeyFilePath();
+            if (string.IsNullOrWhiteSpace(keyFilePath))
+            {
+                masterPasswordService.Lock();
+                return false;
+            }
 
-        try
-        {
-            bool unlocked = await masterPasswordService.TryUnlockAsync(password, keyFileSecret, cancellationToken);
-            if (!unlocked)
+            byte[]? keyFileSecret = await keyFileService.GetAndVerifySecretAsync(keyFilePath, cancellationToken);
+            if (keyFileSecret is null)
             {
                 await RecordFailedAttemptAsync(cancellationToken);
                 masterPasswordService.Lock();
@@ -138,16 +136,32 @@ public sealed class VaultAccessCoordinator(
                 return false;
             }
 
-            await ResetFailedAttemptsAsync(cancellationToken);
-            notificationService.ShowSuccess(
-                "Vault unlocked",
-                "Master password and key file were accepted for this session."
-            );
-            return true;
+            try
+            {
+                bool unlocked = await masterPasswordService.TryUnlockAsync(password, keyFileSecret, cancellationToken);
+                if (!unlocked)
+                {
+                    await RecordFailedAttemptAsync(cancellationToken);
+                    masterPasswordService.Lock();
+                    notificationService.ShowError("Access denied", "That key file did not unlock the vault.");
+                    return false;
+                }
+
+                await ResetFailedAttemptsAsync(cancellationToken);
+                notificationService.ShowSuccess(
+                    "Vault unlocked",
+                    "Master password and key file were accepted for this session."
+                );
+                return true;
+            }
+            finally
+            {
+                CryptographicOperations.ZeroMemory(keyFileSecret);
+            }
         }
         finally
         {
-            CryptographicOperations.ZeroMemory(keyFileSecret);
+            password?.Clear();
         }
     }
 

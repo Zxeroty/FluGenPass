@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -50,9 +51,9 @@ public sealed class MasterPasswordService(
 
     private const int MinPasswordLength = 8;
 
-    private static void ValidatePasswordStrength(string password)
+    private static void ValidatePasswordStrength(char[] password)
     {
-        if (string.IsNullOrWhiteSpace(password))
+        if (password == null || password.Length == 0)
         {
             throw new ArgumentException("Master password cannot be empty.");
         }
@@ -69,7 +70,7 @@ public sealed class MasterPasswordService(
         return settings.MasterPassword is not null;
     }
 
-    public async Task<bool> VerifyPasswordAsync(string password, CancellationToken cancellationToken = default)
+    public async Task<bool> VerifyPasswordAsync(char[] password, CancellationToken cancellationToken = default)
     {
         AppSettings settings = await settingsService.GetAsync(cancellationToken);
         MasterPasswordMetadata? metadata = settings.MasterPassword;
@@ -98,7 +99,7 @@ public sealed class MasterPasswordService(
     }
 
     public async Task SetMasterPasswordAsync(
-        string password,
+        char[] password,
         byte[]? keyFileSecret = null,
         CancellationToken cancellationToken = default
     )
@@ -146,7 +147,7 @@ public sealed class MasterPasswordService(
     }
 
     public async Task ChangeMasterPasswordAsync(
-        string newPassword,
+        char[] newPassword,
         byte[]? newKeyFileSecret = null,
         CancellationToken cancellationToken = default
     )
@@ -220,7 +221,7 @@ public sealed class MasterPasswordService(
     }
 
     public async Task EnableKeyFileAsync(
-        string password,
+        char[] password,
         KeyFileMetadata keyFileMetadata,
         byte[] keyFileSecret,
         CancellationToken cancellationToken = default
@@ -294,7 +295,7 @@ public sealed class MasterPasswordService(
         }
     }
 
-    public async Task DisableKeyFileAsync(string password, CancellationToken cancellationToken = default)
+    public async Task DisableKeyFileAsync(char[] password, CancellationToken cancellationToken = default)
     {
         if (!sessionStateService.IsUnlocked)
         {
@@ -409,7 +410,7 @@ public sealed class MasterPasswordService(
     }
 
     public async Task<bool> TryUnlockAsync(
-        string password,
+        char[] password,
         byte[]? keyFileSecret = null,
         CancellationToken cancellationToken = default
     )
@@ -508,23 +509,58 @@ public sealed class MasterPasswordService(
         sessionStateService.Lock();
     }
 
-    private static byte[] DeriveBaseKeyPbkdf2(string password, byte[] salt, int iterations)
+    private static byte[] DeriveBaseKeyPbkdf2(char[] password, byte[] salt, int iterations)
     {
-        return Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, HashAlgorithmName.SHA256, KeySize);
+        int maxByteCount = Encoding.UTF8.GetMaxByteCount(password.Length);
+        byte[] passwordBytes = ArrayPool<byte>.Shared.Rent(maxByteCount);
+        try
+        {
+            int actualByteCount = Encoding.UTF8.GetBytes(password, 0, password.Length, passwordBytes, 0);
+            return Rfc2898DeriveBytes.Pbkdf2(passwordBytes.AsSpan(0, actualByteCount), salt, iterations, HashAlgorithmName.SHA256, KeySize);
+        }
+        finally
+        {
+            CryptographicOperations.ZeroMemory(passwordBytes);
+            ArrayPool<byte>.Shared.Return(passwordBytes);
+        }
     }
 
-    private static byte[] DeriveBaseKeyArgon2id(string password, byte[] salt, int iterations, int memoryKb, int parallelism)
+    private static byte[] DeriveBaseKeyArgon2id(char[] password, byte[] salt, int iterations, int memoryKb, int parallelism)
     {
-        using var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password));
-        argon2.Salt = salt;
-        argon2.DegreeOfParallelism = parallelism;
-        argon2.MemorySize = memoryKb;
-        argon2.Iterations = iterations;
+        int maxByteCount = Encoding.UTF8.GetMaxByteCount(password.Length);
+        byte[] passwordBytes = ArrayPool<byte>.Shared.Rent(maxByteCount);
+        try
+        {
+            int actualByteCount = Encoding.UTF8.GetBytes(password, 0, password.Length, passwordBytes, 0);
+            
+            // Konscious.Argon2 currently requires a byte[] in its constructor and copies it.
+            // We create a precisely sized temporary array, use it, then wipe it.
+            byte[] exactBytes = new byte[actualByteCount];
+            Buffer.BlockCopy(passwordBytes, 0, exactBytes, 0, actualByteCount);
+            
+            try
+            {
+                using var argon2 = new Argon2id(exactBytes);
+                argon2.Salt = salt;
+                argon2.DegreeOfParallelism = parallelism;
+                argon2.MemorySize = memoryKb;
+                argon2.Iterations = iterations;
 
-        return argon2.GetBytes(KeySize);
+                return argon2.GetBytes(KeySize);
+            }
+            finally
+            {
+                CryptographicOperations.ZeroMemory(exactBytes);
+            }
+        }
+        finally
+        {
+            CryptographicOperations.ZeroMemory(passwordBytes);
+            ArrayPool<byte>.Shared.Return(passwordBytes);
+        }
     }
 
-    private static byte[] DeriveBaseKey(string password, MasterPasswordMetadata metadata, byte[] salt)
+    private static byte[] DeriveBaseKey(char[] password, MasterPasswordMetadata metadata, byte[] salt)
     {
         return metadata.Algorithm switch
         {

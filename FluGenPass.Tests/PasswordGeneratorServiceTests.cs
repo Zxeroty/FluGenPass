@@ -19,7 +19,7 @@ public sealed class PasswordGeneratorServiceTests
             IncludeSymbols = true,
         };
 
-        string password = _service.Generate(options);
+        char[] password = _service.Generate(options);
 
         Assert.Equal(32, password.Length);
     }
@@ -36,7 +36,7 @@ public sealed class PasswordGeneratorServiceTests
             IncludeSymbols = true,
         };
 
-        string password = _service.Generate(options);
+        char[] password = _service.Generate(options);
 
         Assert.Contains(password, character => char.IsUpper(character));
         Assert.Contains(password, character => char.IsLower(character));

@@ -36,7 +36,7 @@ public partial class VaultEntryItemViewModel : ObservableObject
 
     public string SiteName => Entry.SiteName;
 
-    public string Password => Entry.Password;
+    public string Password => new string(Entry.Password);
 
     public IReadOnlyList<string> Tags => Entry.Tags;
 
@@ -46,7 +46,7 @@ public partial class VaultEntryItemViewModel : ObservableObject
 
     public DateTimeOffset CreatedUtc => Entry.CreatedUtc;
 
-    public string PasswordDisplay => IsRevealed ? Entry.Password : new string('*', Math.Max(12, Entry.Password.Length));
+    public string PasswordDisplay => IsRevealed ? new string(Entry.Password) : new string('*', Math.Max(12, Entry.Password.Length));
 
     public string RevealButtonText => IsRevealed 
         ? _localizationService.GetString("VaultBtnHide") 

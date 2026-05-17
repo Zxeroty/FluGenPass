@@ -14,7 +14,7 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
     public async Task EnsureAccessAsync_WithKeyFileEnabled_RequiresPasswordAndKeyFile()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         string keyFilePath = Path.Combine(_tempDirectory, "vault.fgpkey");
         await CreateAndEnableKeyFileAsync(services, keyFilePath);
@@ -38,7 +38,7 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
     public async Task EnsureAccessAsync_WithKeyFileEnabled_LocksWhenKeyFileIsCancelled()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         string keyFilePath = Path.Combine(_tempDirectory, "vault.fgpkey");
         await CreateAndEnableKeyFileAsync(services, keyFilePath);
@@ -62,7 +62,7 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
     public async Task EnsureAccessAsync_WithKeyFileEnabled_LocksWhenKeyFileIsWrong()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         string keyFilePath = Path.Combine(_tempDirectory, "vault.fgpkey");
         string wrongKeyFilePath = Path.Combine(_tempDirectory, "wrong.fgpkey");
@@ -119,7 +119,7 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
         try
         {
             await services.MasterPassword.EnableKeyFileAsync(
-                "CorrectHorseBatteryStaple!",
+                "CorrectHorseBatteryStaple!".ToCharArray(),
                 result.Metadata,
                 result.Secret
             );
@@ -146,14 +146,14 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
             return Task.FromResult<string?>(null);
         }
 
-        public Task<string?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default)
+        public Task<char[]?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(password);
+            return Task.FromResult(password?.ToCharArray());
         }
 
-        public Task<string?> PromptForUnlockPasswordAsync(CancellationToken cancellationToken = default)
+        public Task<char[]?> PromptForUnlockPasswordAsync(CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(password);
+            return Task.FromResult(password?.ToCharArray());
         }
 
         public string? PromptForSaveKeyFilePath()

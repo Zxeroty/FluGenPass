@@ -22,7 +22,7 @@ public sealed class VaultTransferServiceTests : IDisposable
         VaultEntry entry = new()
         {
             SiteName = "example.com",
-            Password = "Secret!123",
+            Password = "Secret!123".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -50,7 +50,7 @@ public sealed class VaultTransferServiceTests : IDisposable
         VaultEntry entry = new()
         {
             SiteName = "bitwarden.example",
-            Password = "CsvSecret!456",
+            Password = "CsvSecret!456".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -100,7 +100,7 @@ public sealed class VaultTransferServiceTests : IDisposable
         VaultEntry existingEntry = new()
         {
             SiteName = "dup.example",
-            Password = "KeepMe!123",
+            Password = "KeepMe!123".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -122,7 +122,7 @@ public sealed class VaultTransferServiceTests : IDisposable
         VaultEntry entry = new()
         {
             SiteName = "tampered.example",
-            Password = "Original!123",
+            Password = "Original!123".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -150,7 +150,7 @@ public sealed class VaultTransferServiceTests : IDisposable
         VaultEntry entry = new()
         {
             SiteName = "cross-device.example",
-            Password = "Signed!321",
+            Password = "Signed!321".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 

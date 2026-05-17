@@ -264,7 +264,7 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
             importedEntries.Add(new VaultEntry
             {
                 SiteName = siteName.Trim(),
-                Password = password,
+                Password = password.ToCharArray(),
                 CreatedUtc = DateTimeOffset.UtcNow.AddTicks(rowNumber),
             });
         }
@@ -550,7 +550,7 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
 
     private static string CreateDuplicateKey(VaultEntry entry)
     {
-        return $"{entry.SiteName.Trim()}::{entry.Password}";
+        return $"{entry.SiteName.Trim()}::{new string(entry.Password)}";
     }
 
     private static List<VaultEntry> CloneEntries(IEnumerable<VaultEntry> entries)
@@ -564,7 +564,7 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
         {
             Id = entry.Id,
             SiteName = entry.SiteName,
-            Password = entry.Password,
+            Password = (char[])entry.Password.Clone(),
             Tags = [.. entry.Tags],
             CreatedUtc = entry.CreatedUtc,
         };
@@ -591,7 +591,7 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
         {
             Type = "login",
             Name = entry.SiteName,
-            LoginPassword = entry.Password,
+            LoginPassword = new string(entry.Password),
         };
     }
 

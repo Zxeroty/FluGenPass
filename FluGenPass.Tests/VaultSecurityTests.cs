@@ -13,10 +13,10 @@ public sealed class VaultSecurityTests : IDisposable
     {
         TestServices services = CreateServices();
 
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
         services.MasterPassword.Lock();
 
-        bool unlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!");
+        bool unlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         Assert.True(await services.MasterPassword.HasMasterPasswordAsync());
         Assert.True(unlocked);
@@ -27,12 +27,12 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task VaultEncryption_RoundTripsEntriesThroughAesGcm()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry expectedEntry = new()
         {
             SiteName = "example.com",
-            Password = "P@ssw0rd!",
+            Password = "P@ssw0rd!".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -48,19 +48,19 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task SaveAsync_ReplacesExistingVaultContents()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry firstEntry = new()
         {
             SiteName = "first.example",
-            Password = "FirstSecret!1",
+            Password = "FirstSecret!1".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow.AddMinutes(-1),
         };
 
         VaultEntry secondEntry = new()
         {
             SiteName = "second.example",
-            Password = "SecondSecret!2",
+            Password = "SecondSecret!2".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -78,12 +78,12 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task SaveAsync_RemovesTemporaryFileAfterSuccessfulWrite()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry entry = new()
         {
             SiteName = "temp-cleanup.example",
-            Password = "CleanupSecret!3",
+            Password = "CleanupSecret!3".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -96,14 +96,14 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task SaveAsync_DeletesStaleTemporaryFileBeforeReplacingVault()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         await File.WriteAllTextAsync(GetTempVaultFilePath(services.Vault), "stale temp data");
 
         VaultEntry entry = new()
         {
             SiteName = "stale-temp.example",
-            Password = "FreshSecret!4",
+            Password = "FreshSecret!4".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -120,19 +120,19 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task SaveAsync_KeepsExistingVaultWhenReplaceFails()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry existingEntry = new()
         {
             SiteName = "existing.example",
-            Password = "ExistingSecret!5",
+            Password = "ExistingSecret!5".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow.AddMinutes(-1),
         };
 
         VaultEntry replacementEntry = new()
         {
             SiteName = "replacement.example",
-            Password = "ReplacementSecret!6",
+            Password = "ReplacementSecret!6".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -159,10 +159,10 @@ public sealed class VaultSecurityTests : IDisposable
     {
         TestServices services = CreateServices();
 
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
         services.MasterPassword.Lock();
 
-        bool unlocked = await services.MasterPassword.TryUnlockAsync("WrongPassword!");
+        bool unlocked = await services.MasterPassword.TryUnlockAsync("WrongPassword!".ToCharArray());
 
         Assert.False(unlocked);
         Assert.False(services.Session.IsUnlocked);
@@ -172,12 +172,12 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task VaultEntries_PersistAcrossServiceInstances()
     {
         TestServices firstInstance = CreateServices();
-        await firstInstance.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await firstInstance.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry entry = new()
         {
             SiteName = "contoso",
-            Password = "S3cret!Value",
+            Password = "S3cret!Value".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -185,7 +185,7 @@ public sealed class VaultSecurityTests : IDisposable
         firstInstance.MasterPassword.Lock();
 
         TestServices secondInstance = CreateServices();
-        bool unlocked = await secondInstance.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!");
+        bool unlocked = await secondInstance.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!".ToCharArray());
         IReadOnlyList<VaultEntry> entries = await secondInstance.Vault.LoadAsync();
 
         Assert.True(unlocked);
@@ -198,22 +198,22 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task ChangeMasterPasswordAsync_PreservesExistingEntries()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry entry = new()
         {
             SiteName = "vault.example",
-            Password = "OriginalSecret!42",
+            Password = "OriginalSecret!42".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
         await services.Vault.SaveAsync([entry]);
-        await services.MasterPassword.ChangeMasterPasswordAsync("NewMasterPassword!123");
+        await services.MasterPassword.ChangeMasterPasswordAsync("NewMasterPassword!123".ToCharArray());
         services.MasterPassword.Lock();
 
-        bool unlockedWithOldPassword = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!");
+        bool unlockedWithOldPassword = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!".ToCharArray());
         services.MasterPassword.Lock();
-        bool unlockedWithNewPassword = await services.MasterPassword.TryUnlockAsync("NewMasterPassword!123");
+        bool unlockedWithNewPassword = await services.MasterPassword.TryUnlockAsync("NewMasterPassword!123".ToCharArray());
         IReadOnlyList<VaultEntry> entries = await services.Vault.LoadAsync();
 
         Assert.False(unlockedWithOldPassword);
@@ -227,12 +227,12 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task KeyFileSetupAndVerification_WorksAfterLockCycle()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry entry = new()
         {
             SiteName = "keyfile.example",
-            Password = "KeyFileSecret!8",
+            Password = "KeyFileSecret!8".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -254,7 +254,7 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task KeyFileVerification_FailsForWrongFile()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         string keyFilePath = Path.Combine(_tempDirectory, "vault.fgpkey");
         string wrongKeyFilePath = Path.Combine(_tempDirectory, "wrong.fgpkey");
@@ -273,12 +273,12 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task ChangeMasterPasswordAsync_KeepsExistingKeyFileValid()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry entry = new()
         {
             SiteName = "stable-keyfile.example",
-            Password = "StillWorks!9",
+            Password = "StillWorks!9".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -288,13 +288,13 @@ public sealed class VaultSecurityTests : IDisposable
         await CreateAndEnableKeyFileAsync(services, keyFilePath);
 
         byte[] keyFileSecret = (await services.KeyFile.GetAndVerifySecretAsync(keyFilePath))!;
-        await services.MasterPassword.ChangeMasterPasswordAsync("NewMasterPassword!123", keyFileSecret);
+        await services.MasterPassword.ChangeMasterPasswordAsync("NewMasterPassword!123".ToCharArray(), keyFileSecret);
         services.MasterPassword.Lock();
 
-        bool passwordOnlyUnlocked = await services.MasterPassword.TryUnlockAsync("NewMasterPassword!123");
+        bool passwordOnlyUnlocked = await services.MasterPassword.TryUnlockAsync("NewMasterPassword!123".ToCharArray());
         byte[] restoredKeyFileSecret = (await services.KeyFile.GetAndVerifySecretAsync(keyFilePath))!;
         bool passwordAndKeyFileUnlocked = await services.MasterPassword.TryUnlockAsync(
-            "NewMasterPassword!123",
+            "NewMasterPassword!123".ToCharArray(),
             restoredKeyFileSecret
         );
         IReadOnlyList<VaultEntry> entries = await services.Vault.LoadAsync();
@@ -311,13 +311,13 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task KeyFileProtectedVault_FailsWithCorrectPasswordOnly()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         string keyFilePath = Path.Combine(_tempDirectory, "required.fgpkey");
         await CreateAndEnableKeyFileAsync(services, keyFilePath);
         services.MasterPassword.Lock();
 
-        bool unlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!");
+        bool unlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         Assert.False(unlocked);
         Assert.False(services.Session.IsUnlocked);
@@ -327,7 +327,7 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task LegacyKeyFileSettings_MigrateToCompositeWrappingAfterTwoStepUnlock()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         string keyFilePath = Path.Combine(_tempDirectory, "legacy.fgpkey");
         KeyFileCreationResult result = await services.KeyFile.CreateKeyFileAsync(keyFilePath);
@@ -344,13 +344,13 @@ public sealed class VaultSecurityTests : IDisposable
 
         services.MasterPassword.Lock();
         byte[] keyFileSecret = (await services.KeyFile.GetAndVerifySecretAsync(keyFilePath))!;
-        bool unlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!", keyFileSecret);
+        bool unlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!".ToCharArray(), keyFileSecret);
         AppSettings migratedSettings = await services.Settings.GetAsync();
         services.MasterPassword.Lock();
 
-        bool passwordOnlyUnlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!");
+        bool passwordOnlyUnlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!".ToCharArray());
         bool passwordAndKeyFileUnlocked = await services.MasterPassword.TryUnlockAsync(
-            "CorrectHorseBatteryStaple!",
+            "CorrectHorseBatteryStaple!".ToCharArray(),
             keyFileSecret
         );
 
@@ -365,12 +365,12 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task ReplacingKeyFile_InvalidatesOldKeyFileAndPreservesEntries()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry entry = new()
         {
             SiteName = "replace-keyfile.example",
-            Password = "ReplacementKeepsMe!10",
+            Password = "ReplacementKeepsMe!10".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
         await services.Vault.SaveAsync([entry]);
@@ -384,7 +384,7 @@ public sealed class VaultSecurityTests : IDisposable
         try
         {
             await services.MasterPassword.EnableKeyFileAsync(
-                "CorrectHorseBatteryStaple!",
+                "CorrectHorseBatteryStaple!".ToCharArray(),
                 newKeyFile.Metadata,
                 newKeyFile.Secret
             );
@@ -395,9 +395,9 @@ public sealed class VaultSecurityTests : IDisposable
         }
 
         services.MasterPassword.Lock();
-        bool oldSecretUnlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!", oldSecret);
+        bool oldSecretUnlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!".ToCharArray(), oldSecret);
         byte[] newSecret = (await services.KeyFile.GetAndVerifySecretAsync(newKeyFilePath))!;
-        bool newSecretUnlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!", newSecret);
+        bool newSecretUnlocked = await services.MasterPassword.TryUnlockAsync("CorrectHorseBatteryStaple!".ToCharArray(), newSecret);
         IReadOnlyList<VaultEntry> entries = await services.Vault.LoadAsync();
 
         Assert.False(oldSecretUnlocked);
@@ -413,12 +413,12 @@ public sealed class VaultSecurityTests : IDisposable
     public async Task ResetAsync_RemovesMasterPasswordAndClearsVault()
     {
         TestServices services = CreateServices();
-        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!");
+        await services.MasterPassword.SetMasterPasswordAsync("CorrectHorseBatteryStaple!".ToCharArray());
 
         VaultEntry entry = new()
         {
             SiteName = "reset.example",
-            Password = "ToBeDeleted!7",
+            Password = "ToBeDeleted!7".ToCharArray(),
             CreatedUtc = DateTimeOffset.UtcNow,
         };
 
@@ -474,7 +474,7 @@ public sealed class VaultSecurityTests : IDisposable
         KeyFileCreationResult result = await services.KeyFile.CreateKeyFileAsync(keyFilePath);
         try
         {
-            await services.MasterPassword.EnableKeyFileAsync(password, result.Metadata, result.Secret);
+            await services.MasterPassword.EnableKeyFileAsync(password.ToCharArray(), result.Metadata, result.Secret);
         }
         finally
         {

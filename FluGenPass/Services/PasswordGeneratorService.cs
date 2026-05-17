@@ -10,7 +10,25 @@ public sealed class PasswordGeneratorService : IPasswordGeneratorService
     private const string NumberCharacters = "0123456789";
     private const string SymbolCharacters = "!@#$%^&*()-_=+[]{}<>?/|~";
 
-    public string Generate(PasswordOptions options)
+    public char[] Generate(PasswordOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        int length = Math.Clamp(options.Length, 8, 64);
+        char[] password = new char[length];
+        
+        try
+        {
+            Generate(options, password);
+            return password;
+        }
+        catch
+        {
+            password.Clear();
+            throw;
+        }
+    }
+
+    public void Generate(PasswordOptions options, Span<char> destination)
     {
         ArgumentNullException.ThrowIfNull(options);
 
@@ -22,27 +40,30 @@ public sealed class PasswordGeneratorService : IPasswordGeneratorService
         }
 
         int length = Math.Clamp(options.Length, 8, 64);
-        List<char> passwordCharacters = new(length);
+        if (destination.Length < length)
+        {
+            throw new ArgumentException("Destination span is too short.", nameof(destination));
+        }
+
         string allCharacters = string.Concat(selectedGroups);
+        int count = 0;
 
         foreach (string group in selectedGroups)
         {
-            passwordCharacters.Add(group[RandomNumberGenerator.GetInt32(group.Length)]);
+            destination[count++] = group[RandomNumberGenerator.GetInt32(group.Length)];
         }
 
-        while (passwordCharacters.Count < length)
+        while (count < length)
         {
-            passwordCharacters.Add(allCharacters[RandomNumberGenerator.GetInt32(allCharacters.Length)]);
+            destination[count++] = allCharacters[RandomNumberGenerator.GetInt32(allCharacters.Length)];
         }
 
-        for (int index = passwordCharacters.Count - 1; index > 0; index--)
+        for (int index = length - 1; index > 0; index--)
         {
             int swapIndex = RandomNumberGenerator.GetInt32(index + 1);
-            (passwordCharacters[index], passwordCharacters[swapIndex]) =
-                (passwordCharacters[swapIndex], passwordCharacters[index]);
+            (destination[index], destination[swapIndex]) =
+                (destination[swapIndex], destination[index]);
         }
-
-        return new string(passwordCharacters.ToArray());
     }
 
     public PasswordStrength EvaluateStrength(PasswordOptions options)

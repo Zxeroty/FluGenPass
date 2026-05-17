@@ -221,6 +221,7 @@ public partial class SettingsViewModel : ObservableObject
 
         IsBusy = true;
 
+        char[]? newPassword = null;
         try
         {
             if (HasMasterPassword && !await _vaultAccessCoordinator.EnsureAccessAsync())
@@ -228,9 +229,9 @@ public partial class SettingsViewModel : ObservableObject
                 return;
             }
 
-            string? newPassword = await _dialogService.PromptForNewMasterPasswordAsync();
+            newPassword = await _dialogService.PromptForNewMasterPasswordAsync();
 
-            if (string.IsNullOrWhiteSpace(newPassword))
+            if (newPassword == null || newPassword.Length == 0)
             {
                 return;
             }
@@ -281,6 +282,7 @@ public partial class SettingsViewModel : ObservableObject
         }
         finally
         {
+            newPassword?.Clear();
             IsBusy = false;
         }
     }
@@ -402,7 +404,7 @@ public partial class SettingsViewModel : ObservableObject
     {
         bool wasUnlocked = _masterPasswordService.IsUnlocked;
 
-        string? password = await PromptVerifiedPasswordAsync();
+        char[]? password = await PromptVerifiedPasswordAsync();
         if (password is null)
         {
             return null;
@@ -411,6 +413,7 @@ public partial class SettingsViewModel : ObservableObject
         string? keyFilePath = _dialogService.PromptForOpenKeyFilePath();
         if (string.IsNullOrWhiteSpace(keyFilePath))
         {
+            password.Clear();
             if (!wasUnlocked)
             {
                 _masterPasswordService.Lock();
@@ -422,6 +425,7 @@ public partial class SettingsViewModel : ObservableObject
         byte[]? keyFileSecret = await _keyFileService.GetAndVerifySecretAsync(keyFilePath);
         if (keyFileSecret is null)
         {
+            password.Clear();
             if (!wasUnlocked)
             {
                 _masterPasswordService.Lock();
@@ -437,6 +441,7 @@ public partial class SettingsViewModel : ObservableObject
         bool unlocked = await _masterPasswordService.TryUnlockAsync(password, keyFileSecret);
         if (!unlocked)
         {
+            password.Clear();
             ZeroIfPresent(keyFileSecret);
             if (!wasUnlocked)
             {
@@ -472,9 +477,9 @@ public partial class SettingsViewModel : ObservableObject
 
         IsBusy = true;
 
+        char[]? password = null;
         try
         {
-            string? password;
             KeyFileAuthResult? existingKeyFileAuth = null;
 
             if (replacingExistingKeyFile)
@@ -544,7 +549,11 @@ public partial class SettingsViewModel : ObservableObject
             }
             finally
             {
-                existingKeyFileAuth?.Clear();
+                if (replacingExistingKeyFile)
+                {
+                    existingKeyFileAuth?.Clear();
+                    password = null; // Already cleared by auth.Clear()
+                }
             }
 
             _notificationService.ShowSuccess(
@@ -566,6 +575,7 @@ public partial class SettingsViewModel : ObservableObject
         }
         finally
         {
+            password?.Clear();
             IsBusy = false;
         }
     }
@@ -577,10 +587,10 @@ public partial class SettingsViewModel : ObservableObject
         _isUpdatingKeyFileState = false;
     }
 
-    private async Task<string?> PromptVerifiedPasswordAsync()
+    private async Task<char[]?> PromptVerifiedPasswordAsync()
     {
-        string? password = await _dialogService.PromptForUnlockPasswordAsync();
-        if (string.IsNullOrWhiteSpace(password))
+        char[]? password = await _dialogService.PromptForUnlockPasswordAsync();
+        if (password == null || password.Length == 0)
         {
             return null;
         }
@@ -590,6 +600,7 @@ public partial class SettingsViewModel : ObservableObject
             return password;
         }
 
+        password.Clear();
         _notificationService.ShowError(
             _localizationService.GetString("NotifAccessDenied"),
             _localizationService.GetString("NotifAccessDeniedMsg")
@@ -625,10 +636,11 @@ public partial class SettingsViewModel : ObservableObject
         }
     }
 
-    private sealed record KeyFileAuthResult(string Password, byte[] KeyFileSecret)
+    private sealed record KeyFileAuthResult(char[] Password, byte[] KeyFileSecret)
     {
         public void Clear()
         {
+            Password.Clear();
             ZeroIfPresent(KeyFileSecret);
         }
     }

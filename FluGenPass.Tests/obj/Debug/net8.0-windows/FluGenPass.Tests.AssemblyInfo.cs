@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FluGenPass.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48d18d84ed02692303fea47101d86aa846b74241")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3bc4def1e42c5b267c0c15046ca315cab9b71169")]
 [assembly: System.Reflection.AssemblyProductAttribute("FluGenPass.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FluGenPass.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

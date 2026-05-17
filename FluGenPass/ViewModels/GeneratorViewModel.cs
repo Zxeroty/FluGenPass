@@ -38,10 +38,9 @@ public partial class GeneratorViewModel : ObservableObject
     [ObservableProperty]
     private int _length = 16;
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveToVaultCommand))]
-    [NotifyCanExecuteChangedFor(nameof(CopyToClipboardCommand))]
-    private string _generatedPassword = string.Empty;
+    private char[]? _generatedPassword;
+
+    public string GeneratedPassword => _generatedPassword != null ? new string(_generatedPassword) : string.Empty;
 
     [ObservableProperty]
     private PasswordStrength _strength = PasswordStrength.Strong;
@@ -146,7 +145,7 @@ public partial class GeneratorViewModel : ObservableObject
             new VaultEntry
             {
                 SiteName = siteName,
-                Password = GeneratedPassword,
+                Password = _generatedPassword != null ? (char[])_generatedPassword.Clone() : Array.Empty<char>(),
                 CreatedUtc = DateTimeOffset.UtcNow,
             }
         );
@@ -160,33 +159,40 @@ public partial class GeneratorViewModel : ObservableObject
 
     private bool CanGeneratePassword() => HasCharacterSelection;
 
-    private bool CanCopyToClipboard() => !string.IsNullOrWhiteSpace(GeneratedPassword);
+    private bool CanCopyToClipboard() => _generatedPassword != null && _generatedPassword.Length > 0;
 
-    private bool CanSaveToVault() => !string.IsNullOrWhiteSpace(GeneratedPassword);
+    private bool CanSaveToVault() => _generatedPassword != null && _generatedPassword.Length > 0;
 
     private void RefreshGeneratedPassword()
     {
         if (!HasCharacterSelection)
         {
-            GeneratedPassword = string.Empty;
+            _generatedPassword?.Clear();
+            _generatedPassword = null;
             EntropyBits = 0;
             Strength = PasswordStrength.Weak;
             StrengthPercent = 0;
             StatusMessage = _localizationService.GetString("GenOptionsSubtitle");
-            return;
+        }
+        else
+        {
+            PasswordOptions options = BuildOptions();
+            _generatedPassword?.Clear();
+            _generatedPassword = _passwordGeneratorService.Generate(options);
+            EntropyBits = Math.Round(_passwordGeneratorService.EstimateEntropy(options), 1);
+            Strength = _passwordGeneratorService.EvaluateStrength(options);
+            StrengthPercent = Strength switch
+            {
+                PasswordStrength.Weak => 33,
+                PasswordStrength.Medium => 66,
+                _ => 100,
+            };
+            StatusMessage = _localizationService.GetString("GenStatusReady");
         }
 
-        PasswordOptions options = BuildOptions();
-        GeneratedPassword = _passwordGeneratorService.Generate(options);
-        EntropyBits = Math.Round(_passwordGeneratorService.EstimateEntropy(options), 1);
-        Strength = _passwordGeneratorService.EvaluateStrength(options);
-        StrengthPercent = Strength switch
-        {
-            PasswordStrength.Weak => 33,
-            PasswordStrength.Medium => 66,
-            _ => 100,
-        };
-        StatusMessage = _localizationService.GetString("GenStatusReady");
+        OnPropertyChanged(nameof(GeneratedPassword));
+        CopyToClipboardCommand.NotifyCanExecuteChanged();
+        SaveToVaultCommand.NotifyCanExecuteChanged();
     }
 
     private PasswordOptions BuildOptions()

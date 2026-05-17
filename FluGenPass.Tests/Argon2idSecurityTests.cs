@@ -13,10 +13,10 @@ public sealed class Argon2idSecurityTests : IDisposable
     {
         TestServices services = CreateServices();
 
-        await services.MasterPassword.SetMasterPasswordAsync("SecurePassword123!");
+        await services.MasterPassword.SetMasterPasswordAsync("SecurePassword123!".ToCharArray());
         services.MasterPassword.Lock();
 
-        bool unlocked = await services.MasterPassword.TryUnlockAsync("SecurePassword123!");
+        bool unlocked = await services.MasterPassword.TryUnlockAsync("SecurePassword123!".ToCharArray());
         AppSettings settings = await services.Settings.GetAsync();
 
         Assert.True(unlocked);
@@ -49,7 +49,7 @@ public sealed class Argon2idSecurityTests : IDisposable
         };
         await services.Settings.SaveAsync(settings);
 
-        bool unlocked = await services.MasterPassword.TryUnlockAsync("OldSchoolPassword");
+        bool unlocked = await services.MasterPassword.TryUnlockAsync("OldSchoolPassword".ToCharArray());
 
         Assert.True(unlocked);
         Assert.True(services.Session.IsUnlocked);
@@ -77,15 +77,15 @@ public sealed class Argon2idSecurityTests : IDisposable
         };
         await services.Settings.SaveAsync(settings);
 
-        await services.MasterPassword.TryUnlockAsync("OldPassword");
+        await services.MasterPassword.TryUnlockAsync("OldPassword".ToCharArray());
         
-        await services.MasterPassword.ChangeMasterPasswordAsync("NewArgonPassword");
+        await services.MasterPassword.ChangeMasterPasswordAsync("NewArgonPassword".ToCharArray());
         
         AppSettings updatedSettings = await services.Settings.GetAsync();
         Assert.Equal(KdfAlgorithm.Argon2id, updatedSettings.MasterPassword!.Algorithm);
         
         services.MasterPassword.Lock();
-        bool unlockedNew = await services.MasterPassword.TryUnlockAsync("NewArgonPassword");
+        bool unlockedNew = await services.MasterPassword.TryUnlockAsync("NewArgonPassword".ToCharArray());
         Assert.True(unlockedNew);
     }
 

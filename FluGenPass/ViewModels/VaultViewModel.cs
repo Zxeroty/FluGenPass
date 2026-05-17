@@ -109,6 +109,12 @@ public partial class VaultViewModel : ObservableObject
     private async Task LockVaultAsync()
     {
         _masterPasswordService.Lock();
+        
+        foreach (VaultEntryItemViewModel entryItem in _allEntries)
+        {
+            entryItem.Entry.Password.Clear();
+        }
+        
         await LoadEntriesAsync();
         _notificationService.ShowInfo(
             _localizationService.GetString("NotifLockedTitle"),
@@ -421,6 +427,10 @@ public partial class VaultViewModel : ObservableObject
     {
         if (!IsVaultUnlocked)
         {
+            foreach (VaultEntryItemViewModel entryItem in _allEntries)
+            {
+                entryItem.Entry.Password.Clear();
+            }
             _allEntries.Clear();
             Entries.Clear();
             AvailableTags.Clear();

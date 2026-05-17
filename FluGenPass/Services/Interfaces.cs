@@ -6,7 +6,9 @@ namespace FluGenPass.Services;
 
 public interface IPasswordGeneratorService
 {
-    string Generate(PasswordOptions options);
+    char[] Generate(PasswordOptions options);
+
+    void Generate(PasswordOptions options, Span<char> destination);
 
     PasswordStrength EvaluateStrength(PasswordOptions options);
 
@@ -41,26 +43,26 @@ public interface IMasterPasswordService
 
     Task<bool> HasMasterPasswordAsync(CancellationToken cancellationToken = default);
 
-    Task SetMasterPasswordAsync(string password, byte[]? keyFileSecret = null, CancellationToken cancellationToken = default);
+    Task SetMasterPasswordAsync(char[] password, byte[]? keyFileSecret = null, CancellationToken cancellationToken = default);
 
-    Task ChangeMasterPasswordAsync(string newPassword, byte[]? newKeyFileSecret = null, CancellationToken cancellationToken = default);
+    Task ChangeMasterPasswordAsync(char[] newPassword, byte[]? newKeyFileSecret = null, CancellationToken cancellationToken = default);
 
     Task ResetAsync(CancellationToken cancellationToken = default);
 
-    Task<bool> TryUnlockAsync(string password, byte[]? keyFileSecret = null, CancellationToken cancellationToken = default);
+    Task<bool> TryUnlockAsync(char[] password, byte[]? keyFileSecret = null, CancellationToken cancellationToken = default);
 
     void Lock();
 
-    Task<bool> VerifyPasswordAsync(string password, CancellationToken cancellationToken = default);
+    Task<bool> VerifyPasswordAsync(char[] password, CancellationToken cancellationToken = default);
 
     Task EnableKeyFileAsync(
-        string password,
+        char[] password,
         KeyFileMetadata keyFileMetadata,
         byte[] keyFileSecret,
         CancellationToken cancellationToken = default
     );
 
-    Task DisableKeyFileAsync(string password, CancellationToken cancellationToken = default);
+    Task DisableKeyFileAsync(char[] password, CancellationToken cancellationToken = default);
 }
 
 public interface IKeyFileService
@@ -149,9 +151,9 @@ public interface IDialogService
 
     Task<string?> PromptForTagsAsync(string initialValue = "", CancellationToken cancellationToken = default);
 
-    Task<string?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default);
+    Task<char[]?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default);
 
-    Task<string?> PromptForUnlockPasswordAsync(CancellationToken cancellationToken = default);
+    Task<char[]?> PromptForUnlockPasswordAsync(CancellationToken cancellationToken = default);
 
     string? PromptForSaveKeyFilePath();
 

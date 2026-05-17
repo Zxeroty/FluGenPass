@@ -52,7 +52,7 @@ public sealed class DialogService : IDialogService
         );
     }
 
-    public async Task<string?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default)
+    public async Task<char[]?> PromptForNewMasterPasswordAsync(CancellationToken cancellationToken = default)
     {
         if (!_isInitialized)
         {
@@ -95,7 +95,6 @@ public sealed class DialogService : IDialogService
 
             if (result != ContentDialogResult.Primary)
             {
-                
                 passwordBox.Clear();
                 confirmPasswordBox.Clear();
                 return null;
@@ -120,7 +119,7 @@ public sealed class DialogService : IDialogService
                 continue;
             }
 
-            string password = passwordBox.Password;
+            char[] password = passwordBox.Password.ToCharArray();
             passwordBox.Clear();
             confirmPasswordBox.Clear();
 
@@ -130,7 +129,7 @@ public sealed class DialogService : IDialogService
         return null;
     }
 
-    public Task<string?> PromptForUnlockPasswordAsync(CancellationToken cancellationToken = default)
+    public Task<char[]?> PromptForUnlockPasswordAsync(CancellationToken cancellationToken = default)
     {
         return PromptForPasswordAsync(
             title: "Unlock vault",
@@ -261,7 +260,7 @@ public sealed class DialogService : IDialogService
         return Application.Current.Resources[key] as string ?? key;
     }
 
-    private async Task<string?> PromptForPasswordAsync(
+    private async Task<char[]?> PromptForPasswordAsync(
         string title,
         string description,
         string primaryButtonText,
@@ -298,12 +297,12 @@ public sealed class DialogService : IDialogService
                 return null;
             }
 
-            string password = passwordBox.Password.Trim();
+            string rawPassword = passwordBox.Password.Trim();
             passwordBox.Clear();
 
-            if (!string.IsNullOrWhiteSpace(password))
+            if (!string.IsNullOrWhiteSpace(rawPassword))
             {
-                return password;
+                return rawPassword.ToCharArray();
             }
         }
 
