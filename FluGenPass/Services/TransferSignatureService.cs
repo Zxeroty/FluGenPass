@@ -5,9 +5,14 @@ using FluGenPass.Models;
 
 namespace FluGenPass.Services;
 
-public sealed class TransferSignatureService(string appDirectory) : ITransferSignatureService
+public sealed class TransferSignatureService(string appDirectory, ILocalizationService? localizationService = null) : ITransferSignatureService
 {
     private const string SignatureAlgorithm = "ECDSA-P256-SHA256";
+
+    private string GetString(string key, string fallback)
+    {
+        return localizationService?.GetString(key) ?? fallback;
+    }
 
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -57,8 +62,8 @@ public sealed class TransferSignatureService(string appDirectory) : ITransferSig
 
         if (string.IsNullOrWhiteSpace(signature.PublicKeyBase64) || string.IsNullOrWhiteSpace(signature.SignatureBase64))
         {
-            integritySummary = "Digital signature is missing.";
-            warnings = ["The file has no usable digital signature."];
+            integritySummary = GetString("VerifyMsgSecureSignatureMissing", "Digital signature is missing.");
+            warnings = [GetString("VerifyMsgSecureSignatureMissingWarning", "The file has no usable digital signature.")];
             return VaultIntegrityStatus.MissingSignature;
         }
 
@@ -92,15 +97,15 @@ public sealed class TransferSignatureService(string appDirectory) : ITransferSig
 
             if (trustedSigner)
             {
-                integritySummary = $"SHA-256 and trusted ECDSA signature verified. Signer key: {computedKeyId}.";
+                integritySummary = string.Format(GetString("VerifyMsgSecureVerified", "SHA-256 and trusted ECDSA signature verified. Signer key: {0}."), computedKeyId);
                 warnings = [];
                 return VaultIntegrityStatus.Verified;
             }
 
-            integritySummary = $"SHA-256 and ECDSA signature verified, but signer is not trusted locally. Signer key: {computedKeyId}.";
+            integritySummary = string.Format(GetString("VerifyMsgSecureUntrusted", "SHA-256 and ECDSA signature verified, but signer is not trusted locally. Signer key: {0}."), computedKeyId);
             warnings =
             [
-                "The file was signed with a valid key, but not with the local FluGenPass signing key for this app instance."
+                GetString("VerifyMsgSecureUntrustedWarning", "The file was signed with a valid key, but not with the local FluGenPass signing key for this app instance.")
             ];
             return VaultIntegrityStatus.UntrustedSignature;
         }

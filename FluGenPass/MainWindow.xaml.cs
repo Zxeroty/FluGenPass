@@ -1,4 +1,6 @@
 using System.Windows;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 using FluGenPass.Services;
 using FluGenPass.ViewModels;
 using FluGenPass.Views.Pages;
@@ -45,9 +47,25 @@ public partial class MainWindow : FluentWindow
 
     public MainViewModel ViewModel { get; }
 
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
+
+    private const uint WDA_NONE = 0x00000000;
+    private const uint WDA_MONITOR = 0x00000001;
+
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         Loaded -= OnLoaded;
+
+        try
+        {
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+            SetWindowDisplayAffinity(hwnd, WDA_MONITOR);
+        }
+        catch
+        {
+            // Ignore if OS does not support display affinity
+        }
 
         try
         {

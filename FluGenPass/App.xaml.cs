@@ -171,7 +171,7 @@ public partial class App : Application
         services.AddSingleton<IVaultService>(serviceProvider =>
             new VaultService(appDirectory, serviceProvider.GetRequiredService<ISessionStateService>())
         );
-        services.AddSingleton<ITransferSignatureService>(_ => new TransferSignatureService(appDirectory));
+        services.AddSingleton<ITransferSignatureService>(sp => new TransferSignatureService(appDirectory, sp.GetRequiredService<ILocalizationService>()));
         services.AddSingleton<IVaultTransferService, VaultTransferService>();
         services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
         services.AddSingleton<IClipboardService, ClipboardService>();

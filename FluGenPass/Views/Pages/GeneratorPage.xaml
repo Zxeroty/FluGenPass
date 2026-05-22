@@ -31,7 +31,7 @@
                              FontFamily="Cascadia Code"
                              FontSize="24"
                              IsReadOnly="True"
-                             Text="{Binding GeneratedPassword}" />
+                             Text="{Binding GeneratedPassword, Mode=OneWay}" />
 
                     <Grid Margin="0,22,0,0">
                         <Grid.ColumnDefinitions>

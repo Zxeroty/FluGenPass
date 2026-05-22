@@ -199,4 +199,18 @@
     <sys:String x:Key="DlgKeyFileCheck2">I commit to keeping a backup copy of the key file in a secure location.</sys:String>
     <sys:String x:Key="DlgKeyFileCheck3">I realize that the developer has no technical means to recover my data.</sys:String>
     <sys:String x:Key="DlgKeyFileWarningBtn">I fully understand, proceed</sys:String>
+    <!-- Verification Status Messages -->
+    <sys:String x:Key="VerifyMsgCsvNoChecksum">CSV SHA-256 sidecar is missing.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoChecksumWarning">Checksum sidecar was not found next to the CSV file.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignature">Digital signature sidecar is missing.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignatureWarning">The .sig.json signature file was not found next to the CSV file.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissing">Digital signature is missing.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissingWarning">The file has no usable digital signature.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureVerified">SHA-256 and trusted ECDSA signature verified. Signer key: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrusted">SHA-256 and ECDSA signature verified, but signer is not trusted locally. Signer key: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrustedWarning">The file was signed with a valid key, but not with the local FluGenPass signing key for this app instance.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureEmbeddedVerified">Embedded SHA-256 verified: {0}. {1}</sys:String>
+    <sys:String x:Key="VerifyMsgCsvHashVerified">CSV SHA-256 verified: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureExportCreated">Embedded SHA-256 and trusted ECDSA signature created. Signer key: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvExportCreated">SHA-256 and ECDSA sidecars created. Signer key: {0}.</sys:String>
 </ResourceDictionary>

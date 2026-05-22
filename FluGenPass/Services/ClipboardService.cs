@@ -16,7 +16,32 @@ public sealed class ClipboardService : IClipboardService
         }
 
         _lastCopiedText = text;
-        Clipboard.SetText(text);
+        
+        try
+        {
+            var dataObject = new DataObject();
+            dataObject.SetText(text);
+
+            // Prevent Windows Clipboard History (Win + V)
+            var preventHistoryStream = new System.IO.MemoryStream(new byte[] { 0, 0, 0, 0 });
+            dataObject.SetData("ExcludeClipboardClipFromMonitorProcessing", preventHistoryStream);
+
+            // Prevent Cloud Syncing of Clipboard data
+            var preventCloudStream = new System.IO.MemoryStream(new byte[] { 0, 0, 0, 0 });
+            dataObject.SetData("CanUploadToCloudClipboard", preventCloudStream);
+
+            // Prevent Bookmarking / Pinning of Clipboard data
+            var preventPinStream = new System.IO.MemoryStream(new byte[] { 0, 0, 0, 0 });
+            dataObject.SetData("CanBookMarkClipboardClip", preventPinStream);
+
+            Clipboard.SetDataObject(dataObject, copy: true);
+        }
+        catch
+        {
+            // Fallback to standard clipboard in case setting complex DataObject fails
+            Clipboard.SetText(text);
+        }
+
         StartClearTimer();
     }
 

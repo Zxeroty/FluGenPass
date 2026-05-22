@@ -198,4 +198,18 @@
     <sys:String x:Key="DlgKeyFileCheck2">Я обязуюсь хранить копию файла-ключа в надежном месте.</sys:String>
     <sys:String x:Key="DlgKeyFileCheck3">Я осознаю, что разработчик не имеет технической возможности восстановить мои данные.</sys:String>
     <sys:String x:Key="DlgKeyFileWarningBtn">Я всё осознаю, продолжить</sys:String>
+    <!-- Сообщения при проверке файлов -->
+    <sys:String x:Key="VerifyMsgCsvNoChecksum">Файл контрольной суммы CSV SHA-256 отсутствует.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoChecksumWarning">Рядом с CSV-файлом не обнаружен файл контрольной суммы .sha256.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignature">Файл цифровой подписи отсутствует.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignatureWarning">Рядом с CSV-файлом не обнаружен файл подписи .sig.json.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissing">Цифровая подпись отсутствует.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissingWarning">Файл не содержит применимой цифровой подписи.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureVerified">SHA-256 и доверенная подпись ECDSA успешно проверены. Ключ автора: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrusted">SHA-256 и подпись ECDSA верны, но автор не является доверенным на этом устройстве. Ключ автора: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrustedWarning">Файл подписан действительным ключом, но не локальным ключом шифрования FluGenPass для этого приложения.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureEmbeddedVerified">Встроенная контрольная сумма SHA-256 проверена: {0}. {1}</sys:String>
+    <sys:String x:Key="VerifyMsgCsvHashVerified">Контрольная сумма CSV SHA-256 проверена: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureExportCreated">Созданы встроенная контрольная сумма SHA-256 и доверенная подпись ECDSA. Ключ подписи: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvExportCreated">Созданы файлы контрольной суммы SHA-256 и цифровой подписи ECDSA (.sig.json). Ключ подписи: {0}.</sys:String>
 </ResourceDictionary>

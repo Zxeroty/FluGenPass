@@ -9,10 +9,15 @@ using FluGenPass.Models;
 
 namespace FluGenPass.Services;
 
-public sealed class VaultTransferService(ITransferSignatureService transferSignatureService) : IVaultTransferService
+public sealed class VaultTransferService(ITransferSignatureService transferSignatureService, ILocalizationService? localizationService = null) : IVaultTransferService
 {
     private const string SecureExportFormatName = "FluGenPass.Export";
     private const string DetachedSignatureFormatName = "FluGenPass.DetachedSignature";
+
+    private string GetString(string key, string fallback)
+    {
+        return localizationService?.GetString(key) ?? fallback;
+    }
 
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -69,7 +74,7 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
                 VaultTransferFormat.FluGenPassSecureExport,
                 clonedEntries.Count,
                 VaultIntegrityStatus.Verified,
-                $"Embedded SHA-256 and trusted ECDSA signature created. Signer key: {signature.SignerKeyId}."
+                string.Format(GetString("VerifyMsgSecureExportCreated", "Embedded SHA-256 and trusted ECDSA signature created. Signer key: {0}."), signature.SignerKeyId)
             );
         }
         finally
@@ -131,7 +136,7 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
                 VaultTransferFormat.BitwardenCsv,
                 clonedEntries.Count,
                 VaultIntegrityStatus.Verified,
-                $"SHA-256 and ECDSA sidecars created. Signer key: {detachedSignature.Signature.SignerKeyId}.",
+                string.Format(GetString("VerifyMsgCsvExportCreated", "SHA-256 and ECDSA sidecars created. Signer key: {0}."), detachedSignature.Signature.SignerKeyId),
                 checksumPath,
                 signaturePath
             );
@@ -336,7 +341,7 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
                 out IReadOnlyList<string> signatureWarnings
             );
 
-            string integritySummary = $"Embedded SHA-256 verified: {actualHashHex}. {signatureSummary}";
+            string integritySummary = string.Format(GetString("VerifyMsgSecureEmbeddedVerified", "Embedded SHA-256 verified: {0}. {1}"), actualHashHex, signatureSummary);
 
             return new VaultVerificationResult(
                 filePath,
@@ -381,12 +386,12 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
                 }
 
                 checksumVerified = true;
-                checksumSummary = $"CSV SHA-256 verified: {actualHash}.";
+                checksumSummary = string.Format(GetString("VerifyMsgCsvHashVerified", "CSV SHA-256 verified: {0}."), actualHash);
             }
             else
             {
-                checksumSummary = "CSV SHA-256 sidecar is missing.";
-                warnings.Add("Checksum sidecar was not found next to the CSV file.");
+                checksumSummary = GetString("VerifyMsgCsvNoChecksum", "CSV SHA-256 sidecar is missing.");
+                warnings.Add(GetString("VerifyMsgCsvNoChecksumWarning", "Checksum sidecar was not found next to the CSV file."));
             }
 
             VaultIntegrityStatus signatureStatus;
@@ -429,8 +434,8 @@ public sealed class VaultTransferService(ITransferSignatureService transferSigna
             else
             {
                 signatureStatus = VaultIntegrityStatus.MissingSignature;
-                signatureSummary = "Digital signature sidecar is missing.";
-                signatureWarnings = ["The .sig.json signature file was not found next to the CSV file."];
+                signatureSummary = GetString("VerifyMsgCsvNoSignature", "Digital signature sidecar is missing.");
+                signatureWarnings = [GetString("VerifyMsgCsvNoSignatureWarning", "The .sig.json signature file was not found next to the CSV file.")];
             }
 
             warnings.AddRange(signatureWarnings);
