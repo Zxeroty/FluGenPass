@@ -136,9 +136,9 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
         {
         }
 
-        public Task<string?> PromptForSiteNameAsync(CancellationToken cancellationToken = default)
+        public Task<(string SiteName, string Url, char[] Password)?> PromptForSiteDetailsAsync(string initialSiteName = "", string initialUrl = "", string initialPassword = "", CancellationToken cancellationToken = default)
         {
-            return Task.FromResult<string?>(null);
+            return Task.FromResult<(string SiteName, string Url, char[] Password)?>(null);
         }
 
         public Task<string?> PromptForTagsAsync(string initialValue = "", CancellationToken cancellationToken = default)

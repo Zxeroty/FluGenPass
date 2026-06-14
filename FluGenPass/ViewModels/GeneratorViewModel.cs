@@ -72,9 +72,18 @@ public partial class GeneratorViewModel : ObservableObject
         _vaultService = vaultService;
         _localizationService = localizationService;
 
+        _localizationService.LanguageChanged += OnLanguageChanged;
+
         StatusMessage = _localizationService.GetString("GenOptionsSubtitle");
 
         RefreshGeneratedPassword();
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        RefreshGeneratedPassword();
+        OnPropertyChanged(nameof(StrengthLabel));
+        OnPropertyChanged(nameof(EntropyLabel));
     }
 
     public bool HasCharacterSelection =>
@@ -133,9 +142,9 @@ public partial class GeneratorViewModel : ObservableObject
             return;
         }
 
-        string? siteName = await _dialogService.PromptForSiteNameAsync();
+        var details = await _dialogService.PromptForSiteDetailsAsync();
 
-        if (string.IsNullOrWhiteSpace(siteName))
+        if (details is null)
         {
             return;
         }
@@ -144,7 +153,8 @@ public partial class GeneratorViewModel : ObservableObject
         entries.Add(
             new VaultEntry
             {
-                SiteName = siteName,
+                SiteName = details.Value.SiteName,
+                Url = details.Value.Url,
                 Password = _generatedPassword != null ? (char[])_generatedPassword.Clone() : Array.Empty<char>(),
                 CreatedUtc = DateTimeOffset.UtcNow,
             }
@@ -153,7 +163,7 @@ public partial class GeneratorViewModel : ObservableObject
         await _vaultService.SaveAsync(entries.OrderByDescending(entry => entry.CreatedUtc));
         _notificationService.ShowSuccess(
             _localizationService.GetString("NotifSuccess"), 
-            string.Format(_localizationService.GetString("GenStatusSaved"), siteName)
+            string.Format(_localizationService.GetString("GenStatusSaved"), details.Value.SiteName)
         );
     }
 

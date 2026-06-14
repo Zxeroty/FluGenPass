@@ -14,5 +14,7 @@ public sealed class VaultEntry
 
     public List<string> Tags { get; set; } = [];
 
+    public string Url { get; set; } = string.Empty;
+
     public DateTimeOffset CreatedUtc { get; set; } = DateTimeOffset.UtcNow;
 }

@@ -213,4 +213,39 @@
     <sys:String x:Key="VerifyMsgCsvHashVerified">CSV SHA-256 verified: {0}.</sys:String>
     <sys:String x:Key="VerifyMsgSecureExportCreated">Embedded SHA-256 and trusted ECDSA signature created. Signer key: {0}.</sys:String>
     <sys:String x:Key="VerifyMsgCsvExportCreated">SHA-256 and ECDSA sidecars created. Signer key: {0}.</sys:String>
+
+    <!-- Vault Entry Extensions -->
+    <sys:String x:Key="DlgSiteDetailsTitle">Entry details</sys:String>
+    <sys:String x:Key="DlgSiteDetailsDesc">Provide a title, link and password for this vault entry.</sys:String>
+    <sys:String x:Key="DlgSiteNameLabel">Site / service name</sys:String>
+    <sys:String x:Key="DlgSiteNamePlaceholder">e.g., GitHub, Google</sys:String>
+    <sys:String x:Key="DlgUrlLabel">Link (URL)</sys:String>
+    <sys:String x:Key="DlgUrlPlaceholder">e.g., https://github.com</sys:String>
+    <sys:String x:Key="DlgPasswordLabel">Password</sys:String>
+    <sys:String x:Key="DlgPasswordPlaceholder">Leave blank to keep current password</sys:String>
+    <sys:String x:Key="DlgSiteNameRequired">Site name is required.</sys:String>
+    <sys:String x:Key="CommonBtnSave">Save</sys:String>
+
+    <sys:String x:Key="VaultColLink">Link</sys:String>
+    <sys:String x:Key="VaultCtxEditTags">Edit Tags</sys:String>
+    <sys:String x:Key="VaultCtxCopySite">Copy Site Name</sys:String>
+    <sys:String x:Key="VaultCtxCopyPassword">Copy Password</sys:String>
+    <sys:String x:Key="VaultCtxCopyLink">Copy Link</sys:String>
+    <sys:String x:Key="VaultCtxOpenLink">Go to Link</sys:String>
+    <sys:String x:Key="VaultCtxEditDetails">Edit Details</sys:String>
+    <sys:String x:Key="VaultCtxClone">Clone Entry</sys:String>
+    <sys:String x:Key="VaultCtxDelete">Delete Entry</sys:String>
+    <sys:String x:Key="NotifCopiedSiteMsg">Site name "{0}" copied to the clipboard.</sys:String>
+    <sys:String x:Key="NotifCopiedUrlMsg">Link for "{0}" copied to the clipboard.</sys:String>
+    <sys:String x:Key="NotifClonedMsg">Vault entry "{0}" cloned successfully.</sys:String>
+    <sys:String x:Key="NotifDetailsUpdatedMsg">Vault entry details updated successfully.</sys:String>
+    <sys:String x:Key="VaultRightClickHint">Right-click on an entry to copy, edit or delete it.</sys:String>
+
+    <!-- HIBP Password Leak Check -->
+    <sys:String x:Key="VaultCtxCheckCompromised">Check for Leaks (HIBP)</sys:String>
+    <sys:String x:Key="DlgPwnedTitle">HIBP Leak Check</sys:String>
+    <sys:String x:Key="DlgPwnedWarning">Warning! This password was found {0} time(s) in the HaveIBeenPwned database of leaked credentials.&#x0a;&#x0a;It is strongly recommended to change this password as it is insecure!</sys:String>
+    <sys:String x:Key="DlgPwnedSafe">Good news! This password was not found in the HaveIBeenPwned database of leaked credentials.&#x0a;&#x0a;It appears to be secure.</sys:String>
+    <sys:String x:Key="DlgPwnedError">Failed to check password compromise. Please check your network connection and try again.</sys:String>
+    <sys:String x:Key="DlgPwnedClose">Close</sys:String>
 </ResourceDictionary>

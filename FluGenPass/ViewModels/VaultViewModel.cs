@@ -60,6 +60,8 @@ public partial class VaultViewModel : ObservableObject
         _localizationService = localizationService;
         IsVaultUnlocked = sessionStateService.IsUnlocked;
 
+        _localizationService.LanguageChanged += OnLanguageChanged;
+
         Headline = _localizationService.GetString("VaultHeadLocked");
         StatusMessage = _localizationService.GetString("VaultMsgLocked");
         TransferHeadline = _localizationService.GetString("TransferTitle");
@@ -74,6 +76,33 @@ public partial class VaultViewModel : ObservableObject
             IsVaultUnlocked = isUnlocked;
             _ = RefreshAsync();
         };
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        OnPropertyChanged(nameof(AllTagsLabel));
+
+        // Refresh static strings
+        if (!IsVaultUnlocked)
+        {
+            Headline = _localizationService.GetString("VaultHeadLocked");
+            StatusMessage = _localizationService.GetString("VaultMsgLocked");
+        }
+        else
+        {
+            UpdateHeader();
+        }
+
+        TransferHeadline = _localizationService.GetString("TransferTitle");
+        TransferMessage = _localizationService.GetString("TransferDesc");
+
+        foreach (VaultEntryItemViewModel entry in _allEntries)
+        {
+            entry.RefreshLocalization();
+        }
+
+        // Refresh AvailableTags labels
+        RefreshAvailableTags();
     }
 
     public ObservableCollection<VaultEntryItemViewModel> Entries { get; } = [];
@@ -447,7 +476,15 @@ public partial class VaultViewModel : ObservableObject
 
         foreach (VaultEntry entry in entries.OrderByDescending(item => item.CreatedUtc))
         {
-            _allEntries.Add(new VaultEntryItemViewModel(entry, CopyEntryAsync, DeleteEntryAsync, EditTagsAsync, _localizationService));
+            _allEntries.Add(new VaultEntryItemViewModel(
+                entry,
+                CopyEntryAsync,
+                DeleteEntryAsync,
+                EditTagsAsync,
+                CloneEntryAsync,
+                EditDetailsAsync,
+                _localizationService
+            ));
         }
 
         RefreshAvailableTags();
@@ -509,6 +546,71 @@ public partial class VaultViewModel : ObservableObject
         _notificationService.ShowSuccess(
             _localizationService.GetString("NotifSuccess"),
             string.Format(_localizationService.GetString("VaultTagsUpdated"), item.SiteName)
+        );
+    }
+
+    private async Task CloneEntryAsync(VaultEntryItemViewModel item)
+    {
+        VaultEntry clonedEntry = new()
+        {
+            SiteName = item.SiteName + " (Copy)",
+            Password = (char[])item.Entry.Password.Clone(),
+            Url = item.Url,
+            Tags = [.. item.Tags],
+            CreatedUtc = DateTimeOffset.UtcNow,
+        };
+
+        List<VaultEntry> all = _allEntries.Select(static entry => entry.Entry).ToList();
+        all.Add(clonedEntry);
+
+        await _vaultService.SaveAsync(all.OrderByDescending(entry => entry.CreatedUtc));
+
+        VaultEntryItemViewModel clonedVM = new(
+            clonedEntry,
+            CopyEntryAsync,
+            DeleteEntryAsync,
+            EditTagsAsync,
+            CloneEntryAsync,
+            EditDetailsAsync,
+            _localizationService
+        );
+
+        _allEntries.Insert(0, clonedVM);
+        RefreshAvailableTags();
+        ApplyFilters();
+
+        _notificationService.ShowSuccess(
+            _localizationService.GetString("NotifSuccess"),
+            string.Format(_localizationService.GetString("NotifClonedMsg"), item.SiteName)
+        );
+    }
+
+    private async Task EditDetailsAsync(VaultEntryItemViewModel item)
+    {
+        var details = await _dialogService.PromptForSiteDetailsAsync(item.SiteName, item.Url, new string(item.Entry.Password));
+
+        if (details is null)
+        {
+            return;
+        }
+
+        item.Entry.SiteName = details.Value.SiteName;
+        item.Entry.Url = details.Value.Url;
+
+        if (details.Value.Password.Length > 0)
+        {
+            item.Entry.Password = details.Value.Password;
+        }
+
+        item.RefreshDetails();
+
+        await _vaultService.SaveAsync(_allEntries.Select(static entry => entry.Entry));
+
+        ApplyFilters();
+
+        _notificationService.ShowSuccess(
+            _localizationService.GetString("NotifSuccess"),
+            _localizationService.GetString("NotifDetailsUpdatedMsg")
         );
     }
 

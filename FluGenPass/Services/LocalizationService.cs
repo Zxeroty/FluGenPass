@@ -5,6 +5,8 @@ namespace FluGenPass.Services;
 
 public sealed class LocalizationService(ISettingsService settingsService) : ILocalizationService
 {
+    public event EventHandler? LanguageChanged;
+
     public AppLanguageOption CurrentLanguage { get; private set; } = AppLanguageOption.English;
 
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -31,6 +33,8 @@ public sealed class LocalizationService(ISettingsService settingsService) : ILoc
         }
 
         Application.Current.Resources.MergedDictionaries.Add(dict);
+
+        LanguageChanged?.Invoke(this, EventArgs.Empty);
 
         var settings = await settingsService.GetAsync(cancellationToken);
         if (settings.Language != language)

@@ -59,8 +59,10 @@ public partial class MainWindow : FluentWindow
 
         try
         {
+#if !DEBUG
             IntPtr hwnd = new WindowInteropHelper(this).Handle;
             SetWindowDisplayAffinity(hwnd, WDA_MONITOR);
+#endif
         }
         catch
         {

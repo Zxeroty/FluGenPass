@@ -3,10 +3,9 @@ using Microsoft.Win32;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
-using PasswordBox = System.Windows.Controls.PasswordBox;
+using TextBox = Wpf.Ui.Controls.TextBox;
 using StackPanel = System.Windows.Controls.StackPanel;
 using TextBlock = System.Windows.Controls.TextBlock;
-using TextBox = System.Windows.Controls.TextBox;
 
 namespace FluGenPass.Services;
 
@@ -26,18 +25,104 @@ public sealed class DialogService : IDialogService
         _isInitialized = true;
     }
 
-    public Task<string?> PromptForSiteNameAsync(CancellationToken cancellationToken = default)
+    public async Task<(string SiteName, string Url, char[] Password)?> PromptForSiteDetailsAsync(
+        string initialSiteName = "",
+        string initialUrl = "",
+        string initialPassword = "",
+        CancellationToken cancellationToken = default
+    )
     {
-        return PromptForTextAsync(
-            title: "Save to vault",
-            description: "Add the site or service label for this password.",
-            primaryButtonText: "Save",
-            validationMessageFactory: value =>
-                string.IsNullOrWhiteSpace(value)
-                    ? "Site or service name is required."
-                    : null,
-            cancellationToken
-        );
+        if (!_isInitialized)
+        {
+            return null;
+        }
+
+        string? validationMessage = null;
+        string defaultSiteName = initialSiteName;
+        string defaultUrl = initialUrl;
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            TextBox siteNameTextBox = new() 
+            { 
+                MinWidth = 320, 
+                Margin = new Thickness(0, 8, 0, 0), 
+                Text = defaultSiteName,
+                PlaceholderText = GetString("DlgSiteNamePlaceholder")
+            };
+            TextBox urlTextBox = new() 
+            { 
+                MinWidth = 320, 
+                Margin = new Thickness(0, 8, 0, 0), 
+                Text = defaultUrl,
+                PlaceholderText = GetString("DlgUrlPlaceholder")
+            };
+            Wpf.Ui.Controls.PasswordBox passwordBox = new()
+            {
+                MinWidth = 320,
+                Margin = new Thickness(0, 8, 0, 0),
+                PlaceholderText = GetString("DlgPasswordPlaceholder"),
+            };
+
+            StackPanel panel = new() { Margin = new Thickness(0, 8, 0, 0) };
+            panel.Children.Add(new TextBlock 
+            { 
+                Text = GetString("DlgSiteDetailsDesc"), 
+                TextWrapping = TextWrapping.Wrap 
+            });
+            
+            panel.Children.Add(new TextBlock { Margin = new Thickness(0, 12, 0, 0), Text = GetString("DlgSiteNameLabel"), FontWeight = FontWeights.SemiBold });
+            panel.Children.Add(siteNameTextBox);
+            
+            panel.Children.Add(new TextBlock { Margin = new Thickness(0, 12, 0, 0), Text = GetString("DlgUrlLabel"), FontWeight = FontWeights.SemiBold });
+            panel.Children.Add(urlTextBox);
+
+            panel.Children.Add(new TextBlock { Margin = new Thickness(0, 12, 0, 0), Text = GetString("DlgPasswordLabel"), FontWeight = FontWeights.SemiBold });
+            panel.Children.Add(passwordBox);
+
+            if (!string.IsNullOrWhiteSpace(validationMessage))
+            {
+                panel.Children.Add(CreateValidationMessage(validationMessage));
+            }
+
+            ContentDialog dialog = new()
+            {
+                Title = GetString("DlgSiteDetailsTitle"),
+                Content = panel,
+                PrimaryButtonText = GetString("CommonBtnSave"),
+                CloseButtonText = GetString("CommonBtnCancel"),
+                DefaultButton = ContentDialogButton.Primary,
+            };
+
+            ContentDialogResult result = await ShowDialogAsync(dialog, cancellationToken);
+
+            if (result != ContentDialogResult.Primary)
+            {
+                return null;
+            }
+
+            string siteName = siteNameTextBox.Text.Trim();
+            string url = urlTextBox.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(siteName))
+            {
+                validationMessage = GetString("DlgSiteNameRequired");
+                defaultSiteName = siteName;
+                defaultUrl = url;
+                continue;
+            }
+
+            string rawPassword = passwordBox.Password;
+            char[] password = string.IsNullOrEmpty(rawPassword)
+                ? []
+                : rawPassword.ToCharArray();
+
+            passwordBox.Password = string.Empty;
+
+            return (siteName, url, password);
+        }
+
+        return null;
     }
 
     public Task<string?> PromptForTagsAsync(string initialValue = "", CancellationToken cancellationToken = default)

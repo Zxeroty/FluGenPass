@@ -212,4 +212,39 @@
     <sys:String x:Key="VerifyMsgCsvHashVerified">Контрольная сумма CSV SHA-256 проверена: {0}.</sys:String>
     <sys:String x:Key="VerifyMsgSecureExportCreated">Созданы встроенная контрольная сумма SHA-256 и доверенная подпись ECDSA. Ключ подписи: {0}.</sys:String>
     <sys:String x:Key="VerifyMsgCsvExportCreated">Созданы файлы контрольной суммы SHA-256 и цифровой подписи ECDSA (.sig.json). Ключ подписи: {0}.</sys:String>
+
+    <!-- Расширения записей сейфа -->
+    <sys:String x:Key="DlgSiteDetailsTitle">Реквизиты записи</sys:String>
+    <sys:String x:Key="DlgSiteDetailsDesc">Укажите название, ссылку и пароль для этой записи.</sys:String>
+    <sys:String x:Key="DlgSiteNameLabel">Название сайта / сервиса</sys:String>
+    <sys:String x:Key="DlgSiteNamePlaceholder">например, GitHub, Google</sys:String>
+    <sys:String x:Key="DlgUrlLabel">Ссылка (URL)</sys:String>
+    <sys:String x:Key="DlgUrlPlaceholder">например, https://github.com</sys:String>
+    <sys:String x:Key="DlgPasswordLabel">Пароль</sys:String>
+    <sys:String x:Key="DlgPasswordPlaceholder">Оставьте пустым, чтобы сохранить текущий пароль</sys:String>
+    <sys:String x:Key="DlgSiteNameRequired">Требуется указать название.</sys:String>
+    <sys:String x:Key="CommonBtnSave">Сохранить</sys:String>
+
+    <sys:String x:Key="VaultColLink">Ссылка</sys:String>
+    <sys:String x:Key="VaultCtxEditTags">Редактировать теги</sys:String>
+    <sys:String x:Key="VaultCtxCopySite">Скопировать название</sys:String>
+    <sys:String x:Key="VaultCtxCopyPassword">Скопировать пароль</sys:String>
+    <sys:String x:Key="VaultCtxCopyLink">Скопировать ссылку</sys:String>
+    <sys:String x:Key="VaultCtxOpenLink">Перейти по ссылке</sys:String>
+    <sys:String x:Key="VaultCtxEditDetails">Редактировать параметры</sys:String>
+    <sys:String x:Key="VaultCtxClone">Клонировать запись</sys:String>
+    <sys:String x:Key="VaultCtxDelete">Удалить запись</sys:String>
+    <sys:String x:Key="NotifCopiedSiteMsg">Название сайта "{0}" скопировано в буфер обмена.</sys:String>
+    <sys:String x:Key="NotifCopiedUrlMsg">Ссылка для "{0}" скопирована в буфер обмена.</sys:String>
+    <sys:String x:Key="NotifClonedMsg">Запись "{0}" успешно клонирована.</sys:String>
+    <sys:String x:Key="NotifDetailsUpdatedMsg">Параметры записи успешно изменены.</sys:String>
+    <sys:String x:Key="VaultRightClickHint">Нажмите правой кнопкой мыши на запись для копирования, изменения или удаления.</sys:String>
+
+    <!-- HIBP Password Leak Check -->
+    <sys:String x:Key="VaultCtxCheckCompromised">Проверить на утечки (HIBP)</sys:String>
+    <sys:String x:Key="DlgPwnedTitle">Проверка утечек HIBP</sys:String>
+    <sys:String x:Key="DlgPwnedWarning">Внимание! Этот пароль был найден {0} раз(а) в базе утечек HaveIBeenPwned.&#x0a;&#x0a;Настоятельно рекомендуется сменить этот пароль, так как он небезопасен!</sys:String>
+    <sys:String x:Key="DlgPwnedSafe">Отличные новости! Этот пароль не найден в базе утечек HaveIBeenPwned.&#x0a;&#x0a;Похоже, он безопасен.</sys:String>
+    <sys:String x:Key="DlgPwnedError">Не удалось проверить пароль на утечки. Пожалуйста, проверьте интернет-соединение и попробуйте снова.</sys:String>
+    <sys:String x:Key="DlgPwnedClose">Закрыть</sys:String>
 </ResourceDictionary>

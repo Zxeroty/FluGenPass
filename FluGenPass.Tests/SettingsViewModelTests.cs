@@ -194,9 +194,9 @@ public sealed class SettingsViewModelTests : IDisposable
         {
         }
 
-        public Task<string?> PromptForSiteNameAsync(CancellationToken cancellationToken = default)
+        public Task<(string SiteName, string Url, char[] Password)?> PromptForSiteDetailsAsync(string initialSiteName = "", string initialUrl = "", string initialPassword = "", CancellationToken cancellationToken = default)
         {
-            return Task.FromResult<string?>(null);
+            return Task.FromResult<(string SiteName, string Url, char[] Password)?>(null);
         }
 
         public Task<string?> PromptForTagsAsync(string initialValue = "", CancellationToken cancellationToken = default)
@@ -314,6 +314,8 @@ public sealed class SettingsViewModelTests : IDisposable
 
     private sealed class TestLocalizationService : ILocalizationService
     {
+        public event EventHandler? LanguageChanged { add { } remove { } }
+
         public AppLanguageOption CurrentLanguage => AppLanguageOption.English;
 
         public Task InitializeAsync(CancellationToken cancellationToken = default)

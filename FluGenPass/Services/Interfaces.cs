@@ -147,7 +147,7 @@ public interface IDialogService
 {
     void Initialize(ContentDialogHost dialogHost, Window ownerWindow);
 
-    Task<string?> PromptForSiteNameAsync(CancellationToken cancellationToken = default);
+    Task<(string SiteName, string Url, char[] Password)?> PromptForSiteDetailsAsync(string initialSiteName = "", string initialUrl = "", string initialPassword = "", CancellationToken cancellationToken = default);
 
     Task<string?> PromptForTagsAsync(string initialValue = "", CancellationToken cancellationToken = default);
 
@@ -206,6 +206,8 @@ public interface IInactivityAutoLockService
 
 public interface ILocalizationService
 {
+    event EventHandler? LanguageChanged;
+
     AppLanguageOption CurrentLanguage { get; }
 
     Task InitializeAsync(CancellationToken cancellationToken = default);
@@ -213,4 +215,9 @@ public interface ILocalizationService
     Task ApplyLanguageAsync(AppLanguageOption language, CancellationToken cancellationToken = default);
 
     string GetString(string key);
+}
+
+public interface IPwnedPasswordService
+{
+    Task<int> GetPwnCountAsync(string password, CancellationToken cancellationToken = default);
 }

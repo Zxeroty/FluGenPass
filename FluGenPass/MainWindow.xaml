@@ -16,14 +16,51 @@
                  Background="{DynamicResource ApplicationBackgroundBrush}"
                  Icon="/ico.png"
                  mc:Ignorable="d">
-    <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
+    <ui:FluentWindow.Resources>
+        <Style x:Key="AnimatedIconStyle" TargetType="ui:SymbolIcon">
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                        <RotateTransform Angle="0" />
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsActive, RelativeSource={RelativeSource AncestorType=ui:NavigationViewItem}}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
+                                                 From="1.0" To="1.25"
+                                                 Duration="0:0:0.15" AutoReverse="True">
+                                    <DoubleAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseInOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
+                                                 From="1.0" To="1.25"
+                                                 Duration="0:0:0.15" AutoReverse="True">
+                                    <DoubleAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseInOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ui:FluentWindow.Resources>
+
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <ui:TitleBar Grid.Row="0"
-                     Background="{DynamicResource ApplicationBackgroundBrush}"
                      Title="FluGenPass">
             <ui:TitleBar.TrailingContent>
                 <StackPanel Orientation="Horizontal">
@@ -40,32 +77,44 @@
             </ui:TitleBar.TrailingContent>
         </ui:TitleBar>
 
-        <Grid Grid.Row="1"
-              Background="{DynamicResource ApplicationBackgroundBrush}">
+        <Grid Grid.Row="1">
             <ui:NavigationView x:Name="RootNavigationView"
                                CompactPaneLength="48"
                                IsBackButtonVisible="Collapsed"
                                IsPaneToggleVisible="True"
                                OpenPaneLength="188"
                                PaneDisplayMode="Left"
-                               Background="{DynamicResource ApplicationBackgroundBrush}"
+                               Transition="FadeInWithSlide"
+                               TransitionDuration="350"
                                PaneTitle="{DynamicResource NavMenu}"
                                Navigating="OnNavigationViewNavigating">
                 <ui:NavigationView.MenuItems>
                     <ui:NavigationViewItem Content="{DynamicResource NavBack}"
-                                           Icon="{ui:SymbolIcon Symbol=ArrowLeft24}"
-                                           Click="OnBackClicked" />
+                                           Click="OnBackClicked">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="ArrowLeft24" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
                     <ui:NavigationViewItem Content="{DynamicResource NavGenerator}"
-                                           TargetPageType="{x:Type pages:GeneratorPage}"
-                                           Icon="{ui:SymbolIcon Symbol=Home24}" />
+                                           TargetPageType="{x:Type pages:GeneratorPage}">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="Home24" Style="{StaticResource AnimatedIconStyle}" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
                     <ui:NavigationViewItem Content="{DynamicResource NavVault}"
-                                           TargetPageType="{x:Type pages:VaultPage}"
-                                           Icon="{ui:SymbolIcon Symbol=LockClosed24}" />
+                                           TargetPageType="{x:Type pages:VaultPage}">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="LockClosed24" Style="{StaticResource AnimatedIconStyle}" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
                 </ui:NavigationView.MenuItems>
                 <ui:NavigationView.FooterMenuItems>
                     <ui:NavigationViewItem Content="{DynamicResource NavSettings}"
-                                           TargetPageType="{x:Type pages:SettingsPage}"
-                                           Icon="{ui:SymbolIcon Symbol=Settings24}" />
+                                           TargetPageType="{x:Type pages:SettingsPage}">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="Settings24" Style="{StaticResource AnimatedIconStyle}" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
                 </ui:NavigationView.FooterMenuItems>
             </ui:NavigationView>
 

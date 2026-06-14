@@ -179,6 +179,7 @@ public partial class App : Application
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<ILocalizationService, LocalizationService>();
+        services.AddSingleton<IPwnedPasswordService, PwnedPasswordService>();
         services.AddSingleton<IVaultAccessCoordinator>(sp => new VaultAccessCoordinator(
             sp.GetRequiredService<IDialogService>(),
             sp.GetRequiredService<IMasterPasswordService>(),

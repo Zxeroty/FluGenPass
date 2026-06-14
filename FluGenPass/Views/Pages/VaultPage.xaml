@@ -4,15 +4,22 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      SnapsToDevicePixels="True"
+      TextOptions.TextFormattingMode="Display"
+      TextOptions.TextRenderingMode="ClearType"
+      UseLayoutRounding="True"
       mc:Ignorable="d"
       Loaded="OnLoaded">
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Page.Resources>
-    <Grid Margin="24">
+
+    <Grid Margin="24"
+          SnapsToDevicePixels="True"
+          UseLayoutRounding="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <ui:Card Margin="0,0,0,24">
@@ -84,13 +91,14 @@
         </ui:Card>
 
         <ui:Card Grid.Row="1">
-            <Grid Margin="28">
+            <Grid Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Margin="0,0,0,20">
+                <Grid Margin="0,0,0,14">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -116,9 +124,10 @@
                                 Text="{Binding SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
 
-                <DataGrid Grid.Row="1"
+                <DataGrid x:Name="EntriesDataGrid"
+                          Grid.Row="1"
                           ItemsSource="{Binding Entries}"
-                          MinHeight="340"
+                          MinHeight="300"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
                           CanUserDeleteRows="False"
@@ -134,15 +143,90 @@
                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                           RowBackground="Transparent"
                           AlternatingRowBackground="Transparent"
+                          RowHeight="34"
                           HorizontalGridLinesBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                           VerticalGridLinesBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                          ClipboardCopyMode="None">
+                          ClipboardCopyMode="None"
+                          PreviewMouseRightButtonDown="OnEntriesDataGridPreviewMouseRightButtonDown">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu SnapsToDevicePixels="True"
+                                     TextOptions.TextFormattingMode="Display"
+                                     TextOptions.TextRenderingMode="ClearType"
+                                     UseLayoutRounding="True">
+                            <MenuItem Header="{DynamicResource VaultCtxCopySite}"
+                                      Command="{Binding CopySiteNameCommand}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="Copy24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource VaultCtxCopyPassword}"
+                                      Command="{Binding CopyEntryCommand}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="Copy24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{Binding RevealButtonText}"
+                                      Command="{Binding ToggleRevealCommand}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="Eye24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource VaultCtxCheckCompromised}"
+                                      Command="{Binding CheckPwnedCommand}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="ShieldError24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource VaultCtxCopyLink}"
+                                      Command="{Binding CopyUrlCommand}"
+                                      IsEnabled="{Binding HasUrl}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="Copy24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource VaultCtxOpenLink}"
+                                      Command="{Binding OpenUrlCommand}"
+                                      IsEnabled="{Binding HasUrl}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="OpenFolder24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="{DynamicResource VaultCtxEditDetails}"
+                                      Command="{Binding EditDetailsCommand}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="Edit24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource VaultCtxEditTags}"
+                                      Command="{Binding EditTagsCommand}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="Tag24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource VaultCtxClone}"
+                                      Command="{Binding CloneEntryCommand}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="DocumentCopy24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="{DynamicResource VaultCtxDelete}"
+                                      Command="{Binding DeleteEntryCommand}"
+                                      Foreground="{DynamicResource SystemFillColorCriticalBrush}">
+                                <MenuItem.Icon>
+                                    <ui:SymbolIcon Symbol="Delete24"
+                                                   Foreground="{DynamicResource SystemFillColorCriticalBrush}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Transparent" />
                             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                             <Setter Property="FontWeight" Value="SemiBold" />
-                            <Setter Property="Padding" Value="8,10" />
+                            <Setter Property="Padding" Value="8,6" />
                             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
                             <Setter Property="BorderThickness" Value="0,0,1,1" />
                         </Style>
@@ -150,7 +234,7 @@
                             <Setter Property="Background" Value="Transparent" />
                             <Setter Property="BorderBrush" Value="Transparent" />
                             <Setter Property="BorderThickness" Value="0" />
-                            <Setter Property="Padding" Value="10,6" />
+                            <Setter Property="Padding" Value="8,4" />
                             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                             <Setter Property="Template">
@@ -179,6 +263,7 @@
                             <Setter Property="BorderBrush" Value="Transparent" />
                             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                            <Setter Property="MinHeight" Value="34" />
                             <Setter Property="ValidationErrorTemplate" Value="{x:Null}" />
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -193,7 +278,7 @@
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Width="180"
+                        <DataGridTemplateColumn Width="1.4*"
                                                 Header="{DynamicResource VaultColSite}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -202,7 +287,32 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="180"
+                        <DataGridTemplateColumn Width="1.6*"
+                                                Header="{DynamicResource VaultColLink}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Url}"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{DynamicResource SystemAccentColorBrush}"
+                                               Cursor="Hand"
+                                               Visibility="{Binding HasUrl, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock.InputBindings>
+                                            <MouseBinding MouseAction="LeftClick" Command="{Binding OpenUrlCommand}" />
+                                        </TextBlock.InputBindings>
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="TextDecorations" Value="Underline" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="1.25*"
                                                 Header="{DynamicResource VaultColPassword}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -212,7 +322,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="180"
+                        <DataGridTemplateColumn Width="1.25*"
                                                 Header="{DynamicResource VaultColTags}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -239,8 +349,8 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border Margin="0,0,6,6"
-                                                            Padding="10,5"
+                                                    <Border Margin="0,0,4,4"
+                                                            Padding="6,3"
                                                             Background="{DynamicResource ControlFillColorSecondaryBrush}"
                                                             BorderBrush="{DynamicResource SystemAccentColorBrush}"
                                                             BorderThickness="1"
@@ -257,7 +367,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="150"
+                        <DataGridTemplateColumn Width="170"
                                                 Header="{DynamicResource VaultColCreated}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -265,35 +375,16 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="236"
-                                                Header="{DynamicResource VaultColActions}">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <ui:Button Width="62"
-                                                   Margin="0,0,8,0"
-                                                   Command="{Binding ToggleRevealCommand}"
-                                                   Content="{Binding RevealButtonText}" />
-                                        <ui:Button Width="54"
-                                                   Margin="0,0,8,0"
-                                                   Command="{Binding EditTagsCommand}"
-                                                   Content="{DynamicResource VaultBtnTags}" />
-                                        <ui:Button Width="40"
-                                                   Margin="0,0,8,0"
-                                                   Command="{Binding CopyEntryCommand}"
-                                                   Icon="{ui:SymbolIcon Symbol=Copy24}"
-                                                   ToolTip="{DynamicResource VaultTipCopy}" />
-                                        <ui:Button Width="40"
-                                                   Appearance="Danger"
-                                                   Command="{Binding DeleteEntryCommand}"
-                                                   Icon="{ui:SymbolIcon Symbol=Delete24}"
-                                                   ToolTip="{DynamicResource VaultTipDelete}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+
                     </DataGrid.Columns>
                 </DataGrid>
+
+                <TextBlock Grid.Row="2"
+                           Margin="0,6,0,0"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                           FontSize="12"
+                           Text="{DynamicResource VaultRightClickHint}" />
             </Grid>
         </ui:Card>
     </Grid>
