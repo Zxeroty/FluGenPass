@@ -2,7 +2,19 @@
   <img src="https://raw.githubusercontent.com/Zxeroty/FluGenPass/refs/heads/main/FluGenPass/ico.png" width="143" height="143">
 </p>
 
-<h1 align="center">FluGenPass</h1>
+<div align="center">
+  
+# FluGenPass
+  
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/Zxeroty/FluGenPass?style=flat-for-the-badge&color=0078d4)](https://github.com/Zxeroty/FluGenPass/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows-0078d4?style=flat-for-the-badge&logo=windows)](https://github.com/Zxeroty/FluGenPass)
+[![Framework](https://img.shields.io/badge/.NET-8.0-512bd4?style=flat-for-the-badge&logo=dotnet)](https://dotnet.microsoft.com/download)
+[![Language](https://img.shields.io/badge/language-C%23-239120?style=flat-for-the-badge&logo=csharp)](https://learn.microsoft.com/dotnet/csharp/)
+[![License](https://img.shields.io/github/license/Zxeroty/FluGenPass?style=flat-for-the-badge&color=888888)](https://github.com/Zxeroty/FluGenPass/blob/main/LICENSE)
+
+</div>
+
+---
 
 FluGenPass is a modern, user-friendly password manager with a high level of security for Windows (.NET 8). It combines the Fluent UI design philosophy with industry-standard cryptographic protection to ensure the security and accessibility of your credentials.
 
