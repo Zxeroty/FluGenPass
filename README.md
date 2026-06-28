@@ -18,6 +18,10 @@
 
 FluGenPass is a modern, user-friendly password manager with a high level of security for Windows (.NET 8). It combines the Fluent UI design philosophy with industry-standard cryptographic protection to ensure the security and accessibility of your credentials.
 
+> [!CAUTION]
+> ### Security depends on your brain!
+> This software uses strong, local-first cryptographic standards. However, no tool can protect your data if you choose a weak master password, compromise your OS with malware, or lose your master passphrase (there is no "Forgot Password" button). **Security is a mindset, not just a tool.** Keep your system clean and use your brain.
+
 ## Security
 
 FluGenPass is built on a "Zero-Knowledge" architecture. Your master password and key files never leave your device, and your data is only decrypted in memory when you need it.
