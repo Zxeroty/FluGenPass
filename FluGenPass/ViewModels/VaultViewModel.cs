@@ -519,9 +519,18 @@ public partial class VaultViewModel : ObservableObject
         RefreshAvailableTags();
         ApplyFilters();
 
-        _notificationService.ShowInfo(
+        _notificationService.ShowAction(
             _localizationService.GetString("NotifDeletedTitle"),
-            string.Format(_localizationService.GetString("NotifDeletedMsg"), item.SiteName)
+            string.Format(_localizationService.GetString("NotifDeletedMsg"), item.SiteName),
+            _localizationService.GetString("CommonBtnUndo"),
+            () =>
+            {
+                _allEntries.Add(item);
+                RefreshAvailableTags();
+                ApplyFilters();
+                _ = _vaultService.SaveAsync(_allEntries.Select(static entry => entry.Entry));
+            },
+            TimeSpan.FromSeconds(4)
         );
     }
 

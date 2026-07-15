@@ -54,6 +54,9 @@ public sealed class LocalizationService(ISettingsService settingsService) : ILoc
         return language switch
         {
             AppLanguageOption.Russian => "ru",
+            AppLanguageOption.Polish => "pl",
+            AppLanguageOption.German => "de",
+            AppLanguageOption.Ukrainian => "uk",
             _ => "en"
         };
     }

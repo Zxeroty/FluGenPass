@@ -210,5 +210,9 @@ public sealed class VaultAccessCoordinatorTests : IDisposable
         public void ShowError(string title, string message)
         {
         }
+
+        public void ShowAction(string title, string message, string actionButtonText, Action action, TimeSpan timeout)
+        {
+        }
     }
 }

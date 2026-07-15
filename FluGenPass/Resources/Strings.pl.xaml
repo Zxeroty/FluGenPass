@@ -1,0 +1,252 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <sys:String x:Key="AppTitle">FluGenPass</sys:String>
+    
+    <!-- Nawigacja -->
+    <sys:String x:Key="NavMenu">Menu</sys:String>
+    <sys:String x:Key="NavBack">Wstecz</sys:String>
+    <sys:String x:Key="NavGenerator">Generator</sys:String>
+    <sys:String x:Key="NavVault">Sejf</sys:String>
+    <sys:String x:Key="NavSettings">Ustawienia</sys:String>
+    <sys:String x:Key="NavVaultUnlocked">Sejf odblokowany</sys:String>
+    <sys:String x:Key="NavLockVault">Zablokuj sejf</sys:String>
+
+    <!-- Strona generatora -->
+    <sys:String x:Key="GenTitle">Generator haseł</sys:String>
+    <sys:String x:Key="GenSubtitle">Utwórz nowe poświadczenie z kryptograficzną losowością, a następnie skopiuj je lub wyślij bezpośrednio do lokalnego sejfu.</sys:String>
+    <sys:String x:Key="GenStrength">Siła: {0}</sys:String>
+    <sys:String x:Key="GenEntropy">Szacunkowa entropia</sys:String>
+    <sys:String x:Key="GenBits">{0} bitów</sys:String>
+    <sys:String x:Key="GenBtnGenerate">Generuj</sys:String>
+    <sys:String x:Key="GenBtnCopy">Kopiuj</sys:String>
+    <sys:String x:Key="GenBtnSave">Zapisz w sejfie</sys:String>
+    <sys:String x:Key="GenOptionsTitle">Opcje</sys:String>
+    <sys:String x:Key="GenOptionsSubtitle">Hasło odświeża się natychmiast podczas dostosowywania długości i zestawów znaków.</sys:String>
+    <sys:String x:Key="GenOptionLength">Długość</sys:String>
+    <sys:String x:Key="GenOptionUpper">Wielkie litery</sys:String>
+    <sys:String x:Key="GenOptionLower">Małe litery</sys:String>
+    <sys:String x:Key="GenOptionNumbers">Cyfry</sys:String>
+    <sys:String x:Key="GenOptionSymbols">Znaki specjalne</sys:String>
+    <sys:String x:Key="GenWeakTitle">Słabe</sys:String>
+    <sys:String x:Key="GenWeakDesc">Poniżej 45 bitów. W porządku do jednorazowego użytku, ale nie do ważnych kont.</sys:String>
+    <sys:String x:Key="GenMediumTitle">Średnie</sys:String>
+    <sys:String x:Key="GenMediumDesc">Między 45 a 69 bitów. Lepiej, ale warto zwiększyć dla długoterminowych poświadczeń.</sys:String>
+    <sys:String x:Key="GenStrongTitle">Silne</sys:String>
+    <sys:String x:Key="GenStrongDesc">70 bitów i więcej. To idealny poziom dla haseł, których używasz na co dzień.</sys:String>
+    <sys:String x:Key="GenStatusReady">Generator jest gotowy.</sys:String>
+    <sys:String x:Key="GenStatusCopied">Hasło skopiowane do schowka.</sys:String>
+    <sys:String x:Key="GenStatusSaved">Hasło zapisane w sejfie jako '{0}'.</sys:String>
+
+    <!-- Strona sejfu -->
+    <sys:String x:Key="VaultTitle">Sejf</sys:String>
+    <sys:String x:Key="VaultSubtitle">Odkryj, kopiuj lub usuń dowolny wpis poniżej.</sys:String>
+    <sys:String x:Key="VaultColSite">Strona / Usługa</sys:String>
+    <sys:String x:Key="VaultColPassword">Hasło</sys:String>
+    <sys:String x:Key="VaultColTags">Tagi</sys:String>
+    <sys:String x:Key="VaultColCreated">Utworzono</sys:String>
+    <sys:String x:Key="VaultColActions">Akcje</sys:String>
+    <sys:String x:Key="VaultFilterLabel">Filtruj po tagu</sys:String>
+    <sys:String x:Key="VaultSearchPlaceholder">Szukaj strony lub tagu...</sys:String>
+    <sys:String x:Key="VaultFilterAllTags">Wszystkie tagi</sys:String>
+    <sys:String x:Key="VaultFilterMatches">Wyświetlono {0} z {1} wpisów dla tagu '{2}'.</sys:String>
+    <sys:String x:Key="VaultFilterNoMatches">Nie znaleziono wpisów dla tagu '{0}'.</sys:String>
+    <sys:String x:Key="VaultSearchMatches">Znaleziono {0} wyników dla '{1}'.</sys:String>
+    <sys:String x:Key="VaultSearchNoMatches">Brak wyników dla '{0}'.</sys:String>
+    <sys:String x:Key="VaultBtnRefresh">Odśwież</sys:String>
+    <sys:String x:Key="VaultBtnImport">Importuj</sys:String>
+    <sys:String x:Key="VaultBtnExportBackup">Eksportuj kopię zapasową</sys:String>
+    <sys:String x:Key="VaultBtnExportCsv">Eksportuj CSV</sys:String>
+    <sys:String x:Key="VaultBtnVerify">Zweryfikuj plik</sys:String>
+    <sys:String x:Key="VaultBtnLock">Zablokuj</sys:String>
+    <sys:String x:Key="VaultBtnTags">Tagi</sys:String>
+    <sys:String x:Key="VaultBtnReveal">Pokaż</sys:String>
+    <sys:String x:Key="VaultBtnHide">Ukryj</sys:String>
+    <sys:String x:Key="VaultTipCopy">Kopiuj hasło</sys:String>
+    <sys:String x:Key="VaultTipDelete">Usuń wpis</sys:String>
+    
+    <sys:String x:Key="VaultHeadLocked">Sejf zablokowany</sys:String>
+    <sys:String x:Key="VaultHeadReady">Sejf gotowy</sys:String>
+    <sys:String x:Key="VaultHeadCountOne">{0} tajemnica przechowywana</sys:String>
+    <sys:String x:Key="VaultHeadCountMany">{0} tajemnic przechowywanych</sys:String>
+    <sys:String x:Key="VaultMsgLocked">Odblokuj sejf, aby przeglądać zapisane hasła.</sys:String>
+    <sys:String x:Key="VaultMsgReady">Hasła zapisane z generatora pojawią się tutaj.</sys:String>
+    <sys:String x:Key="VaultTagsUpdated">Tagi dla '{0}' zaktualizowane.</sys:String>
+
+    <!-- Strona ustawień -->
+    <sys:String x:Key="SettingsTitle">Ustawienia</sys:String>
+    <sys:String x:Key="SettingsSubtitle">Dostosuj zachowanie motywu i sprawdź, gdzie FluGenPass przechowuje lokalne ustawienia i zaszyfrowany sejf.</sys:String>
+    <sys:String x:Key="SettingsPersonalizationTitle">Personalizacja</sys:String>
+    <sys:String x:Key="SettingsThemeTitle">Motyw</sys:String>
+    <sys:String x:Key="SettingsAutoLockTitle">Automatyczne blokowanie</sys:String>
+    <sys:String x:Key="SettingsAutoLockSubtitle">Automatycznie blokuj sejf po okresie bezczynności. Aktywność klawiatury i myszy resetuje licznik.</sys:String>
+    <sys:String x:Key="SettingsAutoLockSwitch">Blokuj po bezczynności</sys:String>
+    <sys:String x:Key="SettingsAutoLockAfter">Zablokuj po</sys:String>
+    <sys:String x:Key="SettingsAutoLockMinutes">Minutach bezczynności</sys:String>
+    <sys:String x:Key="SettingsVaultAccessTitle">Dostęp do sejfu</sys:String>
+    <sys:String x:Key="SettingsVaultBtnReset">Resetuj ochronę sejfu</sys:String>
+    <sys:String x:Key="SettingsVaultBtnCreate">Utwórz hasło główne</sys:String>
+    <sys:String x:Key="SettingsVaultBtnChange">Zmień hasło główne</sys:String>
+    <sys:String x:Key="SettingsVaultDescUnlocked">Sejf jest odblokowany w tej sesji. Możesz zaktualizować hasło główne lub całkowicie zresetować ochronę sejfu.</sys:String>
+    <sys:String x:Key="SettingsVaultDescLocked">Hasło główne jest skonfigurowane. Najpierw odblokuj sejf, jeśli chcesz zmienić hasło bez usuwania zapisanych wpisów.</sys:String>
+    <sys:String x:Key="SettingsVaultDescNone">Nie skonfigurowano jeszcze hasła głównego. Utwórz je, aby chronić dostęp do strony sejfu.</sys:String>
+    <sys:String x:Key="SettingsStorageTitle">Przechowywanie</sys:String>
+    <sys:String x:Key="SettingsStorageSubtitle">Wszystko pozostaje lokalne w Twoim profilu Windows. Eksport i import również są lokalne, z kontrolą integralności SHA-256 i podpisami cyfrowymi ECDSA dla plików transferowych.</sys:String>
+    <sys:String x:Key="SettingsPathAppData">Folder danych aplikacji</sys:String>
+    <sys:String x:Key="SettingsPathSettings">Plik ustawień</sys:String>
+    <sys:String x:Key="SettingsPathVault">Zaszyfrowany plik sejfu</sys:String>
+    <sys:String x:Key="SettingsSecurityTitle">Bezpieczeństwo</sys:String>
+    <sys:String x:Key="SettingsSecuritySubtitle">Sejf odblokowuje się tylko na czas bieżącej sesji. Blokada czyści klucz z pamięci i pozostawia zaszyfrowany plik na dysku.</sys:String>
+    <sys:String x:Key="SettingsKeyFileTitle">Plik klucza</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescDisabled">Wygeneruj lokalny plik klucza, jeśli chcesz, aby sejf wymagał drugiego etapu odblokowania po haśle głównym.</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescEnabled">Odblokowanie dwuetapowe jest włączone. Po haśle głównym ten sejf wymaga również pliku klucza: {0}</sys:String>
+    <sys:String x:Key="SettingsKeyFileSwitch">Wymagaj pliku klucza po haśle głównym</sys:String>
+    <sys:String x:Key="SettingsKeyFileBtnRegenerate">Zastąp plik klucza</sys:String>
+    <sys:String x:Key="SettingsLanguageTitle">Język</sys:String>
+    <sys:String x:Key="SettingsLanguageSubtitle">Wybierz preferowany język interfejsu aplikacji.</sys:String>
+
+    <!-- Ogólne / Okna dialogowe -->
+    <sys:String x:Key="CommonBtnLock">Zablokuj sejf</sys:String>
+    <sys:String x:Key="CommonBtnCancel">Anuluj</sys:String>
+    <sys:String x:Key="CommonBtnOk">OK</sys:String>
+    <sys:String x:Key="CommonBtnClose">Zamknij</sys:String>
+    <sys:String x:Key="CommonBtnUndo">Cofnij</sys:String>
+    
+    <sys:String x:Key="DlgSiteTitle">Nazwa strony</sys:String>
+    <sys:String x:Key="DlgSiteMsg">Wprowadź etykietę dla tego hasła (np. GitHub, Gmail):</sys:String>
+    <sys:String x:Key="DlgResetTitle">Resetuj ochronę sejfu</sys:String>
+    <sys:String x:Key="DlgResetMsg">Spowoduje to usunięcie hasła głównego, usunięcie wszystkich zapisanych wpisów i zablokowanie sejfu. Tej operacji nie można cofnąć.</sys:String>
+    <sys:String x:Key="DlgResetBtn">Resetuj sejf</sys:String>
+
+    <!-- Powiadomienia -->
+    <sys:String x:Key="NotifLockedTitle">Sejf zablokowany</sys:String>
+    <sys:String x:Key="NotifLockedMsg">Sejf jest teraz ukryty, dopóki go ponownie nie odblokujesz.</sys:String>
+    <sys:String x:Key="NotifCopiedTitle">Skopiowano</sys:String>
+    <sys:String x:Key="NotifCopiedMsg">{0} skopiowane do schowka.</sys:String>
+    <sys:String x:Key="NotifDeletedTitle">Usunięto</sys:String>
+    <sys:String x:Key="NotifDeletedMsg">{0} został usunięty z sejfu.</sys:String>
+    <sys:String x:Key="NotifResetTitle">Sejf zresetowany</sys:String>
+    <sys:String x:Key="NotifResetMsg">Hasło główne usunięte, a zawartość lokalnego sejfu wyczyszczona.</sys:String>
+    <sys:String x:Key="NotifSuccess">Sukces</sys:String>
+    <sys:String x:Key="NotifError">Błąd</sys:String>
+    <sys:String x:Key="NotifVaultReady">Sejf gotowy</sys:String>
+    <sys:String x:Key="NotifVaultReadyMsg">Hasło główne utworzone, a sejf odblokowany.</sys:String>
+    <sys:String x:Key="NotifAccessDenied">Odmowa dostępu</sys:String>
+    <sys:String x:Key="NotifAccessDeniedMsg">To hasło główne nie odblokowało sejfu.</sys:String>
+    <sys:String x:Key="NotifAccessDeniedKeyFileMsg">Ten plik klucza nie pasuje do tego sejfu.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdated">Hasło główne zaktualizowane</sys:String>
+    <sys:String x:Key="NotifPasswordUpdatedMsg">Dostęp do sejfu używa teraz nowego hasła głównego.</sys:String>
+    <sys:String x:Key="NotifPasswordCreated">Hasło główne utworzone</sys:String>
+    <sys:String x:Key="NotifPasswordCreatedMsg">Ochrona sejfu jest teraz włączona dla tego urządzenia.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdateFailed">Aktualizacja hasła nie powiodła się</sys:String>
+    <sys:String x:Key="NotifResetFailed">Resetowanie nie powiodło się</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabled">Plik klucza wyłączony</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabledMsg">Sejf będzie wymagał tylko hasła głównego.</sys:String>
+    <sys:String x:Key="NotifKeyFileUpdateFailed">Aktualizacja pliku klucza nie powiodła się</sys:String>
+    <sys:String x:Key="NotifKeyFileReady">Plik klucza gotowy</sys:String>
+    <sys:String x:Key="NotifKeyFileReadyMsg">Wygenerowany plik klucza jest teraz wymagany po haśle głównym.</sys:String>
+
+    <!-- Transfer / Import / Eksport -->
+    <sys:String x:Key="TransferTitle">Transfer przenośny</sys:String>
+    <sys:String x:Key="TransferDesc">Eksportuj kopię zapasową FluGenPass z wbudowaną weryfikacją SHA-256 i podpisem ECDSA lub utwórz plik CSV zgodny z Bitwarden z plikami .sha256 i .sig.json. Import CSV zachowuje obecnie pola strony i hasła.</sys:String>
+    <sys:String x:Key="TransferStatusReady">Gotowy</sys:String>
+    <sys:String x:Key="TransferStatusStarted">Rozpoczęto...</sys:String>
+    <sys:String x:Key="TransferStatusCompleted">Zakończono</sys:String>
+    <sys:String x:Key="TransferStatusFailed">Nie powiodło się</sys:String>
+    <sys:String x:Key="TransferStatusCancelled">Anulowano</sys:String>
+    <sys:String x:Key="TransferStatusIntegrityChecked">Sprawdzono integralność</sys:String>
+    <sys:String x:Key="TransferStatusExportReady">Eksport gotowy</sys:String>
+    
+    <sys:String x:Key="TransferImportTitle">Importuj hasła</sys:String>
+    <sys:String x:Key="TransferImportFilter">Obsługiwane pliki (*.fgpexport.json;*.json;*.csv)|*.fgpexport.json;*.json;*.csv|Bezpieczny eksport FluGenPass (*.fgpexport.json;*.json)|*.fgpexport.json;*.json|Pliki CSV (*.csv)|*.csv</sys:String>
+    <sys:String x:Key="TransferImportSummary">Podsumowanie importu</sys:String>
+    <sys:String x:Key="TransferImportSuccessMsg">{0} elementów dodanych, {1} pominiętych. {2}</sys:String>
+    <sys:String x:Key="TransferImportNotifSuccess">{0} haseł zaimportowanych.</sys:String>
+    <sys:String x:Key="TransferImportDialogSummary">{0} haseł zaimportowanych.\n{1} zduplikowanych lub nieprawidłowych wierszy pominiętych.\n{2}\n{3}</sys:String>
+    <sys:String x:Key="TransferImportNoWarnings">Brak ostrzeżeń importu.</sys:String>
+    
+    <sys:String x:Key="TransferExportSecureTitle">Eksportuj bezpieczną kopię zapasową</sys:String>
+    <sys:String x:Key="TransferExportCsvTitle">Eksportuj Bitwarden CSV</sys:String>
+    <sys:String x:Key="TransferExportSuccessMsg">{0} haseł wyeksportowanych.</sys:String>
+    <sys:String x:Key="TransferExportCsvSuccessMsg">{0} haseł wyeksportowanych do CSV.</sys:String>
+    <sys:String x:Key="TransferExportSidecarsMsg">Pliki podpisu zapisane obok pliku CSV.</sys:String>
+    
+    <sys:String x:Key="TransferVerifyTitle">Zweryfikuj plik transferu</sys:String>
+    <sys:String x:Key="TransferVerifySuccess">Weryfikacja zaliczona</sys:String>
+    <sys:String x:Key="TransferVerifySuccessMsg">Wybrany plik przeszedł weryfikację integralności.</sys:String>
+    <sys:String x:Key="TransferVerifyIncomplete">Weryfikacja niekompletna</sys:String>
+    <sys:String x:Key="TransferVerifyNoChecksum">Nie znaleziono pliku sumy kontrolnej dla wybranego CSV.</sys:String>
+    <sys:String x:Key="TransferVerifyNoSignature">Nie znaleziono podpisu cyfrowego dla wybranego pliku.</sys:String>
+    <sys:String x:Key="TransferVerifySummary">Podsumowanie weryfikacji</sys:String>
+    
+    <sys:String x:Key="TransferDlgChecksumTitle">Nie znaleziono sumy kontrolnej</sys:String>
+    <sys:String x:Key="TransferDlgChecksumMsg">Wybrany plik CSV nie ma pliku .sha256 obok siebie. Importować mimo to?</sys:String>
+    <sys:String x:Key="TransferDlgChecksumBtn">Importuj mimo to</sys:String>
+    
+    <sys:String x:Key="TransferDlgSignatureTitle">Nie znaleziono podpisu</sys:String>
+    <sys:String x:Key="TransferDlgSignatureMsg">Wybrany plik nie ma podpisu cyfrowego lub brakuje pliku .sig.json. Importować mimo to?</sys:String>
+    
+    <sys:String x:Key="TransferDlgTrustTitle">Nieznany sygnatariusz</sys:String>
+    <sys:String x:Key="TransferDlgTrustMsg">Podpis pliku jest kryptograficznie ważny, ale sygnatariusz nie jest zaufany w tej instancji FluGenPass. Importować mimo to?</sys:String>
+
+    <sys:String x:Key="DlgKeyFileDisableTitle">Wyłącz wymóg pliku klucza</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableMsg">Sejf przestanie pytać o plik klucza po haśle głównym. Sam plik nie zostanie usunięty z dysku.</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableBtn">Wyłącz zabezpieczenie</sys:String>
+
+    <sys:String x:Key="DlgKeyFileWarningTitle">OSTRZEŻENIE KRYTYCZNE</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningMsg">Utworzenie lub zastąpienie pliku klucza jest nieodwracalne. Aby kontynuować, musisz potwierdzić wszystkie poniższe punkty:</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck1">Rozumiem, że bez tego pliku klucza dostęp do moich haseł będzie niemożliwy.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck2">Zobowiązuję się do przechowywania kopii zapasowej pliku klucza w bezpiecznym miejscu.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck3">Zdaję sobie sprawę, że programista nie ma technicznych możliwości odzyskania moich danych.</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningBtn">W pełni rozumiem, kontynuuj</sys:String>
+    <!-- Komunikaty statusu weryfikacji -->
+    <sys:String x:Key="VerifyMsgCsvNoChecksum">Brak pliku sumy kontrolnej SHA-256 CSV.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoChecksumWarning">Nie znaleziono pliku sumy kontrolnej obok pliku CSV.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignature">Brak pliku podpisu cyfrowego.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignatureWarning">Nie znaleziono pliku podpisu .sig.json obok pliku CSV.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissing">Brak podpisu cyfrowego.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissingWarning">Plik nie ma użytecznego podpisu cyfrowego.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureVerified">SHA-256 i zaufany podpis ECDSA zweryfikowane. Klucz sygnatariusza: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrusted">SHA-256 i podpis ECDSA zweryfikowane, ale sygnatariusz nie jest lokalnie zaufany. Klucz sygnatariusza: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrustedWarning">Plik został podpisany ważnym kluczem, ale nie lokalnym kluczem podpisu FluGenPass dla tej instancji.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureEmbeddedVerified">Wbudowany SHA-256 zweryfikowany: {0}. {1}</sys:String>
+    <sys:String x:Key="VerifyMsgCsvHashVerified">SHA-256 CSV zweryfikowany: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureExportCreated">Utworzono wbudowany SHA-256 i zaufany podpis ECDSA. Klucz podpisu: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvExportCreated">Utworzono pliki SHA-256 i ECDSA. Klucz podpisu: {0}.</sys:String>
+
+    <!-- Rozszerzenia wpisów sejfu -->
+    <sys:String x:Key="DlgSiteDetailsTitle">Szczegóły wpisu</sys:String>
+    <sys:String x:Key="DlgSiteDetailsDesc">Podaj tytuł, link i hasło dla tego wpisu w sejfie.</sys:String>
+    <sys:String x:Key="DlgSiteNameLabel">Nazwa strony / usługi</sys:String>
+    <sys:String x:Key="DlgSiteNamePlaceholder">np. GitHub, Google</sys:String>
+    <sys:String x:Key="DlgUrlLabel">Link (URL)</sys:String>
+    <sys:String x:Key="DlgUrlPlaceholder">np. https://github.com</sys:String>
+    <sys:String x:Key="DlgPasswordLabel">Hasło</sys:String>
+    <sys:String x:Key="DlgPasswordPlaceholder">Pozostaw puste, aby zachować bieżące hasło</sys:String>
+    <sys:String x:Key="DlgSiteNameRequired">Nazwa strony jest wymagana.</sys:String>
+    <sys:String x:Key="CommonBtnSave">Zapisz</sys:String>
+
+    <sys:String x:Key="VaultColLink">Link</sys:String>
+    <sys:String x:Key="VaultCtxEditTags">Edytuj tagi</sys:String>
+    <sys:String x:Key="VaultCtxCopySite">Kopiuj nazwę strony</sys:String>
+    <sys:String x:Key="VaultCtxCopyPassword">Kopiuj hasło</sys:String>
+    <sys:String x:Key="VaultCtxCopyLink">Kopiuj link</sys:String>
+    <sys:String x:Key="VaultCtxOpenLink">Przejdź do linku</sys:String>
+    <sys:String x:Key="VaultCtxEditDetails">Edytuj szczegóły</sys:String>
+    <sys:String x:Key="VaultCtxClone">Klonuj wpis</sys:String>
+    <sys:String x:Key="VaultCtxDelete">Usuń wpis</sys:String>
+    <sys:String x:Key="NotifCopiedSiteMsg">Nazwa strony "{0}" skopiowana do schowka.</sys:String>
+    <sys:String x:Key="NotifCopiedUrlMsg">Link dla "{0}" skopiowany do schowka.</sys:String>
+    <sys:String x:Key="NotifClonedMsg">Wpis "{0}" został pomyślnie sklonowany.</sys:String>
+    <sys:String x:Key="NotifDetailsUpdatedMsg">Szczegóły wpisu w sejfie zaktualizowane pomyślnie.</sys:String>
+    <sys:String x:Key="VaultRightClickHint">Kliknij prawym przyciskiem na wpis, aby skopiować, edytować lub usunąć.</sys:String>
+
+    <!-- HIBP Sprawdzanie wycieku haseł -->
+    <sys:String x:Key="VaultCtxCheckCompromised">Sprawdź wycieki (HIBP)</sys:String>
+    <sys:String x:Key="DlgPwnedTitle">Sprawdzanie wycieków HIBP</sys:String>
+    <sys:String x:Key="DlgPwnedWarning">Uwaga! To hasło zostało znalezione {0} raz(y) w bazie wyciekłych poświadczeń HaveIBeenPwned.&#x0a;&#x0a;Zdecydowanie zaleca się zmianę tego hasła, ponieważ jest niebezpieczne!</sys:String>
+    <sys:String x:Key="DlgPwnedSafe">Dobre wieści! To hasło nie zostało znalezione w bazie wyciekłych poświadczeń HaveIBeenPwned.&#x0a;&#x0a;Wydaje się być bezpieczne.</sys:String>
+    <sys:String x:Key="DlgPwnedError">Nie udało się sprawdzić wycieku hasła. Sprawdź połączenie sieciowe i spróbuj ponownie.</sys:String>
+    <sys:String x:Key="DlgPwnedClose">Zamknij</sys:String>
+</ResourceDictionary>

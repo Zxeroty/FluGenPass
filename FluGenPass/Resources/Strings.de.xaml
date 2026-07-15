@@ -1,0 +1,253 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <sys:String x:Key="AppTitle">FluGenPass</sys:String>
+    
+    <!-- Navigation -->
+    <sys:String x:Key="NavMenu">Menü</sys:String>
+    <sys:String x:Key="NavBack">Zurück</sys:String>
+    <sys:String x:Key="NavGenerator">Generator</sys:String>
+    <sys:String x:Key="NavVault">Tresor</sys:String>
+    <sys:String x:Key="NavSettings">Einstellungen</sys:String>
+    <sys:String x:Key="NavVaultUnlocked">Tresor entsperrt</sys:String>
+    <sys:String x:Key="NavLockVault">Tresor sperren</sys:String>
+
+    <!-- Generator-Seite -->
+    <sys:String x:Key="GenTitle">Passwort-Generator</sys:String>
+    <sys:String x:Key="GenSubtitle">Erstelle ein neues Passwort mit kryptografischer Zufälligkeit, kopiere es oder sende es direkt an den lokalen Tresor.</sys:String>
+    <sys:String x:Key="GenStrength">Stärke: {0}</sys:String>
+    <sys:String x:Key="GenEntropy">Geschätzte Entropie</sys:String>
+    <sys:String x:Key="GenBits">{0} Bits</sys:String>
+    <sys:String x:Key="GenBtnGenerate">Generieren</sys:String>
+    <sys:String x:Key="GenBtnCopy">Kopieren</sys:String>
+    <sys:String x:Key="GenBtnSave">Im Tresor speichern</sys:String>
+    <sys:String x:Key="GenOptionsTitle">Optionen</sys:String>
+    <sys:String x:Key="GenOptionsSubtitle">Das Passwort wird sofort aktualisiert, während du Länge und Zeichensätze anpasst.</sys:String>
+    <sys:String x:Key="GenOptionLength">Länge</sys:String>
+    <sys:String x:Key="GenOptionUpper">Großbuchstaben</sys:String>
+    <sys:String x:Key="GenOptionLower">Kleinbuchstaben</sys:String>
+    <sys:String x:Key="GenOptionNumbers">Ziffern</sys:String>
+    <sys:String x:Key="GenOptionSymbols">Sonderzeichen</sys:String>
+    <sys:String x:Key="GenWeakTitle">Schwach</sys:String>
+    <sys:String x:Key="GenWeakDesc">Unter 45 Bits. Für den einmaligen Gebrauch in Ordnung, aber nicht für wichtige Konten.</sys:String>
+    <sys:String x:Key="GenMediumTitle">Mittel</sys:String>
+    <sys:String x:Key="GenMediumDesc">Zwischen 45 und 69 Bits. Besser, aber für langlebige Anmeldedaten sollte die Länge erhöht werden.</sys:String>
+    <sys:String x:Key="GenStrongTitle">Stark</sys:String>
+    <sys:String x:Key="GenStrongDesc">70 Bits und mehr. Das ist das ideale Niveau für Passwörter, die du täglich verwendest.</sys:String>
+    <sys:String x:Key="GenStatusReady">Der Generator ist bereit.</sys:String>
+    <sys:String x:Key="GenStatusCopied">Passwort in die Zwischenablage kopiert.</sys:String>
+    <sys:String x:Key="GenStatusSaved">Passwort als '{0}' im Tresor gespeichert.</sys:String>
+
+    <!-- Tresor-Seite -->
+    <sys:String x:Key="VaultTitle">Tresor</sys:String>
+    <sys:String x:Key="VaultSubtitle">Entdecke, kopiere oder lösche einen beliebigen Eintrag unten.</sys:String>
+    <sys:String x:Key="VaultColSite">Seite / Dienst</sys:String>
+    <sys:String x:Key="VaultColPassword">Passwort</sys:String>
+    <sys:String x:Key="VaultColTags">Tags</sys:String>
+    <sys:String x:Key="VaultColCreated">Erstellt</sys:String>
+    <sys:String x:Key="VaultColActions">Aktionen</sys:String>
+    <sys:String x:Key="VaultFilterLabel">Nach Tag filtern</sys:String>
+    <sys:String x:Key="VaultSearchPlaceholder">Seite oder Tag suchen...</sys:String>
+    <sys:String x:Key="VaultFilterAllTags">Alle Tags</sys:String>
+    <sys:String x:Key="VaultFilterMatches">{0} von {1} Einträgen für Tag '{2}' angezeigt.</sys:String>
+    <sys:String x:Key="VaultFilterNoMatches">Keine Einträge für Tag '{0}' gefunden.</sys:String>
+    <sys:String x:Key="VaultSearchMatches">{0} Ergebnisse für '{1}' gefunden.</sys:String>
+    <sys:String x:Key="VaultSearchNoMatches">Keine Ergebnisse für '{0}'.</sys:String>
+    <sys:String x:Key="VaultBtnRefresh">Aktualisieren</sys:String>
+    <sys:String x:Key="VaultBtnImport">Importieren</sys:String>
+    <sys:String x:Key="VaultBtnExportBackup">Sicherung exportieren</sys:String>
+    <sys:String x:Key="VaultBtnExportCsv">CSV exportieren</sys:String>
+    <sys:String x:Key="VaultBtnVerify">Datei verifizieren</sys:String>
+    <sys:String x:Key="VaultBtnLock">Sperren</sys:String>
+    <sys:String x:Key="VaultBtnTags">Tags</sys:String>
+    <sys:String x:Key="VaultBtnReveal">Anzeigen</sys:String>
+    <sys:String x:Key="VaultBtnHide">Ausblenden</sys:String>
+    <sys:String x:Key="VaultTipCopy">Passwort kopieren</sys:String>
+    <sys:String x:Key="VaultTipDelete">Eintrag löschen</sys:String>
+    
+    <sys:String x:Key="VaultHeadLocked">Tresor gesperrt</sys:String>
+    <sys:String x:Key="VaultHeadReady">Tresor bereit</sys:String>
+    <sys:String x:Key="VaultHeadCountOne">{0} Geheimnis gespeichert</sys:String>
+    <sys:String x:Key="VaultHeadCountMany">{0} Geheimnisse gespeichert</sys:String>
+    <sys:String x:Key="VaultMsgLocked">Entsperre den Tresor, um die gespeicherten Passwörter anzuzeigen.</sys:String>
+    <sys:String x:Key="VaultMsgReady">Vom Generator gespeicherte Passwörter werden hier angezeigt.</sys:String>
+    <sys:String x:Key="VaultTagsUpdated">Tags für '{0}' aktualisiert.</sys:String>
+
+    <!-- Einstellungsseite -->
+    <sys:String x:Key="SettingsTitle">Einstellungen</sys:String>
+    <sys:String x:Key="SettingsSubtitle">Passe das Verhalten des Designs an und erfahre, wo FluGenPass lokale Einstellungen und den verschlüsselten Tresor speichert.</sys:String>
+    <sys:String x:Key="SettingsPersonalizationTitle">Personalisierung</sys:String>
+    <sys:String x:Key="SettingsThemeTitle">Design</sys:String>
+    <sys:String x:Key="SettingsAutoLockTitle">Automatisches Sperren</sys:String>
+    <sys:String x:Key="SettingsAutoLockSubtitle">Sperre den Tresor automatisch nach einer Phase der Inaktivität. Tastatur- und Mausaktivität setzen den Timer zurück.</sys:String>
+    <sys:String x:Key="SettingsAutoLockSwitch">Bei Inaktivität sperren</sys:String>
+    <sys:String x:Key="SettingsAutoLockAfter">Sperren nach</sys:String>
+    <sys:String x:Key="SettingsAutoLockMinutes">Minuten Inaktivität</sys:String>
+    <sys:String x:Key="SettingsVaultAccessTitle">Tresor-Zugriff</sys:String>
+    <sys:String x:Key="SettingsVaultBtnReset">Tresorschutz zurücksetzen</sys:String>
+    <sys:String x:Key="SettingsVaultBtnCreate">Master-Passwort erstellen</sys:String>
+    <sys:String x:Key="SettingsVaultBtnChange">Master-Passwort ändern</sys:String>
+    <sys:String x:Key="SettingsVaultDescUnlocked">Der Tresor ist in dieser Sitzung entsperrt. Du kannst das Master-Passwort aktualisieren oder den Tresorschutz vollständig zurücksetzen.</sys:String>
+    <sys:String x:Key="SettingsVaultDescLocked">Ein Master-Passwort ist konfiguriert. Entsperre zuerst den Tresor, wenn du das Passwort ändern möchtest, ohne die gespeicherten Einträge zu löschen.</sys:String>
+    <sys:String x:Key="SettingsVaultDescNone">Noch kein Master-Passwort konfiguriert. Erstelle eines, um den Zugriff auf die Tresor-Seite zu schützen.</sys:String>
+    <sys:String x:Key="SettingsStorageTitle">Speicher</sys:String>
+    <sys:String x:Key="SettingsStorageSubtitle">Alles bleibt lokal in deinem Windows-Profil. Export und Import sind ebenfalls lokal, mit SHA-256-Integritätsprüfung und ECDSA-Signaturen für Transferdateien.</sys:String>
+    <sys:String x:Key="SettingsPathAppData">Anwendungsdaten-Ordner</sys:String>
+    <sys:String x:Key="SettingsPathSettings">Einstellungsdatei</sys:String>
+    <sys:String x:Key="SettingsPathVault">Verschlüsselte Tresor-Datei</sys:String>
+    <sys:String x:Key="SettingsSecurityTitle">Sicherheit</sys:String>
+    <sys:String x:Key="SettingsSecuritySubtitle">Der Tresor wird nur für die aktuelle Sitzung entsperrt. Beim Sperren wird der Schlüssel aus dem Speicher gelöscht und die verschlüsselte Datei auf der Festplatte belassen.</sys:String>
+    <sys:String x:Key="SettingsKeyFileTitle">Schlüsseldatei</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescDisabled">Generiere eine lokale Schlüsseldatei, wenn der Tresor nach dem Master-Passwort eine zweite Entsperrstufe benötigen soll.</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescEnabled">Zwei-Faktor-Entsperrung ist aktiviert. Nach dem Master-Passwort benötigt dieser Tresor auch eine Schlüsseldatei: {0}</sys:String>
+    <sys:String x:Key="SettingsKeyFileSwitch">Schlüsseldatei nach dem Master-Passwort anfordern</sys:String>
+    <sys:String x:Key="SettingsKeyFileBtnRegenerate">Schlüsseldatei ersetzen</sys:String>
+    <sys:String x:Key="SettingsLanguageTitle">Sprache</sys:String>
+    <sys:String x:Key="SettingsLanguageSubtitle">Wähle deine bevorzugte Sprache für die Anwendungsoberfläche.</sys:String>
+
+    <!-- Allgemein / Dialoge -->
+    <sys:String x:Key="CommonBtnLock">Tresor sperren</sys:String>
+    <sys:String x:Key="CommonBtnCancel">Abbrechen</sys:String>
+    <sys:String x:Key="CommonBtnOk">OK</sys:String>
+    <sys:String x:Key="CommonBtnClose">Schließen</sys:String>
+    <sys:String x:Key="CommonBtnUndo">Rückgängig</sys:String>
+    
+    <sys:String x:Key="DlgSiteTitle">Seitenname</sys:String>
+    <sys:String x:Key="DlgSiteMsg">Gib eine Bezeichnung für dieses Passwort ein (z. B. GitHub, Gmail):</sys:String>
+    <sys:String x:Key="DlgResetTitle">Tresorschutz zurücksetzen</sys:String>
+    <sys:String x:Key="DlgResetMsg">Dadurch werden das Master-Passwort entfernt, alle gespeicherten Einträge gelöscht und der Tresor gesperrt. Dieser Vorgang kann nicht rückgängig gemacht werden.</sys:String>
+    <sys:String x:Key="DlgResetBtn">Tresor zurücksetzen</sys:String>
+
+    <!-- Benachrichtigungen -->
+    <sys:String x:Key="NotifLockedTitle">Tresor gesperrt</sys:String>
+    <sys:String x:Key="NotifLockedMsg">Der Tresor ist nun verborgen, bis du ihn erneut entsperrst.</sys:String>
+    <sys:String x:Key="NotifCopiedTitle">Kopiert</sys:String>
+    <sys:String x:Key="NotifCopiedMsg">{0} in die Zwischenablage kopiert.</sys:String>
+    <sys:String x:Key="NotifDeletedTitle">Gelöscht</sys:String>
+    <sys:String x:Key="NotifDeletedMsg">{0} wurde aus dem Tresor gelöscht.</sys:String>
+    <sys:String x:Key="NotifResetTitle">Tresor zurückgesetzt</sys:String>
+    <sys:String x:Key="NotifResetMsg">Master-Passwort entfernt und lokaler Tresorinhalt gelöscht.</sys:String>
+    <sys:String x:Key="NotifSuccess">Erfolg</sys:String>
+    <sys:String x:Key="NotifError">Fehler</sys:String>
+    <sys:String x:Key="NotifVaultReady">Tresor bereit</sys:String>
+    <sys:String x:Key="NotifVaultReadyMsg">Master-Passwort erstellt und Tresor entsperrt.</sys:String>
+    <sys:String x:Key="NotifAccessDenied">Zugriff verweigert</sys:String>
+    <sys:String x:Key="NotifAccessDeniedMsg">Dieses Master-Passwort hat den Tresor nicht entsperrt.</sys:String>
+    <sys:String x:Key="NotifAccessDeniedKeyFileMsg">Diese Schlüsseldatei passt nicht zu diesem Tresor.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdated">Master-Passwort aktualisiert</sys:String>
+    <sys:String x:Key="NotifPasswordUpdatedMsg">Der Tresor-Zugriff verwendet jetzt das neue Master-Passwort.</sys:String>
+    <sys:String x:Key="NotifPasswordCreated">Master-Passwort erstellt</sys:String>
+    <sys:String x:Key="NotifPasswordCreatedMsg">Der Tresorschutz ist jetzt für dieses Gerät aktiviert.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdateFailed">Passwort-Aktualisierung fehlgeschlagen</sys:String>
+    <sys:String x:Key="NotifResetFailed">Zurücksetzen fehlgeschlagen</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabled">Schlüsseldatei deaktiviert</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabledMsg">Der Tresor benötigt nur noch das Master-Passwort.</sys:String>
+    <sys:String x:Key="NotifKeyFileUpdateFailed">Schlüsseldatei-Aktualisierung fehlgeschlagen</sys:String>
+    <sys:String x:Key="NotifKeyFileReady">Schlüsseldatei bereit</sys:String>
+    <sys:String x:Key="NotifKeyFileReadyMsg">Die generierte Schlüsseldatei wird jetzt nach dem Master-Passwort benötigt.</sys:String>
+
+    <!-- Transfer / Import / Export -->
+    <sys:String x:Key="TransferTitle">Portabler Transfer</sys:String>
+    <sys:String x:Key="TransferDesc">Exportiere ein FluGenPass-Backup mit integrierter SHA-256-Prüfung und ECDSA-Signatur oder erstelle eine Bitwarden-kompatible CSV-Datei mit .sha256- und .sig.json-Dateien. Der CSV-Import übernimmt derzeit die Felder für Seite und Passwort.</sys:String>
+    <sys:String x:Key="TransferStatusReady">Bereit</sys:String>
+    <sys:String x:Key="TransferStatusStarted">Gestartet...</sys:String>
+    <sys:String x:Key="TransferStatusCompleted">Abgeschlossen</sys:String>
+    <sys:String x:Key="TransferStatusFailed">Fehlgeschlagen</sys:String>
+    <sys:String x:Key="TransferStatusCancelled">Abgebrochen</sys:String>
+    <sys:String x:Key="TransferStatusIntegrityChecked">Integrität geprüft</sys:String>
+    <sys:String x:Key="TransferStatusExportReady">Export bereit</sys:String>
+    
+    <sys:String x:Key="TransferImportTitle">Passwörter importieren</sys:String>
+    <sys:String x:Key="TransferImportFilter">Unterstützte Dateien (*.fgpexport.json;*.json;*.csv)|*.fgpexport.json;*.json;*.csv|FluGenPass-Sicherungsexport (*.fgpexport.json;*.json)|*.fgpexport.json;*.json|CSV-Dateien (*.csv)|*.csv</sys:String>
+    <sys:String x:Key="TransferImportSummary">Import-Zusammenfassung</sys:String>
+    <sys:String x:Key="TransferImportSuccessMsg">{0} Elemente hinzugefügt, {1} übersprungen. {2}</sys:String>
+    <sys:String x:Key="TransferImportNotifSuccess">{0} Passwörter importiert.</sys:String>
+    <sys:String x:Key="TransferImportDialogSummary">{0} Passwörter importiert.\n{1} doppelte oder ungültige Zeilen übersprungen.\n{2}\n{3}</sys:String>
+    <sys:String x:Key="TransferImportNoWarnings">Keine Importwarnungen.</sys:String>
+    
+    <sys:String x:Key="TransferExportSecureTitle">Sicherheits-Backup exportieren</sys:String>
+    <sys:String x:Key="TransferExportCsvTitle">Bitwarden-CSV exportieren</sys:String>
+    <sys:String x:Key="TransferExportSuccessMsg">{0} Passwörter exportiert.</sys:String>
+    <sys:String x:Key="TransferExportCsvSuccessMsg">{0} Passwörter als CSV exportiert.</sys:String>
+    <sys:String x:Key="TransferExportSidecarsMsg">Signaturdateien neben der CSV-Datei gespeichert.</sys:String>
+    
+    <sys:String x:Key="TransferVerifyTitle">Transferdatei verifizieren</sys:String>
+    <sys:String x:Key="TransferVerifySuccess">Verifizierung bestanden</sys:String>
+    <sys:String x:Key="TransferVerifySuccessMsg">Die ausgewählte Datei hat die Integritätsprüfung bestanden.</sys:String>
+    <sys:String x:Key="TransferVerifyIncomplete">Verifizierung unvollständig</sys:String>
+    <sys:String x:Key="TransferVerifyNoChecksum">Keine Prüfsummendatei für das ausgewählte CSV gefunden.</sys:String>
+    <sys:String x:Key="TransferVerifyNoSignature">Keine digitale Signatur für die ausgewählte Datei gefunden.</sys:String>
+    <sys:String x:Key="TransferVerifySummary">Verifizierungs-Zusammenfassung</sys:String>
+    
+    <sys:String x:Key="TransferDlgChecksumTitle">Keine Prüfsumme gefunden</sys:String>
+    <sys:String x:Key="TransferDlgChecksumMsg">Die ausgewählte CSV-Datei hat keine .sha256-Datei neben sich. Trotzdem importieren?</sys:String>
+    <sys:String x:Key="TransferDlgChecksumBtn">Trotzdem importieren</sys:String>
+    
+    <sys:String x:Key="TransferDlgSignatureTitle">Keine Signatur gefunden</sys:String>
+    <sys:String x:Key="TransferDlgSignatureMsg">Die ausgewählte Datei hat keine digitale Signatur oder die .sig.json-Datei fehlt. Trotzdem importieren?</sys:String>
+    
+    <sys:String x:Key="TransferDlgTrustTitle">Unbekannter Unterzeichner</sys:String>
+    <sys:String x:Key="TransferDlgTrustMsg">Die Dateisignatur ist kryptografisch gültig, aber der Unterzeichner wird von dieser FluGenPass-Instanz nicht als vertrauenswürdig eingestuft. Trotzdem importieren?</sys:String>
+
+    <sys:String x:Key="DlgKeyFileDisableTitle">Schlüsseldatei-Anforderung deaktivieren</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableMsg">Der Tresor wird nicht mehr nach der Schlüsseldatei nach dem Master-Passwort fragen. Die Datei selbst wird nicht von der Festplatte gelöscht.</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableBtn">Schutz deaktivieren</sys:String>
+
+    <sys:String x:Key="DlgKeyFileWarningTitle">KRITISCHER HINWEIS</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningMsg">Das Erstellen oder Ersetzen einer Schlüsseldatei ist endgültig. Du musst alle folgenden Punkte bestätigen, um fortzufahren:</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck1">Mir ist klar, dass ohne diese Schlüsseldatei der Zugriff auf meine Passwörter unmöglich ist.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck2">Ich werde ein Backup der Schlüsseldatei an einem sicheren Ort aufbewahren.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck3">Mir ist bewusst, dass der Entwickler keine technische Möglichkeit hat, meine Daten wiederherzustellen.</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningBtn">Ich verstehe, fortfahren</sys:String>
+    
+    <!-- Verifizierungs-Statusmeldungen -->
+    <sys:String x:Key="VerifyMsgCsvNoChecksum">Keine SHA-256-Prüfsumme für CSV.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoChecksumWarning">Neben der CSV-Datei wurde keine Prüfsummendatei gefunden.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignature">Keine digitale Signaturdatei.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignatureWarning">Neben der CSV-Datei wurde keine .sig.json-Signaturdatei gefunden.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissing">Keine digitale Signatur.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissingWarning">Die Datei hat keine nutzbare digitale Signatur.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureVerified">SHA-256 und vertrauenswürdige ECDSA-Signatur verifiziert. Signaturschlüssel: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrusted">SHA-256 und ECDSA-Signatur verifiziert, aber der Unterzeichner ist nicht lokal vertrauenswürdig. Signaturschlüssel: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrustedWarning">Die Datei wurde mit einem gültigen Schlüssel signiert, aber nicht mit dem lokalen FluGenPass-Signaturschlüssel dieser Instanz.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureEmbeddedVerified">Eingebetteter SHA-256 verifiziert: {0}. {1}</sys:String>
+    <sys:String x:Key="VerifyMsgCsvHashVerified">CSV SHA-256 verifiziert: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureExportCreated">Eingebetteter SHA-256 und vertrauenswürdige ECDSA-Signatur erstellt. Signaturschlüssel: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvExportCreated">SHA-256- und ECDSA-Dateien erstellt. Signaturschlüssel: {0}.</sys:String>
+
+    <!-- Tresor-Eintragserweiterungen -->
+    <sys:String x:Key="DlgSiteDetailsTitle">Eintragsdetails</sys:String>
+    <sys:String x:Key="DlgSiteDetailsDesc">Gib einen Titel, einen Link und ein Passwort für diesen Tresoreintrag an.</sys:String>
+    <sys:String x:Key="DlgSiteNameLabel">Seiten-/Dienstname</sys:String>
+    <sys:String x:Key="DlgSiteNamePlaceholder">z. B. GitHub, Google</sys:String>
+    <sys:String x:Key="DlgUrlLabel">Link (URL)</sys:String>
+    <sys:String x:Key="DlgUrlPlaceholder">z. B. https://github.com</sys:String>
+    <sys:String x:Key="DlgPasswordLabel">Passwort</sys:String>
+    <sys:String x:Key="DlgPasswordPlaceholder">Leer lassen, um das aktuelle Passwort beizubehalten</sys:String>
+    <sys:String x:Key="DlgSiteNameRequired">Seitenname ist erforderlich.</sys:String>
+    <sys:String x:Key="CommonBtnSave">Speichern</sys:String>
+
+    <sys:String x:Key="VaultColLink">Link</sys:String>
+    <sys:String x:Key="VaultCtxEditTags">Tags bearbeiten</sys:String>
+    <sys:String x:Key="VaultCtxCopySite">Seitenname kopieren</sys:String>
+    <sys:String x:Key="VaultCtxCopyPassword">Passwort kopieren</sys:String>
+    <sys:String x:Key="VaultCtxCopyLink">Link kopieren</sys:String>
+    <sys:String x:Key="VaultCtxOpenLink">Link öffnen</sys:String>
+    <sys:String x:Key="VaultCtxEditDetails">Details bearbeiten</sys:String>
+    <sys:String x:Key="VaultCtxClone">Eintrag klonen</sys:String>
+    <sys:String x:Key="VaultCtxDelete">Eintrag löschen</sys:String>
+    <sys:String x:Key="NotifCopiedSiteMsg">Seitenname "{0}" in die Zwischenablage kopiert.</sys:String>
+    <sys:String x:Key="NotifCopiedUrlMsg">Link für "{0}" in die Zwischenablage kopiert.</sys:String>
+    <sys:String x:Key="NotifClonedMsg">Eintrag "{0}" wurde erfolgreich geklont.</sys:String>
+    <sys:String x:Key="NotifDetailsUpdatedMsg">Tresoreintragsdetails erfolgreich aktualisiert.</sys:String>
+    <sys:String x:Key="VaultRightClickHint">Klicke mit der rechten Maustaste auf einen Eintrag, um ihn zu kopieren, zu bearbeiten oder zu löschen.</sys:String>
+
+    <!-- HIBP-Passwort-Leak-Prüfung -->
+    <sys:String x:Key="VaultCtxCheckCompromised">Auf Leaks prüfen (HIBP)</sys:String>
+    <sys:String x:Key="DlgPwnedTitle">HIBP-Leak-Prüfung</sys:String>
+    <sys:String x:Key="DlgPwnedWarning">Achtung! Dieses Passwort wurde {0}-mal in der HaveIBeenPwned-Datenbank für kompromittierte Zugangsdaten gefunden.&#x0a;&#x0a;Es wird dringend empfohlen, dieses Passwort zu ändern, da es unsicher ist!</sys:String>
+    <sys:String x:Key="DlgPwnedSafe">Gute Nachrichten! Dieses Passwort wurde nicht in der HaveIBeenPwned-Datenbank für kompromittierte Zugangsdaten gefunden.&#x0a;&#x0a;Es scheint sicher zu sein.</sys:String>
+    <sys:String x:Key="DlgPwnedError">Die Passwort-Leak-Prüfung ist fehlgeschlagen. Überprüfe deine Netzwerkverbindung und versuche es erneut.</sys:String>
+    <sys:String x:Key="DlgPwnedClose">Schließen</sys:String>
+</ResourceDictionary>

@@ -111,6 +111,7 @@
     <sys:String x:Key="CommonBtnCancel">Cancel</sys:String>
     <sys:String x:Key="CommonBtnOk">OK</sys:String>
     <sys:String x:Key="CommonBtnClose">Close</sys:String>
+    <sys:String x:Key="CommonBtnUndo">Undo</sys:String>
     
     <sys:String x:Key="DlgSiteTitle">Site Name</sys:String>
     <sys:String x:Key="DlgSiteMsg">Enter a label for this password (e.g., GitHub, Gmail):</sys:String>

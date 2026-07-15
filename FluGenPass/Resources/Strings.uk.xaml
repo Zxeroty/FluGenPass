@@ -1,0 +1,253 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <sys:String x:Key="AppTitle">FluGenPass</sys:String>
+    
+    <!-- Навігація -->
+    <sys:String x:Key="NavMenu">Меню</sys:String>
+    <sys:String x:Key="NavBack">Назад</sys:String>
+    <sys:String x:Key="NavGenerator">Генератор</sys:String>
+    <sys:String x:Key="NavVault">Сховище</sys:String>
+    <sys:String x:Key="NavSettings">Налаштування</sys:String>
+    <sys:String x:Key="NavVaultUnlocked">Сховище розблоковано</sys:String>
+    <sys:String x:Key="NavLockVault">Заблокувати сховище</sys:String>
+
+    <!-- Сторінка генератора -->
+    <sys:String x:Key="GenTitle">Генератор паролів</sys:String>
+    <sys:String x:Key="GenSubtitle">Створіть новий пароль із криптографічною випадковістю, скопіюйте його або надішліть безпосередньо до локального сховища.</sys:String>
+    <sys:String x:Key="GenStrength">Міцність: {0}</sys:String>
+    <sys:String x:Key="GenEntropy">Оціночна ентропія</sys:String>
+    <sys:String x:Key="GenBits">{0} біт</sys:String>
+    <sys:String x:Key="GenBtnGenerate">Згенерувати</sys:String>
+    <sys:String x:Key="GenBtnCopy">Копіювати</sys:String>
+    <sys:String x:Key="GenBtnSave">Зберегти в сховище</sys:String>
+    <sys:String x:Key="GenOptionsTitle">Параметри</sys:String>
+    <sys:String x:Key="GenOptionsSubtitle">Пароль оновлюється миттєво під час налаштування довжини та наборів символів.</sys:String>
+    <sys:String x:Key="GenOptionLength">Довжина</sys:String>
+    <sys:String x:Key="GenOptionUpper">Великі літери</sys:String>
+    <sys:String x:Key="GenOptionLower">Малі літери</sys:String>
+    <sys:String x:Key="GenOptionNumbers">Цифри</sys:String>
+    <sys:String x:Key="GenOptionSymbols">Спеціальні символи</sys:String>
+    <sys:String x:Key="GenWeakTitle">Слабкий</sys:String>
+    <sys:String x:Key="GenWeakDesc">Нижче 45 біт. Прийнятно для одноразового використання, але не для важливих акаунтів.</sys:String>
+    <sys:String x:Key="GenMediumTitle">Середній</sys:String>
+    <sys:String x:Key="GenMediumDesc">Від 45 до 69 біт. Краще, але варто збільшити для довгострокових облікових даних.</sys:String>
+    <sys:String x:Key="GenStrongTitle">Сильний</sys:String>
+    <sys:String x:Key="GenStrongDesc">70 біт і більше. Це ідеальний рівень для паролів, які ви використовуєте щодня.</sys:String>
+    <sys:String x:Key="GenStatusReady">Генератор готовий.</sys:String>
+    <sys:String x:Key="GenStatusCopied">Пароль скопійовано в буфер обміну.</sys:String>
+    <sys:String x:Key="GenStatusSaved">Пароль збережено в сховищі як '{0}'.</sys:String>
+
+    <!-- Сторінка сховища -->
+    <sys:String x:Key="VaultTitle">Сховище</sys:String>
+    <sys:String x:Key="VaultSubtitle">Переглядайте, копіюйте або видаляйте будь-який запис нижче.</sys:String>
+    <sys:String x:Key="VaultColSite">Сайт / Сервіс</sys:String>
+    <sys:String x:Key="VaultColPassword">Пароль</sys:String>
+    <sys:String x:Key="VaultColTags">Теги</sys:String>
+    <sys:String x:Key="VaultColCreated">Створено</sys:String>
+    <sys:String x:Key="VaultColActions">Дії</sys:String>
+    <sys:String x:Key="VaultFilterLabel">Фільтр за тегом</sys:String>
+    <sys:String x:Key="VaultSearchPlaceholder">Пошук сайту або тегу...</sys:String>
+    <sys:String x:Key="VaultFilterAllTags">Усі теги</sys:String>
+    <sys:String x:Key="VaultFilterMatches">Показано {0} з {1} записів для тегу '{2}'.</sys:String>
+    <sys:String x:Key="VaultFilterNoMatches">Не знайдено записів для тегу '{0}'.</sys:String>
+    <sys:String x:Key="VaultSearchMatches">Знайдено {0} результатів для '{1}'.</sys:String>
+    <sys:String x:Key="VaultSearchNoMatches">Немає результатів для '{0}'.</sys:String>
+    <sys:String x:Key="VaultBtnRefresh">Оновити</sys:String>
+    <sys:String x:Key="VaultBtnImport">Імпортувати</sys:String>
+    <sys:String x:Key="VaultBtnExportBackup">Експортувати резервну копію</sys:String>
+    <sys:String x:Key="VaultBtnExportCsv">Експортувати CSV</sys:String>
+    <sys:String x:Key="VaultBtnVerify">Перевірити файл</sys:String>
+    <sys:String x:Key="VaultBtnLock">Заблокувати</sys:String>
+    <sys:String x:Key="VaultBtnTags">Теги</sys:String>
+    <sys:String x:Key="VaultBtnReveal">Показати</sys:String>
+    <sys:String x:Key="VaultBtnHide">Приховати</sys:String>
+    <sys:String x:Key="VaultTipCopy">Копіювати пароль</sys:String>
+    <sys:String x:Key="VaultTipDelete">Видалити запис</sys:String>
+    
+    <sys:String x:Key="VaultHeadLocked">Сховище заблоковано</sys:String>
+    <sys:String x:Key="VaultHeadReady">Сховище готове</sys:String>
+    <sys:String x:Key="VaultHeadCountOne">{0} таємниця збережена</sys:String>
+    <sys:String x:Key="VaultHeadCountMany">{0} таємниць збережено</sys:String>
+    <sys:String x:Key="VaultMsgLocked">Розблокуйте сховище, щоб переглянути збережені паролі.</sys:String>
+    <sys:String x:Key="VaultMsgReady">Паролі, збережені з генератора, з'являться тут.</sys:String>
+    <sys:String x:Key="VaultTagsUpdated">Теги для '{0}' оновлено.</sys:String>
+
+    <!-- Сторінка налаштувань -->
+    <sys:String x:Key="SettingsTitle">Налаштування</sys:String>
+    <sys:String x:Key="SettingsSubtitle">Налаштуйте поведінку теми та дізнайтеся, де FluGenPass зберігає локальні налаштування та зашифроване сховище.</sys:String>
+    <sys:String x:Key="SettingsPersonalizationTitle">Персоналізація</sys:String>
+    <sys:String x:Key="SettingsThemeTitle">Тема</sys:String>
+    <sys:String x:Key="SettingsAutoLockTitle">Автоматичне блокування</sys:String>
+    <sys:String x:Key="SettingsAutoLockSubtitle">Автоматично блокувати сховище після періоду бездіяльності. Активність клавіатури та миші скидає лічильник.</sys:String>
+    <sys:String x:Key="SettingsAutoLockSwitch">Блокувати при бездіяльності</sys:String>
+    <sys:String x:Key="SettingsAutoLockAfter">Заблокувати через</sys:String>
+    <sys:String x:Key="SettingsAutoLockMinutes">хвилин бездіяльності</sys:String>
+    <sys:String x:Key="SettingsVaultAccessTitle">Доступ до сховища</sys:String>
+    <sys:String x:Key="SettingsVaultBtnReset">Скинути захист сховища</sys:String>
+    <sys:String x:Key="SettingsVaultBtnCreate">Створити майстер-пароль</sys:String>
+    <sys:String x:Key="SettingsVaultBtnChange">Змінити майстер-пароль</sys:String>
+    <sys:String x:Key="SettingsVaultDescUnlocked">Сховище розблоковано в цьому сеансі. Ви можете оновити майстер-пароль або повністю скинути захист сховища.</sys:String>
+    <sys:String x:Key="SettingsVaultDescLocked">Майстер-пароль налаштовано. Спочатку розблокуйте сховище, якщо хочете змінити пароль без видалення збережених записів.</sys:String>
+    <sys:String x:Key="SettingsVaultDescNone">Майстер-пароль ще не налаштовано. Створіть його, щоб захистити доступ до сторінки сховища.</sys:String>
+    <sys:String x:Key="SettingsStorageTitle">Зберігання</sys:String>
+    <sys:String x:Key="SettingsStorageSubtitle">Усе залишається локальним у вашому профілі Windows. Експорт та імпорт також локальні, з перевіркою цілісності SHA-256 та цифровими підписами ECDSA для файлів передачі.</sys:String>
+    <sys:String x:Key="SettingsPathAppData">Папка даних додатку</sys:String>
+    <sys:String x:Key="SettingsPathSettings">Файл налаштувань</sys:String>
+    <sys:String x:Key="SettingsPathVault">Зашифрований файл сховища</sys:String>
+    <sys:String x:Key="SettingsSecurityTitle">Безпека</sys:String>
+    <sys:String x:Key="SettingsSecuritySubtitle">Сховище розблоковується лише на час поточного сеансу. Блокування очищує ключ із пам'яті та залишає зашифрований файл на диску.</sys:String>
+    <sys:String x:Key="SettingsKeyFileTitle">Файл ключа</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescDisabled">Згенеруйте локальний файл ключа, якщо ви хочете, щоб сховище вимагало другого етапу розблокування після майстер-пароля.</sys:String>
+    <sys:String x:Key="SettingsKeyFileDescEnabled">Двофакторне розблокування ввімкнено. Після майстер-пароля це сховище також вимагає файл ключа: {0}</sys:String>
+    <sys:String x:Key="SettingsKeyFileSwitch">Вимагати файл ключа після майстер-пароля</sys:String>
+    <sys:String x:Key="SettingsKeyFileBtnRegenerate">Замінити файл ключа</sys:String>
+    <sys:String x:Key="SettingsLanguageTitle">Мова</sys:String>
+    <sys:String x:Key="SettingsLanguageSubtitle">Виберіть бажану мову інтерфейсу додатку.</sys:String>
+
+    <!-- Загальне / Діалоги -->
+    <sys:String x:Key="CommonBtnLock">Заблокувати сховище</sys:String>
+    <sys:String x:Key="CommonBtnCancel">Скасувати</sys:String>
+    <sys:String x:Key="CommonBtnOk">Готово</sys:String>
+    <sys:String x:Key="CommonBtnClose">Закрити</sys:String>
+    <sys:String x:Key="CommonBtnUndo">Скасувати</sys:String>
+    
+    <sys:String x:Key="DlgSiteTitle">Назва сайту</sys:String>
+    <sys:String x:Key="DlgSiteMsg">Введіть мітку для цього пароля (наприклад, GitHub, Gmail):</sys:String>
+    <sys:String x:Key="DlgResetTitle">Скинути захист сховища</sys:String>
+    <sys:String x:Key="DlgResetMsg">Це призведе до видалення майстер-пароля, видалення всіх збережених записів та блокування сховища. Цю операцію не можна скасувати.</sys:String>
+    <sys:String x:Key="DlgResetBtn">Скинути сховище</sys:String>
+
+    <!-- Сповіщення -->
+    <sys:String x:Key="NotifLockedTitle">Сховище заблоковано</sys:String>
+    <sys:String x:Key="NotifLockedMsg">Сховище тепер приховано, доки ви не розблокуєте його знову.</sys:String>
+    <sys:String x:Key="NotifCopiedTitle">Скопійовано</sys:String>
+    <sys:String x:Key="NotifCopiedMsg">{0} скопійовано в буфер обміну.</sys:String>
+    <sys:String x:Key="NotifDeletedTitle">Видалено</sys:String>
+    <sys:String x:Key="NotifDeletedMsg">{0} видалено зі сховища.</sys:String>
+    <sys:String x:Key="NotifResetTitle">Сховище скинуто</sys:String>
+    <sys:String x:Key="NotifResetMsg">Майстер-пароль видалено, а вміст локального сховища очищено.</sys:String>
+    <sys:String x:Key="NotifSuccess">Успіх</sys:String>
+    <sys:String x:Key="NotifError">Помилка</sys:String>
+    <sys:String x:Key="NotifVaultReady">Сховище готове</sys:String>
+    <sys:String x:Key="NotifVaultReadyMsg">Майстер-пароль створено, сховище розблоковано.</sys:String>
+    <sys:String x:Key="NotifAccessDenied">Доступ заборонено</sys:String>
+    <sys:String x:Key="NotifAccessDeniedMsg">Цей майстер-пароль не розблокував сховище.</sys:String>
+    <sys:String x:Key="NotifAccessDeniedKeyFileMsg">Цей файл ключа не підходить до цього сховища.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdated">Майстер-пароль оновлено</sys:String>
+    <sys:String x:Key="NotifPasswordUpdatedMsg">Доступ до сховища тепер використовує новий майстер-пароль.</sys:String>
+    <sys:String x:Key="NotifPasswordCreated">Майстер-пароль створено</sys:String>
+    <sys:String x:Key="NotifPasswordCreatedMsg">Захист сховища тепер увімкнено для цього пристрою.</sys:String>
+    <sys:String x:Key="NotifPasswordUpdateFailed">Не вдалося оновити пароль</sys:String>
+    <sys:String x:Key="NotifResetFailed">Не вдалося скинути</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabled">Файл ключа вимкнено</sys:String>
+    <sys:String x:Key="NotifKeyFileDisabledMsg">Сховище вимагатиме лише майстер-пароль.</sys:String>
+    <sys:String x:Key="NotifKeyFileUpdateFailed">Не вдалося оновити файл ключа</sys:String>
+    <sys:String x:Key="NotifKeyFileReady">Файл ключа готовий</sys:String>
+    <sys:String x:Key="NotifKeyFileReadyMsg">Згенерований файл ключа тепер вимагається після майстер-пароля.</sys:String>
+
+    <!-- Трансфер / Імпорт / Експорт -->
+    <sys:String x:Key="TransferTitle">Портативний трансфер</sys:String>
+    <sys:String x:Key="TransferDesc">Експортуйте резервну копію FluGenPass із вбудованою перевіркою SHA-256 та підписом ECDSA або створіть файл CSV, сумісний із Bitwarden, із файлами .sha256 та .sig.json. Імпорт CSV наразі приймає поля сайту та пароля.</sys:String>
+    <sys:String x:Key="TransferStatusReady">Готово</sys:String>
+    <sys:String x:Key="TransferStatusStarted">Розпочато...</sys:String>
+    <sys:String x:Key="TransferStatusCompleted">Завершено</sys:String>
+    <sys:String x:Key="TransferStatusFailed">Не вдалося</sys:String>
+    <sys:String x:Key="TransferStatusCancelled">Скасовано</sys:String>
+    <sys:String x:Key="TransferStatusIntegrityChecked">Цілісність перевірено</sys:String>
+    <sys:String x:Key="TransferStatusExportReady">Експорт готовий</sys:String>
+    
+    <sys:String x:Key="TransferImportTitle">Імпортувати паролі</sys:String>
+    <sys:String x:Key="TransferImportFilter">Підтримувані файли (*.fgpexport.json;*.json;*.csv)|*.fgpexport.json;*.json;*.csv|Безпечний експорт FluGenPass (*.fgpexport.json;*.json)|*.fgpexport.json;*.json|Файли CSV (*.csv)|*.csv</sys:String>
+    <sys:String x:Key="TransferImportSummary">Підсумок імпорту</sys:String>
+    <sys:String x:Key="TransferImportSuccessMsg">{0} елементів додано, {1} пропущено. {2}</sys:String>
+    <sys:String x:Key="TransferImportNotifSuccess">{0} паролів імпортовано.</sys:String>
+    <sys:String x:Key="TransferImportDialogSummary">{0} паролів імпортовано.\n{1} дубльованих або недійсних рядків пропущено.\n{2}\n{3}</sys:String>
+    <sys:String x:Key="TransferImportNoWarnings">Немає попереджень імпорту.</sys:String>
+    
+    <sys:String x:Key="TransferExportSecureTitle">Експортувати безпечну резервну копію</sys:String>
+    <sys:String x:Key="TransferExportCsvTitle">Експортувати Bitwarden CSV</sys:String>
+    <sys:String x:Key="TransferExportSuccessMsg">{0} паролів експортовано.</sys:String>
+    <sys:String x:Key="TransferExportCsvSuccessMsg">{0} паролів експортовано до CSV.</sys:String>
+    <sys:String x:Key="TransferExportSidecarsMsg">Файли підписів збережено поруч із файлом CSV.</sys:String>
+    
+    <sys:String x:Key="TransferVerifyTitle">Перевірити файл передачі</sys:String>
+    <sys:String x:Key="TransferVerifySuccess">Перевірку пройдено</sys:String>
+    <sys:String x:Key="TransferVerifySuccessMsg">Вибраний файл пройшов перевірку цілісності.</sys:String>
+    <sys:String x:Key="TransferVerifyIncomplete">Перевірка неповна</sys:String>
+    <sys:String x:Key="TransferVerifyNoChecksum">Не знайдено файлу контрольної суми для вибраного CSV.</sys:String>
+    <sys:String x:Key="TransferVerifyNoSignature">Не знайдено цифрового підпису для вибраного файлу.</sys:String>
+    <sys:String x:Key="TransferVerifySummary">Підсумок перевірки</sys:String>
+    
+    <sys:String x:Key="TransferDlgChecksumTitle">Контрольну суму не знайдено</sys:String>
+    <sys:String x:Key="TransferDlgChecksumMsg">Вибраний файл CSV не має файлу .sha256 поруч. Все одно імпортувати?</sys:String>
+    <sys:String x:Key="TransferDlgChecksumBtn">Все одно імпортувати</sys:String>
+    
+    <sys:String x:Key="TransferDlgSignatureTitle">Підпис не знайдено</sys:String>
+    <sys:String x:Key="TransferDlgSignatureMsg">Вибраний файл не має цифрового підпису або файл .sig.json відсутній. Все одно імпортувати?</sys:String>
+    
+    <sys:String x:Key="TransferDlgTrustTitle">Невідомий підписувач</sys:String>
+    <sys:String x:Key="TransferDlgTrustMsg">Підпис файлу є криптографічно дійсним, але підписувач не є довіреним у цьому екземплярі FluGenPass. Все одно імпортувати?</sys:String>
+
+    <sys:String x:Key="DlgKeyFileDisableTitle">Вимкнути вимогу файлу ключа</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableMsg">Сховище перестане запитувати файл ключа після майстер-пароля. Сам файл не буде видалено з диска.</sys:String>
+    <sys:String x:Key="DlgKeyFileDisableBtn">Вимкнути захист</sys:String>
+
+    <sys:String x:Key="DlgKeyFileWarningTitle">КРИТИЧНЕ ПОПЕРЕДЖЕННЯ</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningMsg">Створення або заміна файлу ключа є незворотним. Щоб продовжити, ви повинні підтвердити всі наступні пункти:</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck1">Я розумію, що без цього файлу ключа доступ до моїх паролів буде неможливим.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck2">Я зобов'язуюсь зберігати резервну копію файлу ключа в безпечному місці.</sys:String>
+    <sys:String x:Key="DlgKeyFileCheck3">Я усвідомлюю, що розробник не має технічної можливості відновити мої дані.</sys:String>
+    <sys:String x:Key="DlgKeyFileWarningBtn">Я повністю розумію, продовжити</sys:String>
+    
+    <!-- Статуси перевірки -->
+    <sys:String x:Key="VerifyMsgCsvNoChecksum">Немає контрольної суми SHA-256 для CSV.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoChecksumWarning">Не знайдено файлу контрольної суми поруч із файлом CSV.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignature">Немає файлу цифрового підпису.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvNoSignatureWarning">Не знайдено файлу підпису .sig.json поруч із файлом CSV.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissing">Немає цифрового підпису.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureSignatureMissingWarning">Файл не має корисного цифрового підпису.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureVerified">SHA-256 та довірений підпис ECDSA перевірено. Ключ підписувача: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrusted">SHA-256 та підпис ECDSA перевірено, але підписувач не є локально довіреним. Ключ підписувача: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureUntrustedWarning">Файл підписано дійсним ключем, але не локальним ключем підпису FluGenPass для цього екземпляра.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureEmbeddedVerified">Вбудований SHA-256 перевірено: {0}. {1}</sys:String>
+    <sys:String x:Key="VerifyMsgCsvHashVerified">CSV SHA-256 перевірено: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgSecureExportCreated">Створено вбудований SHA-256 та довірений підпис ECDSA. Ключ підпису: {0}.</sys:String>
+    <sys:String x:Key="VerifyMsgCsvExportCreated">Створено файли SHA-256 та ECDSA. Ключ підпису: {0}.</sys:String>
+
+    <!-- Розширення записів сховища -->
+    <sys:String x:Key="DlgSiteDetailsTitle">Деталі запису</sys:String>
+    <sys:String x:Key="DlgSiteDetailsDesc">Вкажіть назву, посилання та пароль для цього запису сховища.</sys:String>
+    <sys:String x:Key="DlgSiteNameLabel">Назва сайту / сервісу</sys:String>
+    <sys:String x:Key="DlgSiteNamePlaceholder">напр. GitHub, Google</sys:String>
+    <sys:String x:Key="DlgUrlLabel">Посилання (URL)</sys:String>
+    <sys:String x:Key="DlgUrlPlaceholder">напр. https://github.com</sys:String>
+    <sys:String x:Key="DlgPasswordLabel">Пароль</sys:String>
+    <sys:String x:Key="DlgPasswordPlaceholder">Залиште порожнім, щоб зберегти поточний пароль</sys:String>
+    <sys:String x:Key="DlgSiteNameRequired">Назва сайту обов'язкова.</sys:String>
+    <sys:String x:Key="CommonBtnSave">Зберегти</sys:String>
+
+    <sys:String x:Key="VaultColLink">Посилання</sys:String>
+    <sys:String x:Key="VaultCtxEditTags">Редагувати теги</sys:String>
+    <sys:String x:Key="VaultCtxCopySite">Копіювати назву сайту</sys:String>
+    <sys:String x:Key="VaultCtxCopyPassword">Копіювати пароль</sys:String>
+    <sys:String x:Key="VaultCtxCopyLink">Копіювати посилання</sys:String>
+    <sys:String x:Key="VaultCtxOpenLink">Перейти за посиланням</sys:String>
+    <sys:String x:Key="VaultCtxEditDetails">Редагувати деталі</sys:String>
+    <sys:String x:Key="VaultCtxClone">Клонувати запис</sys:String>
+    <sys:String x:Key="VaultCtxDelete">Видалити запис</sys:String>
+    <sys:String x:Key="NotifCopiedSiteMsg">Назву сайту "{0}" скопійовано в буфер обміну.</sys:String>
+    <sys:String x:Key="NotifCopiedUrlMsg">Посилання для "{0}" скопійовано в буфер обміну.</sys:String>
+    <sys:String x:Key="NotifClonedMsg">Запис "{0}" успішно склоновано.</sys:String>
+    <sys:String x:Key="NotifDetailsUpdatedMsg">Деталі запису сховища успішно оновлено.</sys:String>
+    <sys:String x:Key="VaultRightClickHint">Клацніть правою кнопкою миші на записі, щоб скопіювати, редагувати або видалити.</sys:String>
+
+    <!-- HIBP Перевірка витоку паролів -->
+    <sys:String x:Key="VaultCtxCheckCompromised">Перевірити витоки (HIBP)</sys:String>
+    <sys:String x:Key="DlgPwnedTitle">Перевірка витоків HIBP</sys:String>
+    <sys:String x:Key="DlgPwnedWarning">Увага! Цей пароль знайдено {0} раз(ів) у базі викрадених облікових даних HaveIBeenPwned.&#x0a;&#x0a;Настійно рекомендується змінити цей пароль, оскільки він небезпечний!</sys:String>
+    <sys:String x:Key="DlgPwnedSafe">Хороші новини! Цей пароль не знайдено в базі викрадених облікових даних HaveIBeenPwned.&#x0a;&#x0a;Схоже, він безпечний.</sys:String>
+    <sys:String x:Key="DlgPwnedError">Не вдалося перевірити витік пароля. Перевірте мережеве з'єднання та спробуйте ще раз.</sys:String>
+    <sys:String x:Key="DlgPwnedClose">Закрити</sys:String>
+</ResourceDictionary>

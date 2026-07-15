@@ -141,6 +141,8 @@ public interface INotificationService
     void ShowSuccess(string title, string message);
 
     void ShowError(string title, string message);
+
+    void ShowAction(string title, string message, string actionButtonText, Action action, TimeSpan timeout);
 }
 
 public interface IDialogService

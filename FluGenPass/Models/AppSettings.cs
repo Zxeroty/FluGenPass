@@ -23,7 +23,10 @@ public sealed record AppSettings
 public enum AppLanguageOption
 {
     English,
-    Russian
+    Russian,
+    Polish,
+    German,
+    Ukrainian
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
