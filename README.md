@@ -19,8 +19,8 @@
 FluGenPass is a modern, user-friendly password manager with a high level of security for Windows (.NET 8). It combines the Fluent UI design philosophy with industry-standard cryptographic protection to ensure the security and accessibility of your credentials.
 
 > [!CAUTION]
-> ### Security depends on your brain!
-> This software uses strong, local-first cryptographic standards. However, no tool can protect your data if you choose a weak master password, compromise your OS with malware, or lose your master passphrase (there is no "Forgot Password" button). **Security is a mindset, not just a tool.** Keep your system clean and use your brain.
+> ### Security starts with the user!
+> FluGenPass relies on strong local cryptographic primitives. However, no tool can protect data against weak master passwords, OS-level malware, or forgotten passphrases (there is no password recovery mechanism). A security tool is only as strong as the environment it runs in.
 
 ## Security
 
@@ -64,7 +64,7 @@ FluGenPass is built on a "Zero-Knowledge" architecture. Your master password and
 
 ## Installation
 
-1. Download the latest `flugenpass-setup.exe` or `flugenpass-install.msix`from the [Releases](https://github.com/Zxeroty/FluGenPass/releases) page.
+1. Download the latest `flugenpass-setup.exe` or `flugenpass-install.msix` from the [Releases](https://github.com/Zxeroty/FluGenPass/releases) page.
 2. Run the installer and follow the instructions.
 3. *Requirement*: .NET 8 Desktop Runtime (the installer will help you install it if needed).
 
