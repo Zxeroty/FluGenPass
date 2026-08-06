@@ -44,7 +44,7 @@ FluGenPass is built on a "Zero-Knowledge" architecture. Your master password and
   - **Inline Password Editing**: Update the site name, URL, and password directly from the context menu.
   - **Compact Layout**: Optimized row spacing for better information density.
 - **Smart Generator**: Create cryptographically strong passwords with entropy indicators and one-click saving.
-- **Full Localization**: Native support for **English** and **Russian**.
+- **Full Localization**: Native support for **English**, **German**, **Polish**, **Russian** and **Ukrainian**.
 - **HIBP Leak Check**: Verify if any of your passwords have been exposed in known data breaches.
 
 ## Tech Stack
@@ -64,7 +64,7 @@ FluGenPass is built on a "Zero-Knowledge" architecture. Your master password and
 
 ## Installation
 
-1. Download the latest `flugenpass-setup.exe` from the [Releases](https://github.com/Zxeroty/FluGenPass/releases) page.
+1. Download the latest `flugenpass-setup.exe` or `flugenpass-install.msix`from the [Releases](https://github.com/Zxeroty/FluGenPass/releases) page.
 2. Run the installer and follow the instructions.
 3. *Requirement*: .NET 8 Desktop Runtime (the installer will help you install it if needed).
 
